@@ -1,0 +1,105 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+   <groupId>com.tibco.sonar</groupId>
+  <artifactId>sonar-bw-6-plugin</artifactId>
+  <version>0.0.2-SNAPSHOT</version>
+  <name>Sonarqube BW6 Plugiin</name>
+  <description>SonarQube Plugin for Businessworks6, BWCE and TCI</description>
+  
+  <packaging>sonar-plugin</packaging>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <sonar.apiVersion>7.2.1</sonar.apiVersion>
+    <jdk.min.version>1.8</jdk.min.version>
+    <sonar.version>7.2.1</sonar.version>
+  <!-- <sonar.sources>src/main/java,src/main/js</sonar.sources>-->
+  </properties>
+  
+  <distributionManagement>
+      <snapshotRepository>
+        <id>maven-snapshots</id>
+        <url>https://nexus.tibcopsg.net/repository/maven-snapshots/</url>
+      </snapshotRepository>
+      <repository>
+        <id>maven-releases</id>
+        <url>https://nexus.tibcopsg.net/repository/maven-releases/</url>
+      </repository>
+  </distributionManagement>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.sonarsource.sonarqube</groupId>
+      <artifactId>sonar-plugin-api</artifactId>
+      <!-- minimal version of SonarQube to support. Note that the groupId was "org.codehaus.sonar" before version 5.2 -->
+      <version>7.2</version>
+      <!-- mandatory scope -->
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+		<groupId>com.tibco.utils.bw</groupId>
+		<artifactId>bw6-utils</artifactId>
+		<version>1.0.1-SNAPSHOT</version>
+	</dependency>
+	
+	<dependency>
+			<groupId>com.tibco.utils.bw</groupId>
+			<artifactId>bw6-utils</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>xalan</groupId>
+			<artifactId>xalan</artifactId>
+			<version>2.7.2</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.12.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.sonar-plugins.xml</groupId>
+			<artifactId>xml-squid</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<!-- Test dependencies -->
+		<dependency>
+			<groupId>org.codehaus.sonar</groupId>
+			<artifactId>sonar-testing-harness</artifactId>
+			<scope>test</scope>
+			<version>5.1</version>
+		</dependency>
+  </dependencies>
+  
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+     <plugins>
+       <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      
+     <plugin>
+        <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
+        <artifactId>sonar-packaging-maven-plugin</artifactId>
+        <version>1.17</version>
+        <extensions>true</extensions>
+        <configuration>
+          <!-- the entry-point class that extends org.sonar.api.SonarPlugin -->
+          <pluginClass>com.tibco.sonar.plugins.bw6.plugin.BusinessWorksPlugin</pluginClass>
+           
+          <!-- advanced properties can be set here. See paragraph "Advanced Build Properties". -->
+        </configuration>
+      </plugin>
+      
+    </plugins>
+  </build>
+</project>
