@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.jfree.util.Log;
 import org.sonar.api.batch.SensorContext;
 //import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.api.batch.fs.FileSystem;
@@ -28,11 +29,12 @@ import org.sonar.api.batch.fs.InputFile;
 //import org.sonar.api.checks.AnnotationCheckFactory;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
-import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.tibco.sonar.plugins.bw6.check.*;
@@ -53,13 +55,13 @@ public abstract class AbstractRuleSensor extends AbstractSensor {
 	protected FileSystem fs;
 	protected Checks checks;
 	protected RulesProfile profile;
+	private static final Logger LOG = Loggers.get(AbstractRuleSensor.class);
 
 	@SuppressWarnings("rawtypes")
 	protected AbstractRuleSensor(RulesProfile profile,
-			FileSystem fileSystem,
-			ResourcePerspectives resourcePerspectives, String repositoryKey,
+			FileSystem fileSystem, String repositoryKey,
 			String languageKey, CheckFactory checkFactory) {
-		super(fileSystem, resourcePerspectives, languageKey, checkFactory);
+		super(fileSystem, languageKey, checkFactory);
 		this.fs = fileSystem;
 		this.profile = profile;
 		/*this.annotationCheckFactory = AnnotationCheckFactory.create(profile,
@@ -118,15 +120,15 @@ public abstract class AbstractRuleSensor extends AbstractSensor {
 				check.setRuleKey(ruleKey);
 				sourceCode = check.validate(sourceCode);
 			}
-			saveIssues(sourceCode, resource);
+	//		saveIssues(sourceCode, resource);
 		}
 	}
 
 	@SuppressWarnings("rawtypes")
 	@VisibleForTesting
 	protected void saveIssues(Source source, InputFile resource) {
-		for (Violation issue : source.getViolations()) {
-			Issuable issuable = resourcePerspectives.as(Issuable.class,
+/**		for (Violation issue : source.getViolations()) {
+					Issuable issuable = resourcePerspectives.as(Issuable.class,
 					resource);
 			int lineNumber = 1; 
 			if(issue.getLine() != 0)
@@ -135,8 +137,9 @@ public abstract class AbstractRuleSensor extends AbstractSensor {
 			issuable.addIssue(issuable.newIssueBuilder()
 					.ruleKey(issue.getRule().ruleKey()).line(lineNumber)
 					.message(issue.getMessage()).build());
-		}
+		}**/
+	    LOG.warn("SAVE ISSUES CODE MISSING FROM THIS PLUGIN - NEEDS FIXING"); 
 	}
 
-	protected abstract void processMetrics();
+//	protected abstract void processMetrics();
 }

@@ -20,6 +20,7 @@ package com.tibco.sonar.plugins.bw6.sensor;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,13 +34,17 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
-import org.sonar.api.component.ResourcePerspectives;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
+import org.sonar.api.batch.sensor.measure.NewMeasure;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.rule.RuleKey;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -60,16 +65,19 @@ import com.tibco.utils.bw.model.Service;
  * @author Kapil Shivarkar
  */
 public class ProcessRuleSensor extends AbstractRuleSensor {
+
 	private Resource processFileResource;
 	private Map<String, Process> servicetoprocess = new HashMap<String, Process>();
 	protected List<Process> processList = new ArrayList<Process>();
 	private String processname = null;
+	
 	public ProcessRuleSensor(RulesProfile profile, FileSystem fileSystem,
-			ResourcePerspectives resourcePerspectives, CheckFactory checkFactory) {
-		super(profile, fileSystem, resourcePerspectives,
+			 CheckFactory checkFactory) {
+		super(profile, fileSystem,
 				ProcessRuleDefinition.REPOSITORY_KEY, BWProcessLanguage.KEY, checkFactory);
 	}
 
+	private static final Logger LOG = Loggers.get(ProcessRuleSensor.class);
 
 	public enum BWResources{		
 		HTTPClient,
@@ -139,11 +147,11 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 			}
 			process.setSubProcess(flag);
 		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
+			LOG.error(e.getMessage());
 		} catch (SAXException e) {
-			e.printStackTrace();
+			LOG.error(e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOG.error(e.getMessage());
 		}
 
 	}
@@ -235,7 +243,10 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 	}
 
 
-	public void processMetrics(){
+//	public void processMetrics(){
+	@Override
+	public void execute(SensorContext context) {
+	
 		int moduleProperties = getPropertiesCount(".bwm");
 		int groupsProcess = 0;
 		int activitiesProcess = 0;
@@ -269,117 +280,121 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 		}
 
 		noOfProcesses = noOfProcesses - subprocesscount;
-		if(sensorContext.getMeasure(BusinessWorksMetrics.BWLANGUAGEFLAG) == null)
-			saveMeasure(BusinessWorksMetrics.BWLANGUAGEFLAG, (double)1);
+	//	if(sensorContext.getMeasure(BusinessWorksMetrics.BWLANGUAGEFLAG) == null)
+	//		saveMeasure(BusinessWorksMetrics.BWLANGUAGEFLAG, (double)1);
 		//processFileResource = sensorContext.getResource(ProcessFileResource.fromIOFile(file, project));
-		saveMeasure(BusinessWorksMetrics.PROCESSES, (double) noOfProcesses);
-		saveMeasure(BusinessWorksMetrics.SUBPROCESSES, (double) subprocesscount);
-		saveMeasure(BusinessWorksMetrics.GROUPS, (double) groupsProcess);
-		saveMeasure(BusinessWorksMetrics.ACTIVITIES, (double) activitiesProcess);
-		saveMeasure(BusinessWorksMetrics.TRANSITIONS, (double) transitionsProcess);
-		saveMeasure(BusinessWorksMetrics.PROCESSSTARTER, (double) processStarters);
-		saveMeasure(BusinessWorksMetrics.GLOBALVARIABLES, (double) moduleProperties);
-		saveMeasure(BusinessWorksMetrics.BWRESOURCES, (double) sharedResources);
-		saveMeasure(BusinessWorksMetrics.JOBSHAREDVARIABLES, (double) jobSharedVariable);
-		saveMeasure(BusinessWorksMetrics.MODULESHAREDVARIABLES, (double) moduleSharedVariable);
-		saveMeasure(BusinessWorksMetrics.CATCHBLOCK, (double) catchBlocks);
-		saveMeasure(BusinessWorksMetrics.EVENTHANDLER, (double) eventHandlers);
-		saveMeasure(BusinessWorksMetrics.SERVICES, (double) services);
-		saveMeasure(BusinessWorksMetrics.SUBSERVICES, (double) subservice);
-		saveMeasure(BusinessWorksMetrics.SUBREFERENCE, (double) subreference);
-		saveMeasure(BusinessWorksMetrics.PROJECTCOMPLEXITY, "MEDIUM");
-		saveMeasure(BusinessWorksMetrics.CODEQUALITY, "AVERAGE");
+		saveMeasure(context,BusinessWorksMetrics.PROCESSES, (Integer) noOfProcesses);
+		saveMeasure(context,BusinessWorksMetrics.SUBPROCESSES, (Integer) subprocesscount);
+		saveMeasure(context,BusinessWorksMetrics.GROUPS, (Integer) groupsProcess);
+		saveMeasure(context,BusinessWorksMetrics.ACTIVITIES, (Integer) activitiesProcess);
+		saveMeasure(context,BusinessWorksMetrics.TRANSITIONS, (Integer) transitionsProcess);
+		saveMeasure(context,BusinessWorksMetrics.PROCESSSTARTER, (Integer) processStarters);
+		saveMeasure(context,BusinessWorksMetrics.GLOBALVARIABLES, (Integer) moduleProperties);
+		saveMeasure(context,BusinessWorksMetrics.BWRESOURCES, (Integer) sharedResources);
+		saveMeasure(context,BusinessWorksMetrics.JOBSHAREDVARIABLES, (Integer) jobSharedVariable);
+		saveMeasure(context,BusinessWorksMetrics.MODULESHAREDVARIABLES, (Integer) moduleSharedVariable);
+		saveMeasure(context,BusinessWorksMetrics.CATCHBLOCK, (Integer) catchBlocks);
+		saveMeasure(context,BusinessWorksMetrics.EVENTHANDLER, (Integer) eventHandlers);
+		saveMeasure(context,BusinessWorksMetrics.SERVICES, (Integer) services);
+		saveMeasure(context,BusinessWorksMetrics.SUBSERVICES, (Integer) subservice);
+		saveMeasure(context,BusinessWorksMetrics.SUBREFERENCE, (Integer) subreference);
+	//	saveMeasure(BusinessWorksMetrics.PROJECTCOMPLEXITY, "MEDIUM");
+//		saveMeasure(BusinessWorksMetrics.CODEQUALITY, "AVERAGE");
+		
 		Metric[] metric = BusinessWorksMetrics.resourceMetrics();
+		
 		BWResources bwresource;
+		
 		for (int i = 0; i < metric.length; i++) {	
 			bwresource = BWResources.valueOf(metric[i].getName().replaceAll("\\s",""));
 			switch (bwresource) {
 			case HTTPClient:
-				saveMeasure(BusinessWorksMetrics.BWRESOURCES_HTTP_CONNECTION_FLAG, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.BWRESOURCES_HTTP_CONNECTION_FLAG, (Integer)1);
 				break;
 			case XMLAuthentication:
-				saveMeasure(BusinessWorksMetrics.XML_AUTHENTICATION_FLAG, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.XML_AUTHENTICATION_FLAG, (Integer)1);
 				break;
 			case WSSAuthentication:
-				saveMeasure(BusinessWorksMetrics.WSS_Authentication_FLAG, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.WSS_Authentication_FLAG, (Integer)1);
 				break;
 			case TrustProvider:
-				saveMeasure(BusinessWorksMetrics.Trust_Provider_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.Trust_Provider_Flag, (Integer)1);
 				break;
 			case ThrealPool:
-				saveMeasure(BusinessWorksMetrics.Threal_Pool_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.Threal_Pool_Flag, (Integer)1);
 				break;
 			case TCPConnection:
-				saveMeasure(BusinessWorksMetrics.TCP_Connection_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.TCP_Connection_Flag, (Integer)1);
 				break;
 			case SubjectProvider:
-				saveMeasure(BusinessWorksMetrics.Subject_Provider_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.Subject_Provider_Flag, (Integer)1);
 				break;
 			case SSLServerConfiguration:
-				saveMeasure(BusinessWorksMetrics.SSL_Server_Configuration_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.SSL_Server_Configuration_Flag, (Integer)1);
 				break;
 			case SSLClientConfiguration:
-				saveMeasure(BusinessWorksMetrics.SSL_Client_Configuration_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.SSL_Client_Configuration_Flag, (Integer)1);
 				break;
 			case SMTPResource:
-				saveMeasure(BusinessWorksMetrics.SMTP_Resource_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.SMTP_Resource_Flag, (Integer)1);
 				break;
 			case RendezvousTransport:
-				saveMeasure(BusinessWorksMetrics.RVTRANSPORTFLAG, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.RVTRANSPORTFLAG, (Integer)1);
 				break;
 			case ProxyConfiguration:
-				saveMeasure(BusinessWorksMetrics.Proxy_Configuration_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.Proxy_Configuration_Flag, (Integer)1);
 				break;
 			case LDAPAuthentication:
-				saveMeasure(BusinessWorksMetrics.LDAP_Authentication_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.LDAP_Authentication_Flag, (Integer)1);
 				break;
 			case KeystoreProvider:
-				saveMeasure(BusinessWorksMetrics.Keystore_Provider_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.Keystore_Provider_Flag, (Integer)1);
 				break;
 			case JNDIConfiguration:
-				saveMeasure(BusinessWorksMetrics.JNDI_Configuration_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.JNDI_Configuration_Flag, (Integer)1);
 				break;
 			case JMSConnection:
-				saveMeasure(BusinessWorksMetrics.BWRESOURCES_JMS_CONNECTION_FLAG, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.BWRESOURCES_JMS_CONNECTION_FLAG, (Integer)1);
 				break;
 			case JDBCConnection:
-				saveMeasure(BusinessWorksMetrics.BWRESOURCES_JDBC_CONNECTION_FLAG, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.BWRESOURCES_JDBC_CONNECTION_FLAG, (Integer)1);
 				break;
 			case JavaGlobalInstance:
-				saveMeasure(BusinessWorksMetrics.Java_Global_Instance_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.Java_Global_Instance_Flag, (Integer)1);
 				break;
 			case IdentityProvider:
-				saveMeasure(BusinessWorksMetrics.Identity_Provider_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.Identity_Provider_Flag, (Integer)1);
 				break;
 			case HTTPConnector:
-				saveMeasure(BusinessWorksMetrics.BWRESOURCES_HTTP_CONNECTOR_FLAG, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.BWRESOURCES_HTTP_CONNECTOR_FLAG, (Integer)1);
 				break;
 			case FTPConnection:
-				saveMeasure(BusinessWorksMetrics.FTP_Connection_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.FTP_Connection_Flag, (Integer)1);
 				break;
 			case FTLRealmServerConnection:
-				saveMeasure(BusinessWorksMetrics.FTL_Realm_Server_Connection_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.FTL_Realm_Server_Connection_Flag, (Integer)1);
 				break;
 			case DataFormat:
-				saveMeasure(BusinessWorksMetrics.Data_Format_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.Data_Format_Flag, (Integer)1);
 				break;
 			case SQLFile:
-				saveMeasure(BusinessWorksMetrics.SQL_File_Flag, (double)1);
+				saveMeasure(context,BusinessWorksMetrics.SQL_File_Flag, (Integer)1);
 				break;
 			default:
 				break;
 			}
-			saveMeasure(metric[i], (double)foundResources.get(metric[i].getName()));
+	//		saveMeasure(context, metric[i], (Integer)foundResources.get(metric[i].getName()));
 		}
 	}
 
 
-	private void saveMeasure(Metric metric, double value) {
-		sensorContext.saveMeasure(processFileResource, new Measure(metric, value));
-	}
-
-	private void saveMeasure(Metric metric, String value) {
-		sensorContext.saveMeasure(processFileResource, new Measure(metric, value));
+	private void saveMeasure(SensorContext context, Metric<Integer> metric, Integer value) {
+	
+		context.<Integer>newMeasure()		
+		.forMetric(metric)
+		.on(null)
+        .withValue(value)
+        .save();
 	}
 
 	public static Map<String, Integer> foundResources = new HashMap<String, Integer>(); 
@@ -443,6 +458,12 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 	@Override
 	public String toString() {
 		return getClass().getSimpleName();
+	}
+
+	@Override
+	public void describe(SensorDescriptor arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

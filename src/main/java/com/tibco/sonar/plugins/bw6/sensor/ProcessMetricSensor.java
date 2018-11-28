@@ -23,7 +23,8 @@ import java.io.File;
 
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.rule.CheckFactory;
-import org.sonar.api.component.ResourcePerspectives;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
 import com.tibco.sonar.plugins.bw6.sensor.AbstractMetricSensor;
@@ -31,9 +32,9 @@ import com.tibco.sonar.plugins.bw6.sensor.AbstractMetricSensor;
 
 public class ProcessMetricSensor extends AbstractMetricSensor {
 
-	protected ProcessMetricSensor(FileSystem fileSystem, ResourcePerspectives resourcePerspectives, String languageKey,
+	protected ProcessMetricSensor(FileSystem fileSystem, String languageKey,
 			CheckFactory checkFactory) {
-		super(fileSystem, resourcePerspectives, languageKey, checkFactory);
+		super(fileSystem, languageKey, checkFactory);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -43,11 +44,6 @@ public class ProcessMetricSensor extends AbstractMetricSensor {
 		
 	}
 
-	@Override
-	protected void processMetrics() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	protected void analyseFile(File file) {
@@ -57,8 +53,20 @@ public class ProcessMetricSensor extends AbstractMetricSensor {
 
 	public ProcessMetricSensor(
 			FileSystem fileSystem,
-			ResourcePerspectives resourcePerspectives, CheckFactory checkFactory) {
-		super(fileSystem, resourcePerspectives, BWProcessLanguage.KEY, checkFactory);
+		    CheckFactory checkFactory) {
+		super(fileSystem, BWProcessLanguage.KEY, checkFactory);
+	}
+
+	@Override
+	public void describe(SensorDescriptor arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void execute(SensorContext arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

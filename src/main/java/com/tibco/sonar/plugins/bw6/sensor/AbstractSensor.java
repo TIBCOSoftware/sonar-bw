@@ -20,18 +20,16 @@ package com.tibco.sonar.plugins.bw6.sensor;
 import org.sonar.api.utils.log.*;
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
-import org.sonar.api.component.ResourcePerspectives;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
+
 import org.sonar.api.resources.Project;
 //import org.sonar.api.scan.filesystem.FileQuery;
 //import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.rule.CheckFactory;
-import com.tibco.utils.bw.model.Process;
 
 
 /**
@@ -46,17 +44,15 @@ public abstract class AbstractSensor implements Sensor {
 	
 	//protected ModuleFileSystem fileSystem1;
 	protected FileSystem fileSystem;
-	protected ResourcePerspectives resourcePerspectives;
+
 	protected String languageKey;
 	protected Project project;
 	protected SensorContext sensorContext;
 	public final CheckFactory checkFactory;
 	public static Map<String, String> resourceExtensionMapper = new HashMap<String,String>();
 	
-	protected AbstractSensor(FileSystem fileSystem,
-			ResourcePerspectives resourcePerspectives, String languageKey, CheckFactory checkFactory) {
+	protected AbstractSensor(FileSystem fileSystem, String languageKey, CheckFactory checkFactory) {
 		this.fileSystem = fileSystem;
-		this.resourcePerspectives = resourcePerspectives;
 		this.languageKey = languageKey;
 		this.checkFactory = checkFactory;
 		createResourceExtensionMapper(resourceExtensionMapper);
@@ -110,12 +106,12 @@ public abstract class AbstractSensor implements Sensor {
 			}
 		}
 		analyseDeadLock(fileSystem.files(fileSystem.predicates().hasLanguage(languageKey)));
-		processMetrics();
+//		processMetrics();
 	}
 
 	protected abstract void analyseDeadLock(Iterable<File> filesIterable);
 	
-	protected abstract void processMetrics();
+//	protected abstract void processMetrics();
 	
 	protected abstract void analyseFile(java.io.File file);
 

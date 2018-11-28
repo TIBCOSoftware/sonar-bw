@@ -21,7 +21,7 @@ import com.tibco.sonar.plugins.bw6.sensor.ProcessRuleSensor;
 public class BusinessWorksMetrics implements Metrics{
 
 	public static final String BWLANGUAGEFLAG_KEY = "isbwproject";
-	public static final Metric BWLANGUAGEFLAG = new Metric.Builder(BWLANGUAGEFLAG_KEY,
+	public static final Metric<Boolean> BWLANGUAGEFLAG = new Metric.Builder(BWLANGUAGEFLAG_KEY,
 			"TIBCO BusinessWorks Nature", Metric.ValueType.BOOL)
 			.setDescription("Equals true if the resource is a TIBCO BusinessWorks project or module")
 			.setQualitative(false)
@@ -34,7 +34,7 @@ public class BusinessWorksMetrics implements Metrics{
 	 */
 	
 	public static final String GLOBALVARIABLES_KEY = "globalvariables";
-	public static final Metric GLOBALVARIABLES = new Metric.Builder(GLOBALVARIABLES_KEY,
+	public static final Metric<Integer> GLOBALVARIABLES = new Metric.Builder(GLOBALVARIABLES_KEY,
 			"Module Properties", Metric.ValueType.INT)
 			.setDescription("Total number of module properties")
 			.setDirection(Metric.DIRECTION_WORST).setQualitative(false)
@@ -42,7 +42,7 @@ public class BusinessWorksMetrics implements Metrics{
 			.setDomain(CoreMetrics.DOMAIN_SIZE).create();
 	
 	public static final String JOBSHAREDVARIABLES_KEY = "jobsharedvariables";
-	public static final Metric JOBSHAREDVARIABLES = new Metric.Builder(JOBSHAREDVARIABLES_KEY,
+	public static final Metric<Integer> JOBSHAREDVARIABLES = new Metric.Builder(JOBSHAREDVARIABLES_KEY,
 			"Job Shared Variables", Metric.ValueType.INT)
 			.setDescription("Total number of job shared variables")
 			.setDirection(Metric.DIRECTION_WORST).setQualitative(false)
@@ -50,7 +50,7 @@ public class BusinessWorksMetrics implements Metrics{
 			.setDomain(CoreMetrics.DOMAIN_SIZE).create();
 	
 	public static final String MODULESHAREDVARIABLES_KEY = "modulesharedvariables";
-	public static final Metric MODULESHAREDVARIABLES = new Metric.Builder(MODULESHAREDVARIABLES_KEY,
+	public static final Metric<Integer> MODULESHAREDVARIABLES = new Metric.Builder(MODULESHAREDVARIABLES_KEY,
 			"Module Shared Variables", Metric.ValueType.INT)
 			.setDescription("Total number of module shared variables")
 			.setDirection(Metric.DIRECTION_WORST).setQualitative(false)
@@ -58,7 +58,7 @@ public class BusinessWorksMetrics implements Metrics{
 			.setDomain(CoreMetrics.DOMAIN_SIZE).create();
 	
 	public static final String CATCHBLOCK_KEY = "catchblock";
-	public static final Metric CATCHBLOCK = new Metric.Builder(CATCHBLOCK_KEY,
+	public static final Metric<Integer> CATCHBLOCK = new Metric.Builder(CATCHBLOCK_KEY,
 			"Catch Blocks", Metric.ValueType.INT)
 			.setDescription("Total number of catch blocks")
 			.setDirection(Metric.DIRECTION_WORST).setQualitative(false)
@@ -66,7 +66,7 @@ public class BusinessWorksMetrics implements Metrics{
 			.setDomain(CoreMetrics.DOMAIN_SIZE).create();
 	
 	public static final String EVENTHANDLER_KEY = "eventhandler";
-	public static final Metric EVENTHANDLER = new Metric.Builder(EVENTHANDLER_KEY,
+	public static final Metric<Integer> EVENTHANDLER = new Metric.Builder(EVENTHANDLER_KEY,
 			"Event Handlers", Metric.ValueType.INT)
 			.setDescription("Total number of event handlers")
 			.setDirection(Metric.DIRECTION_WORST).setQualitative(false)
@@ -79,14 +79,14 @@ public class BusinessWorksMetrics implements Metrics{
 	 * 
 	 */
 	
-	public static Metric[] resourceMetrics(){
+	public static Metric<Integer>[] resourceMetrics(){
 		Iterator<Map.Entry<String, Integer>> it = ProcessRuleSensor.foundResources.entrySet().iterator();
-		Metric[] BWRESOURCES_METRICS_LIST = new Metric[ProcessRuleSensor.foundResources.size()];
+		Metric<Integer>[] BWRESOURCES_METRICS_LIST = new Metric[ProcessRuleSensor.foundResources.size()];
 		int i = 0 ;
 		while (it.hasNext()) {
 	        Map.Entry<String, Integer> pair = it.next();
 	        String BWRESOURCE_KEY = pair.getKey().replaceAll("\\s","");
-	        Metric BWRESOURCE = new Metric.Builder(BWRESOURCE_KEY,
+	        Metric<Integer> BWRESOURCE = new Metric.Builder(BWRESOURCE_KEY,
 	    			pair.getKey(), Metric.ValueType.INT)
 	    			.setDescription("Total of shared resources")
 	    			.setDirection(Metric.DIRECTION_WORST).setQualitative(false)

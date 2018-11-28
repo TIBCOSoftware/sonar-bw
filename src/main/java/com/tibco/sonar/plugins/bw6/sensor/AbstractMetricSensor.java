@@ -19,7 +19,6 @@ package com.tibco.sonar.plugins.bw6.sensor;
 
 import org.sonar.api.utils.log.*;
 import org.sonar.api.batch.SensorContext;
-import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.resources.Project;
 //import org.sonar.api.scan.filesystem.FileQuery;
 //import org.sonar.api.scan.filesystem.ModuleFileSystem;
@@ -35,9 +34,8 @@ public abstract class AbstractMetricSensor extends AbstractSensor {
 	
 	private static final Logger LOGGER = Loggers.get(AbstractMetricSensor.class);
 	
-	protected AbstractMetricSensor(FileSystem fileSystem,
-			ResourcePerspectives resourcePerspectives, String languageKey, CheckFactory checkFactory) {
-		super(fileSystem, resourcePerspectives, languageKey, checkFactory);
+	protected AbstractMetricSensor(FileSystem fileSystem, String languageKey, CheckFactory checkFactory) {
+		super(fileSystem, languageKey, checkFactory);
 	}
 
 	/**
