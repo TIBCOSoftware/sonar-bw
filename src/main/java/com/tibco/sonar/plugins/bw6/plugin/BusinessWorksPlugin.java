@@ -8,6 +8,7 @@ import org.sonar.api.resources.Qualifiers;
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
 import com.tibco.sonar.plugins.bw6.rulerepository.ProcessRuleDefinition;
 import com.tibco.sonar.plugins.bw6.sensor.ProcessRuleSensor;
+import com.tibco.sonar.plugins.bw6.language.BWProcessQualityProfile;
 
 public class BusinessWorksPlugin implements Plugin {
 	
@@ -20,16 +21,17 @@ public class BusinessWorksPlugin implements Plugin {
 	  @Override
 	  public void define(Context context) {
 	    context.addExtensions(
-	      PropertyDefinition.builder(BusinessWorksPlugin.FILE_SUFFIXES_KEY)
+	/**       PropertyDefinition.builder(BusinessWorksPlugin.FILE_SUFFIXES_KEY)
 	        .name("File suffixes")
 	        .description("Comma-separated list of suffixes for files to analyze.")
 	        .defaultValue(".bwp")
 	        .category("BWP")
 	        .onQualifiers(Qualifiers.PROJECT)
-	        .build(),
+	        .build(),*/
 	      BWProcessLanguage.class,
 	      ProcessRuleDefinition.class,
 	      CommonRulesSonarWayProfile.class,
-	      ProcessRuleSensor.class);
-	  }
+				ProcessRuleSensor.class,
+				BWProcessQualityProfile.class);	
+			}
 }

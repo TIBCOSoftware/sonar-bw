@@ -19,7 +19,7 @@
  */
 package com.tibco.sonar.plugins.bw6.language;
 
-import org.sonar.api.config.Settings;
+//import org.sonar.api.config.Settings;
 
 import com.tibco.sonar.plugins.bw6.plugin.BusinessWorksPlugin;
 
@@ -34,10 +34,10 @@ public class BWProcessLanguage extends AbstractBusinessWorksLanguage {
 		super(KEY, LANGUAGE_NAME);
 	}
 	
-	public BWProcessLanguage(Settings settings) {		
+/** 	public BWProcessLanguage(Settings settings) {		
 		super(settings,KEY,LANGUAGE_NAME);
 	}
-
+*/
 	public static final BWProcessLanguage INSTANCE = new BWProcessLanguage();
 
 	/**
@@ -61,6 +61,7 @@ public class BWProcessLanguage extends AbstractBusinessWorksLanguage {
 	//public static final String[] DEFAULT_FILE_SUFFIXES = { ".process" };
 	public static final String[] DEFAULT_FILE_SUFFIXES = { ".bwp" };
 	public String[] getFileSuffixes() {
+		
 		return getFileSuffixes(FILE_SUFFIXES_KEY, DEFAULT_FILE_SUFFIXES);
 	}
 
