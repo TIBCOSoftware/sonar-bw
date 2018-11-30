@@ -3,8 +3,6 @@ package com.tibco.sonar.plugins.bw6.source;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import org.sonar.api.resources.Resource;
-
 import com.tibco.sonar.plugins.bw6.violation.Violation;
 
 public interface Source {

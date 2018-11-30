@@ -4,7 +4,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sonar.api.resources.Resource;
 import com.tibco.sonar.plugins.bw6.violation.Violation;
 
 public abstract class AbstractSource implements Source {

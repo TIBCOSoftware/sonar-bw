@@ -92,13 +92,16 @@
 	      <groupId>com.google.guava</groupId>
           <artifactId>guava</artifactId>
       </exclusion>
+			      <exclusion>
+	            <groupId>commons-lang</groupId>
+              <artifactId>commons-lang</artifactId>
+           </exclusion>
       </exclusions>
 
 	</dependency>
 
 		<!-- Test dependencies -->
 
-		<!--	
 
 	<dependency>
 		<groupId>org.sonarsource.sonarqube</groupId>
@@ -112,7 +115,7 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
--->		
+	
 	<dependency>
 				<groupId>org.sonarsource.sslr-squid-bridge</groupId>
 				<artifactId>sslr-squid-bridge</artifactId>
@@ -152,9 +155,9 @@
 	        <version>1.18.0.372</version>
 	        <extensions>true</extensions>
 	        <configuration>
-			<pluginKey>BW6Plugin</pluginKey>           
-			     <pluginClass>com.tibco.sonar.plugins.bw6.plugin.BusinessWorksPlugin</pluginClass>
-   	        </configuration>
+							<pluginKey>BW6Plugin</pluginKey>           
+							<pluginClass>com.tibco.sonar.plugins.bw6.plugin.BusinessWorksPlugin</pluginClass>
+					</configuration>
 	      </plugin>
 
        <plugin>

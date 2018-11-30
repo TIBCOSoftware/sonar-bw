@@ -20,7 +20,6 @@ package com.tibco.sonar.plugins.bw6.sensor;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,12 +35,10 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.batch.sensor.measure.NewMeasure;
-import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.resources.Project;
-import org.sonar.api.resources.Resource;
+import org.sonar.api.batch.fs.InputModule;
+
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
@@ -66,7 +63,7 @@ import com.tibco.utils.bw.model.Service;
  */
 public class ProcessRuleSensor extends AbstractRuleSensor {
 
-	private Resource processFileResource;
+//	private InputFile processFileResource;
 	private Map<String, Process> servicetoprocess = new HashMap<String, Process>();
 	protected List<Process> processList = new ArrayList<Process>();
 	private String processname = null;
@@ -129,7 +126,7 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 	}
 
 	public void checkSubprocess(Process process){
-		File file = new File(System.getProperty("user.dir")+"/META-INF/module.bwm");
+		File file = new File(System.getProperty("sonar.sources")+"/META-INF/module.bwm");
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder;
 		NodeList propertyList = null;
@@ -247,16 +244,16 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 	@Override
 	public void execute(SensorContext context) {
 	
-		int moduleProperties = getPropertiesCount(".bwm");
+		int moduleProperties = getPropertiesCount(context,".bwm");
 		int groupsProcess = 0;
 		int activitiesProcess = 0;
 		int transitionsProcess = 0;
 		int processStarters = 0;
 		int catchBlocks = 0;
 		int noOfProcesses = processList.size();
-		int sharedResources = getSharedResourcesCount(new File(System.getProperty("user.dir")+"/Resources"));
-		int jobSharedVariable = getPropertiesCount(".jsv");
-		int moduleSharedVariable = getPropertiesCount(".msv");
+		int sharedResources = getSharedResourcesCount(new File(System.getProperty("sonar.sources")+"/Resources"));
+		int jobSharedVariable = getPropertiesCount(context,".jsv");
+		int moduleSharedVariable = getPropertiesCount(context,".msv");
 		int eventHandlers = 0;
 		int services = 0;
 		int subprocesscount = 0;
@@ -421,12 +418,18 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 		return count;
 	}
 
-	public int getPropertiesCount(final String fileExtension){
-		File dir = new File(System.getProperty("user.dir")+"/META-INF");
+	public int getPropertiesCount(SensorContext context, final String fileExtension){
+		
+		String projectPath= context.config().get("sonar.sources").orElse("./");
+		Loggers.get(getClass()).info("Loading properties from Project folder" + projectPath);
+		
+		File dir = new File(projectPath+"/META-INF");
+		
 		File[] files = dir.listFiles(new FilenameFilter() { 
 			public boolean accept(File dir, String filename)
 			{ return filename.endsWith(fileExtension); }
 		});
+		
 		ModuleProperties moduleprops = new ModuleProperties(files[0]);
 		if (fileExtension.equals(".jsv"))
 			return moduleprops.getPropertiesCount("jobSharedVariable");
@@ -437,7 +440,7 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 	}
 
 	public int getModulePropertiesCount(){
-		File dir = new File(System.getProperty("user.dir")+"/META-INF");
+		File dir = new File(System.getProperty("sonar.sources")+"/META-INF");
 		File[] files = dir.listFiles(new FilenameFilter() { 
 			public boolean accept(File dir, String filename)
 			{ return filename.endsWith(".bwm"); }
@@ -448,7 +451,7 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 	/**
 	 * This sensor only executes on projects with active XML rules.
 	 */
-	public boolean shouldExecuteOnProject(Project project) {
+	public boolean shouldExecuteOnProject(InputModule inputModule) {
 		/*return !fileSystem.files(FileQuery.onSource().onLanguage(ProcessLanguage.KEY))
 				.isEmpty();*/
 		return fileSystem.files(fileSystem.predicates().hasLanguage(languageKey)).iterator().hasNext();

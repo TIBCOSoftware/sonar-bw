@@ -19,50 +19,48 @@
  */
 package com.tibco.sonar.plugins.bw6.language;
 
-//import org.sonar.api.config.Settings;
-
-import com.tibco.sonar.plugins.bw6.plugin.BusinessWorksPlugin;
+import org.apache.commons.lang.StringUtils;
+import org.sonar.api.resources.AbstractLanguage;
+import java.util.ArrayList;
+import java.util.List;
+import org.sonar.api.config.Configuration;
+import com.tibco.sonar.plugins.bw6.settings.BW6LanguageFileSuffixProperty;
 
 /**
  * Process language implementation
  * 
  * @since 1.3
  */
-public class BWProcessLanguage extends AbstractBusinessWorksLanguage {
+public class BWProcessLanguage extends AbstractLanguage {
 
-	public BWProcessLanguage() {
-		super(KEY, LANGUAGE_NAME);
-	}
-	
-/** 	public BWProcessLanguage(Settings settings) {		
-		super(settings,KEY,LANGUAGE_NAME);
-	}
-*/
-	public static final BWProcessLanguage INSTANCE = new BWProcessLanguage();
+	protected Configuration config;
 
-	/**
-	 * Process key
-	 */
-	public static final String KEY = "process";
-
-	/**
-	 * Process name
-	 */
 	public static final String LANGUAGE_NAME = "BusinessWorks 6";
+	public static final String KEY = "bw6";
 
-	/**
-	 * Key of the file suffix parameter
-	 */
-	public static final String FILE_SUFFIXES_KEY = BusinessWorksPlugin.PROCESS_FILE_SUFFIXES_KEY;
+	public BWProcessLanguage(Configuration config) {
+    super(KEY, LANGUAGE_NAME);
+    this.config = config;
+  }
 
-	/**
-	 * Default Process files knows suffixes
-	 */
-	//public static final String[] DEFAULT_FILE_SUFFIXES = { ".process" };
-	public static final String[] DEFAULT_FILE_SUFFIXES = { ".bwp" };
+	@Override
 	public String[] getFileSuffixes() {
-		
-		return getFileSuffixes(FILE_SUFFIXES_KEY, DEFAULT_FILE_SUFFIXES);
+	  String[] suffixes = filterEmptyStrings(config.getStringArray(BW6LanguageFileSuffixProperty.FILE_SUFFIXES_KEY));
+	  if (suffixes.length == 0) {
+		suffixes = StringUtils.split(BW6LanguageFileSuffixProperty.FILE_SUFFIXES_DEFAULT_VALUE, ",");
+	  }
+	  return suffixes;
 	}
 
+
+	private String[] filterEmptyStrings(String[] stringArray) {
+		List<String> nonEmptyStrings = new ArrayList<>();
+		for (String string : stringArray) {
+		  if (StringUtils.isNotBlank(string.trim())) {
+			nonEmptyStrings.add(string.trim());
+		  }
+		}
+		return nonEmptyStrings.toArray(new String[nonEmptyStrings.size()]);
+    }
+     
 }

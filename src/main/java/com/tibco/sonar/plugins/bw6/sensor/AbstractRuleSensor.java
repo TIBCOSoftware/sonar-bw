@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jfree.util.Log;
-import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.sensor.SensorContext;
 //import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
@@ -31,7 +31,7 @@ import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.resources.Project;
+import org.sonar.api.batch.fs.InputModule;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
@@ -95,7 +95,7 @@ public abstract class AbstractRuleSensor extends AbstractSensor {
 	 * Analyze the XML files.
 	 */
 	@SuppressWarnings("unchecked")
-	public void analyse(Project project, SensorContext sensorContext) {
+	public void analyse(InputModule project, SensorContext sensorContext) {
 		this.abstractCheck = checks.all();
 		//this.abstractCheck = annotationCheckFactory.getChecks();
 		this.project = project;

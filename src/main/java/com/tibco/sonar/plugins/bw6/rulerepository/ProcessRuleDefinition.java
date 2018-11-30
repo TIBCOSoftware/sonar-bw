@@ -7,11 +7,19 @@ import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinitionAnnotationLoader;
 
 import com.google.common.collect.ImmutableList;
+import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
 
 public final class ProcessRuleDefinition implements RulesDefinition{
-	public static final String REPOSITORY_KEY = "process";
-	public static final String REPOSITORY_NAME = "BusinessWorks Process Repo";
-	protected static final List<String> LANGUAGE_KEYS = ImmutableList.of("process");
+
+
+
+	protected static final String KEY = "process";
+	protected static final String NAME = "process";
+  
+	public static final String REPOSITORY_KEY = BWProcessLanguage.KEY + "-" + KEY;
+	protected static final String REPOSITORY_NAME = BWProcessLanguage.KEY + "-" + NAME;
+	protected static final List<String> LANGUAGE_KEYS = ImmutableList.of(BWProcessLanguage.KEY);
+	
 	public static List<Class> checkRules;
 	public static Class check[] = {	
 			com.tibco.sonar.plugins.bw6.check.process.NoDescriptionCheck.class,

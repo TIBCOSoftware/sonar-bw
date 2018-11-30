@@ -14,13 +14,13 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Splitter.MapSplitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
-import org.junit.Test;
+//import org.junit.Test;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class ProcessTest {
 	private boolean flag = true;
-	@Test
+//	@Test
 	public void TestProcess()
 	{
 		/*Process process = new Process();

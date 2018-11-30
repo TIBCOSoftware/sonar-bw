@@ -25,7 +25,7 @@ import java.util.Map;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 
-import org.sonar.api.resources.Project;
+import org.sonar.api.batch.fs.InputModule;
 //import org.sonar.api.scan.filesystem.FileQuery;
 //import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.api.batch.fs.FileSystem;
@@ -46,7 +46,7 @@ public abstract class AbstractSensor implements Sensor {
 	protected FileSystem fileSystem;
 
 	protected String languageKey;
-	protected Project project;
+	protected InputModule project;
 	protected SensorContext sensorContext;
 	public final CheckFactory checkFactory;
 	public static Map<String, String> resourceExtensionMapper = new HashMap<String,String>();
@@ -92,7 +92,7 @@ public abstract class AbstractSensor implements Sensor {
 	/**
 	 * Analyze the files.
 	 */
-	public void analyse(Project project, SensorContext sensorContext) {
+	public void analyse(InputModule project, SensorContext sensorContext) {
 		this.project = project;
 		this.sensorContext = sensorContext;
 		/*for (java.io.File file : fileSystem.files(FileQuery.onSource()
@@ -118,7 +118,7 @@ public abstract class AbstractSensor implements Sensor {
 	/**
 	 * This sensor only executes on projects with language files.
 	 */
-	public boolean shouldExecuteOnProject(Project project) {
+	public boolean shouldExecuteOnProject(InputModule project) {
 		/*return !fileSystem1.files(FileQuery.onSource().onLanguage(languageKey))
 				.isEmpty();*/
 		return !fileSystem.files(fileSystem.predicates().hasLanguage(languageKey)).iterator().hasNext();

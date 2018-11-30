@@ -22,10 +22,6 @@ package com.tibco.sonar.plugins.bw6.source;
 import org.sonar.api.utils.log.*;
 import org.apache.commons.io.FileUtils;
 
-
-//import org.sonar.api.resources.Resource;
-import org.sonar.api.batch.fs.*;
-
 import org.sonar.api.rules.Rule;
 import org.sonar.api.utils.SonarException;
 import org.w3c.dom.Document;
