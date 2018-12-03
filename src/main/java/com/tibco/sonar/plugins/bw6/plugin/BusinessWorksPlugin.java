@@ -3,9 +3,7 @@ package com.tibco.sonar.plugins.bw6.plugin;
 import org.sonar.api.Plugin;
 
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
-import com.tibco.sonar.plugins.bw6.measurecomputer.resources.ComputeTotalHTTPConnectionResource;
-import com.tibco.sonar.plugins.bw6.measurecomputer.resources.ComputeTotalJDBCResourceResource;
-import com.tibco.sonar.plugins.bw6.measurecomputer.resources.ComputeTotalSQLResourceResource;
+import com.tibco.sonar.plugins.bw6.measurecomputer.resources.*;
 import com.tibco.sonar.plugins.bw6.metric.SharedResourceMetrics;
 import com.tibco.sonar.plugins.bw6.rulerepository.ProcessRuleDefinition;
 //import com.tibco.sonar.plugins.bw6.sensor.ProcessRuleSensor;
@@ -41,7 +39,9 @@ public class BusinessWorksPlugin implements Plugin {
 			SharedResourceMetrics.class,
 			ComputeTotalHTTPConnectionResource.class,
 			ComputeTotalJDBCResourceResource.class,
-			ComputeTotalSQLResourceResource.class);		
+			ComputeTotalSQLResourceResource.class,
+			ComputeTotalHTTPClientResourceResource.class,
+			ComputeTotalXMLAuthResourceResource.class);		
 	}
 
 }
