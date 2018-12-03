@@ -9,9 +9,9 @@
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <sonar.apiVersion>7.2.1</sonar.apiVersion>
+    <sonar.apiVersion>7.4</sonar.apiVersion>
     <jdk.min.version>1.8</jdk.min.version>
-    <sonar.version>7.2.1</sonar.version>
+    <sonar.version>7.4</sonar.version>
     <sonarjava.version>5.8.0.15699</sonarjava.version>
     <sonar.sources>src/main/java</sonar.sources>
   </properties>

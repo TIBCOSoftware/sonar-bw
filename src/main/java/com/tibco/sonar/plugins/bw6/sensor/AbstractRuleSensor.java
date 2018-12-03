@@ -23,13 +23,12 @@ import java.util.List;
 
 import org.jfree.util.Log;
 import org.sonar.api.batch.sensor.SensorContext;
-//import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 //import org.sonar.api.checks.AnnotationCheckFactory;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
-import org.sonar.api.issue.Issuable;
+//import org.sonar.api.issue.Issuable;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.batch.fs.InputModule;
 import org.sonar.api.rule.RuleKey;

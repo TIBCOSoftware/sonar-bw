@@ -4,8 +4,6 @@ import org.sonar.api.utils.log.*;
 import org.sonar.api.batch.sensor.SensorContext;
 
 import org.sonar.api.batch.fs.InputModule;
-//import org.sonar.api.scan.filesystem.FileQuery;
-//import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.rule.CheckFactory;
 

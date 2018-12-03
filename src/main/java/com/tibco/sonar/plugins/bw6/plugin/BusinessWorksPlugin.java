@@ -1,9 +1,15 @@
 package com.tibco.sonar.plugins.bw6.plugin;
 
 import org.sonar.api.Plugin;
+
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
+import com.tibco.sonar.plugins.bw6.measurecomputer.resources.ComputeTotalHTTPConnectionResource;
+import com.tibco.sonar.plugins.bw6.measurecomputer.resources.ComputeTotalJDBCResourceResource;
+import com.tibco.sonar.plugins.bw6.measurecomputer.resources.ComputeTotalSQLResourceResource;
+import com.tibco.sonar.plugins.bw6.metric.SharedResourceMetrics;
 import com.tibco.sonar.plugins.bw6.rulerepository.ProcessRuleDefinition;
-import com.tibco.sonar.plugins.bw6.sensor.ProcessRuleSensor;
+//import com.tibco.sonar.plugins.bw6.sensor.ProcessRuleSensor;
+import com.tibco.sonar.plugins.bw6.sensor.SharedResourcesSensor;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.settings.BW6LanguageFileSuffixProperty;
 
@@ -18,17 +24,27 @@ public class BusinessWorksPlugin implements Plugin {
 //	 public static final String TIBCO_BUSINESSWORK_RULEREPOSITORY = "bwcommon";
 //	 public static final String PROCESS_FILE_SUFFIXES_KEY = "sonar.bw.process.file.suffixes";
 
-	  @Override
-	  public void define(Context context) {
-	    context.addExtensions(
+	@Override
+	public void define(Context context) {
+	   
+		// BW6 Language Claasses
+		context.addExtensions(
        			BW6LanguageFileSuffixProperty.class,
 		    	BWProcessLanguage.class,
 	            ProcessRuleDefinition.class,
-				ProcessRuleSensor.class,
-				BWProcessQualityProfile.class
-			);	
-			}
-		}
+			//	ProcessRuleSensor.class,
+				SharedResourcesSensor.class,
+				BWProcessQualityProfile.class);
+	
+        // Resource File Metric Information
+		context.addExtensions(
+			SharedResourceMetrics.class,
+			ComputeTotalHTTPConnectionResource.class,
+			ComputeTotalJDBCResourceResource.class,
+			ComputeTotalSQLResourceResource.class);		
+	}
+
+}
 
 
 

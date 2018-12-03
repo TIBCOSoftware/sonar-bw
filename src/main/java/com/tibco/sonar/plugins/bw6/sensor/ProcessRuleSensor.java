@@ -16,7 +16,8 @@
  * limitations under the License.
  */
 package com.tibco.sonar.plugins.bw6.sensor;
-
+import java.net.URI;
+import java.nio.file.Path;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -30,7 +31,10 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputComponent;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.sensor.SensorContext;
@@ -38,7 +42,7 @@ import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.batch.fs.InputModule;
-
+import org.sonar.api.batch.fs.InputPath;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
@@ -243,7 +247,7 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 //	public void processMetrics(){
 	@Override
 	public void execute(SensorContext context) {
-	
+/** 	
 		int moduleProperties = getPropertiesCount(context,".bwm");
 		int groupsProcess = 0;
 		int activitiesProcess = 0;
@@ -251,7 +255,7 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 		int processStarters = 0;
 		int catchBlocks = 0;
 		int noOfProcesses = processList.size();
-		int sharedResources = getSharedResourcesCount(new File(System.getProperty("sonar.sources")+"/Resources"));
+		int sharedResources = getSharedResourcesCount(new File(context.config().get("sonar.sources").orElse("./")+"/Resources"));
 		int jobSharedVariable = getPropertiesCount(context,".jsv");
 		int moduleSharedVariable = getPropertiesCount(context,".msv");
 		int eventHandlers = 0;
@@ -280,14 +284,18 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 	//	if(sensorContext.getMeasure(BusinessWorksMetrics.BWLANGUAGEFLAG) == null)
 	//		saveMeasure(BusinessWorksMetrics.BWLANGUAGEFLAG, (double)1);
 		//processFileResource = sensorContext.getResource(ProcessFileResource.fromIOFile(file, project));
-		saveMeasure(context,BusinessWorksMetrics.PROCESSES, (Integer) noOfProcesses);
+	
+/** TODO 		saveMeasure(context,BusinessWorksMetrics.PROCESSES, (Integer) noOfProcesses);
 		saveMeasure(context,BusinessWorksMetrics.SUBPROCESSES, (Integer) subprocesscount);
 		saveMeasure(context,BusinessWorksMetrics.GROUPS, (Integer) groupsProcess);
 		saveMeasure(context,BusinessWorksMetrics.ACTIVITIES, (Integer) activitiesProcess);
 		saveMeasure(context,BusinessWorksMetrics.TRANSITIONS, (Integer) transitionsProcess);
 		saveMeasure(context,BusinessWorksMetrics.PROCESSSTARTER, (Integer) processStarters);
 		saveMeasure(context,BusinessWorksMetrics.GLOBALVARIABLES, (Integer) moduleProperties);
-		saveMeasure(context,BusinessWorksMetrics.BWRESOURCES, (Integer) sharedResources);
+
+		saveMeasure(resourcePath,context,BusinessWorksMetrics.BWRESOURCES, (Integer) sharedResources);
+*/
+/** TDOO
 		saveMeasure(context,BusinessWorksMetrics.JOBSHAREDVARIABLES, (Integer) jobSharedVariable);
 		saveMeasure(context,BusinessWorksMetrics.MODULESHAREDVARIABLES, (Integer) moduleSharedVariable);
 		saveMeasure(context,BusinessWorksMetrics.CATCHBLOCK, (Integer) catchBlocks);
@@ -382,15 +390,18 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 			}
 	//		saveMeasure(context, metric[i], (Integer)foundResources.get(metric[i].getName()));
 		}
+	
+	 */
+	
 	}
 
 
-	private void saveMeasure(SensorContext context, Metric<Integer> metric, Integer value) {
+	private void saveMeasure(final InputComponent inputComponent, SensorContext context, Metric<Integer> metric, Integer value) {
 	
 		context.<Integer>newMeasure()		
 		.forMetric(metric)
-		.on(null)
-        .withValue(value)
+		.withValue(value)
+		.on(inputComponent)
         .save();
 	}
 
