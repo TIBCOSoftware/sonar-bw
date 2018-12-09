@@ -3,7 +3,7 @@ package com.tibco.sonar.plugins.bw6.measurecomputer.resources;
 import static com.tibco.sonar.plugins.bw6.metric.SharedResourceMetrics.BWRESOURCES_XML_AUTHENTICATION;
 
 
-public class ComputeTotalXMLAuthResourceResource extends AbstractResourceTotals {
+public class ComputeTotalXMLAuthResource extends AbstractResourceTotals {
 
   @Override
   public MeasureComputerDefinition define(MeasureComputerDefinitionContext def) {

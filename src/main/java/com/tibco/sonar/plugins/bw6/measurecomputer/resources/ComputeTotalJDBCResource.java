@@ -3,7 +3,7 @@ package com.tibco.sonar.plugins.bw6.measurecomputer.resources;
 import static com.tibco.sonar.plugins.bw6.metric.SharedResourceMetrics.BWRESOURCES_JDBC_CONNECTION;
 
 
-public class ComputeTotalJDBCResourceResource extends AbstractResourceTotals {
+public class ComputeTotalJDBCResource extends AbstractResourceTotals {
 
   @Override
   public MeasureComputerDefinition define(MeasureComputerDefinitionContext def) {

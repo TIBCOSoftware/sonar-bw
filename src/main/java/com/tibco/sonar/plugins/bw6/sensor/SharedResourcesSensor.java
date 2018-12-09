@@ -1,6 +1,5 @@
 package com.tibco.sonar.plugins.bw6.sensor;
 
-import org.apache.commons.logging.Log;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.measure.Metric;
@@ -9,17 +8,9 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.File;
 import org.sonar.api.utils.log.Loggers;
-import com.tibco.sonar.plugins.bw6.metric.SharedResourceMetrics; // .BusinessWorksMetrics;
+import com.tibco.sonar.plugins.bw6.metric.SharedResourceMetrics;
 
-//import static org.sonarsource.plugins.example.measures.ExampleMetrics.FILENAME_SIZE;
-//import static com.tibco.sonar.plugins.bw6.metric.BusinessWorksMetrics.BWRESOURCES;;
-
-/**
- * Scanner feeds raw measures on files but must not aggregate values to directories and project.
- * This class emulates loading of file measures from a 3rd-party analyser.
- */
 public class SharedResourcesSensor implements Sensor {
   @Override
   public void describe(SensorDescriptor descriptor) {

@@ -37,11 +37,30 @@ public class BusinessWorksPlugin implements Plugin {
         // Resource File Metric Information
 		context.addExtensions(
 			SharedResourceMetrics.class,
+			ComputeBusinessDataFormatResource.class,		
+			ComputeProxyConfigResource.class,	
+			ComputeTotalJDBCResource.class,
+			ComputeFTLRealmConnectionResource.class,		
+			ComputeTotalRVResource.class,	
+			ComputeTotalHTTPClientResource.class,
+			ComputeFTPConnectionResource.class,		
+			ComputeTotalSMTPResource.class,			
+			ComputeTCPConnectionResource.class,
+			ComputeIdentityProviderResource.class,		
+			ComputeTotalSSLClientConfigResource.class,	
+			ComputeTotalXMLAuthResource.class,
+			ComputeJavaGlobalInstanceResource.class,		
+			ComputeTotalSSLServerConfigResource.class,	
+			ComputeThreadPoolResource.class,
+			ComputeJMSConfigResource.class,			
+			ComputeTotalSubjectProviderResource.class,
 			ComputeTotalHTTPConnectionResource.class,
-			ComputeTotalJDBCResourceResource.class,
-			ComputeTotalSQLResourceResource.class,
-			ComputeTotalHTTPClientResourceResource.class,
-			ComputeTotalXMLAuthResourceResource.class);		
+			ComputeJNDIConfigResource.class,	
+			ComputeTotalWSSAuthResource.class,		
+			ComputeKeyStoreProviderResource.class,		
+			ComputeTotalTrustProviderResource.class,
+			ComputeLDAPAuthResource.class,	
+			ComputeTotalSQLResource.class);		
 	}
 
 }

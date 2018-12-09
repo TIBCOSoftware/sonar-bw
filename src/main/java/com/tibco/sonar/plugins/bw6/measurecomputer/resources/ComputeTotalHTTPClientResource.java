@@ -3,7 +3,7 @@ package com.tibco.sonar.plugins.bw6.measurecomputer.resources;
 import static com.tibco.sonar.plugins.bw6.metric.SharedResourceMetrics.BWRESOURCES_HTTP_CLIENT;
 
 
-public class ComputeTotalHTTPClientResourceResource extends AbstractResourceTotals {
+public class ComputeTotalHTTPClientResource extends AbstractResourceTotals {
 
   @Override
   public MeasureComputerDefinition define(MeasureComputerDefinitionContext def) {

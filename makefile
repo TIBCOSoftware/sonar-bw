@@ -11,6 +11,6 @@ test1:
 	  -Dsonar.projectKey=BWCE-Test1 \
 	  -Dsonar.sources=./tests/bwce1/tibco.bwce.sample.binding.rest.BookStore \
 	  -Dsonar.host.url=http://192.168.76.20:9000 \
-	  -Dsonar.login=2df09a92b48b40ca55f7798b5ce465c511006e0b \
+	  -Dsonar.login=d738135f812a3985e4b3a02704e4a08262dce2be \
 	  -Dsonar.user.dir=./tests/bwce1/tibco.bwce.sample.binding.rest.BookStore
 #	  -Dsonar.java.binaries=./target

@@ -17,6 +17,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.tibco.sonar.plugins.bw6.sensor.ProcessRuleSensor;
+import com.tibco.sonar.plugins.bw6.sensor.SharedResourcesSensor;
 
 public class BusinessWorksMetrics implements Metrics{
 
@@ -81,8 +82,9 @@ public class BusinessWorksMetrics implements Metrics{
 	 */
 	
 	public static Metric<Integer>[] resourceMetrics(){
-		Iterator<Map.Entry<String, Integer>> it = ProcessRuleSensor.foundResources.entrySet().iterator();
-		Metric<Integer>[] BWRESOURCES_METRICS_LIST = new Metric[ProcessRuleSensor.foundResources.size()];
+		Iterator<Map.Entry<String, Integer>> it = SharedResourcesSensor.foundResources.entrySet().iterator();
+		
+		Metric<Integer>[] BWRESOURCES_METRICS_LIST = new Metric[SharedResourcesSensor.foundResources.size()];
 		int i = 0 ;
 		while (it.hasNext()) {
 	        Map.Entry<String, Integer> pair = it.next();
@@ -118,6 +120,7 @@ public class BusinessWorksMetrics implements Metrics{
 			.setDescription("Equals true if the resource exists in the project")
 			.setQualitative(false)
 			.setDomain(CoreMetrics.DOMAIN_GENERAL).create();
+
 	public static final String BWRESOURCES_HTTP_CONNECTOR_KEY = "HTTPConnector";
 	public static final Metric<Integer> BWRESOURCES_HTTP_CONNECTOR = new Metric.Builder(BWRESOURCES_HTTP_CONNECTOR_KEY,
 			"HTTP Connectors", Metric.ValueType.INT)
@@ -145,6 +148,7 @@ public class BusinessWorksMetrics implements Metrics{
 			.setDescription("Equals true if the resource exists in the project")
 			.setQualitative(false)
 			.setDomain(CoreMetrics.DOMAIN_GENERAL).create();
+	
 	public static final String BWRESOURCES_JMS_CONNECTION_KEY = "JMSConnection";
 	public static final Metric<Integer> BWRESOURCES_JMS_CONNECTION = new Metric.Builder(BWRESOURCES_JMS_CONNECTION_KEY,
 			"JMS Connections", Metric.ValueType.INT)
@@ -336,7 +340,7 @@ public class BusinessWorksMetrics implements Metrics{
 //			.setFormula(new SumChildValuesFormula(false))
 			.setDomain(CoreMetrics.DOMAIN_SIZE).create();
 	
-	public static final Metric<Boolean> Threal_Pool_Flag = new Metric.Builder("isthreadpool",
+	/** public static final Metric<Boolean> Threal_Pool_Flag = new Metric.Builder("isthreadpool",
 			"TIBCO BusinessWorks Nature", Metric.ValueType.BOOL)
 			.setDescription("Equals true if the resource exists in the project")
 			.setQualitative(false)
@@ -347,7 +351,7 @@ public class BusinessWorksMetrics implements Metrics{
 			.setDirection(Metric.DIRECTION_WORST).setQualitative(false)
 //			.setFormula(new SumChildValuesFormula(false))
 			.setDomain(CoreMetrics.DOMAIN_SIZE).create();
-	
+**/	
 	public static final Metric<Boolean> Subject_Provider_Flag = new Metric.Builder("issubjectprovider",
 			"TIBCO BusinessWorks Nature", Metric.ValueType.BOOL)
 			.setDescription("Equals true if the resource exists in the project")
@@ -409,7 +413,6 @@ public class BusinessWorksMetrics implements Metrics{
 		WSS_Authentication,
 		TCP_Connection,
 		Subject_Provider,
-		Threal_Pool,
 		Trust_Provider,
 		Proxy_Configuration,
 		LDAP_Authentication,

@@ -157,7 +157,6 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 
 	}
 
-
 	protected void analyseDeadLock(Iterable<File> filesIterable){
 		for (int i = 0; i < processList.size(); i++) {
 			Map<String, Service> services = processList.get(i).getServices();
@@ -396,7 +395,7 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 	}
 
 
-	private void saveMeasure(final InputComponent inputComponent, SensorContext context, Metric<Integer> metric, Integer value) {
+/** 	private void saveMeasure(final InputComponent inputComponent, SensorContext context, Metric<Integer> metric, Integer value) {
 	
 		context.<Integer>newMeasure()		
 		.forMetric(metric)
@@ -428,7 +427,7 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 		}
 		return count;
 	}
-
+**/
 	public int getPropertiesCount(SensorContext context, final String fileExtension){
 		
 		String projectPath= context.config().get("sonar.sources").orElse("./");
