@@ -5,7 +5,6 @@ import java.nio.charset.Charset;
 import com.tibco.sonar.plugins.bw6.file.XmlFile;
 import com.tibco.utils.bw.common.SaxParser;
 import com.tibco.utils.bw.model.Process;
-import java.io.InputStream;
 
 /**
  * Checks and analyzes report measurements, issues and other findings in
@@ -23,35 +22,27 @@ public class ProcessSource extends XmlSource {
 		process.setProcessXmlDocument(new SaxParser().parseDocument(file, true));	
 	}
 
-	public ProcessSource(InputStream file){
-		super(file);
-		this.process = new Process();
-		process.setProcessXmlDocument(new SaxParser().parseDocument(file, true));	
-	}
-
-
 	public ProcessSource(XmlFile xmlFile) {
 		super(xmlFile);
-		this.process = new Process();
+		this.process = new Process();	
 	}
 
-/** 	public ProcessSource(String code) {
+	/*public ProcessSource(String code) {
 		super(code);
 		setCode(code);
 		this.process = new Process();
 		InputStream is = createInputStream();
 		process.setProcessXmlDocument(new SaxParser().parseDocument(is, true));		
-	}
-*/
+	}*/
+
 	@Override
 	public boolean parseSource(Charset charset) {
 		boolean result = super.parseSource(charset);
-		// TODO This can probalby be removed.
-		//if(result){
-		//	Process proc = process.setProcessXmlDocument(getDocument(true));
-		//	proc.parse();
-		//	proc.myparse();
-		//}
+		/*if(result){
+			Process proc = process.setProcessXmlDocument(getDocument(true));
+			//proc.parse();
+			//proc.myparse();
+		}*/
 		return result;
 	}
 

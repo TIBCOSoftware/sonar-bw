@@ -11,28 +11,6 @@ import static java.util.Arrays.asList;
 
 public class SharedResourceMetrics implements Metrics {
 
-    /** TODO:  What invokes resource metrics if nothing remove 
-    public static Metric<Integer>[] resourceMetrics(){
-		Iterator<Map.Entry<String, Integer>> it = SharedResourcesSensor.foundResources.entrySet().iterator();
-		
-		Metric<Integer>[] BWRESOURCES_METRICS_LIST = new Metric[SharedResourcesSensor.foundResources.size()];
-		int i = 0 ;
-		while (it.hasNext()) {
-	        Map.Entry<String, Integer> pair = it.next();
-	        String BWRESOURCE_KEY = pair.getKey().replaceAll("\\s","");
-	        Metric<Integer> BWRESOURCE = new Metric.Builder(BWRESOURCE_KEY,
-	    			pair.getKey(), Metric.ValueType.INT)
-	    			.setDescription("Total of shared resources")
-	    			.setDirection(Metric.DIRECTION_WORST).setQualitative(false)
-//	    			.setFormula(new SumChildValuesFormula(false))
-	    			.setDomain(CoreMetrics.DOMAIN_SIZE).create();
-	        BWRESOURCES_METRICS_LIST[i] = BWRESOURCE;
-	        i++;
-	    }
-		return BWRESOURCES_METRICS_LIST;
-	}
-	*/
-
 	private static final String MEASURES_DOMANIN = "BW Resources";
 
 	public static final String BWRESOURCES_HTTP_CLIENT_KEY = "HTTPClient";
@@ -42,6 +20,7 @@ public class SharedResourceMetrics implements Metrics {
 			.setDirection(Metric.DIRECTION_WORST).setQualitative(false)
 			.setDomain(MEASURES_DOMANIN).create();
 	
+
 	public static final String BWRESOURCES_HTTP_CONNECTOR_KEY = "HTTPConnector";
 	public static final Metric<Integer> BWRESOURCES_HTTP_CONNECTOR = new Metric.Builder(BWRESOURCES_HTTP_CONNECTOR_KEY,
 			"BW HTTP Connectors", Metric.ValueType.INT)

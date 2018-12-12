@@ -54,7 +54,6 @@ import com.tibco.sonar.plugins.bw6.check.process.DeadLockCheck;
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
 import com.tibco.sonar.plugins.bw6.metric.BusinessWorksMetrics;
 import com.tibco.sonar.plugins.bw6.rulerepository.ProcessRuleDefinition;
-import com.tibco.sonar.plugins.bw6.settings.BW6LanguageFileSuffixProperty;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.sonar.plugins.bw6.violation.DefaultViolation;
 import com.tibco.sonar.plugins.bw6.violation.Violation;
@@ -109,32 +108,25 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void analyseFile(InputFile file) {
-		//InputFile resource = fs.inputFile(fs.predicates().is(file));		
-	try
-	   {
-			ProcessSource sourceCode = new ProcessSource(file.inputStream());
-			Process process = sourceCode.getProcessModel();
-			process.startParsing();
-			checkSubprocess(process);
-			processList.add(process);
-		
-			if (sourceCode.parseSource(fileSystem.encoding())) {
-				for (AbstractCheck check : abstractCheck) {
-					if(!(check instanceof DeadLockCheck)){
-						RuleKey ruleKey = checks.ruleKey(check);
-						check.setRuleKey(ruleKey);
-						check.setRule(profile.getActiveRule(ruleKey.repository(), ruleKey.rule()).getRule());
-						sourceCode = check.validate(sourceCode);
-					}
-				}
-				saveIssues(sourceCode, file);
-			}
-		} catch (IOException e) {
-			// TODO:  Handle this better....
-			e.printStackTrace();
-	  }
+	protected void analyseFile(java.io.File file) {
+		InputFile resource = fs.inputFile(fs.predicates().is(file));		
+		ProcessSource sourceCode = new ProcessSource(file);
+		Process process = sourceCode.getProcessModel();
+		process.startParsing();
+		checkSubprocess(process);
+		processList.add(process);
 
+		if (sourceCode.parseSource(fileSystem.encoding())) {
+			for (AbstractCheck check : abstractCheck) {
+				if(!(check instanceof DeadLockCheck)){
+					RuleKey ruleKey = checks.ruleKey(check);
+					check.setRuleKey(ruleKey);
+					check.setRule(profile.getActiveRule(ruleKey.repository(), ruleKey.rule()).getRule());
+					sourceCode = check.validate(sourceCode);
+				}
+			}
+			saveIssues(sourceCode, resource);
+		}
 	}
 
 	public void checkSubprocess(Process process){
@@ -254,35 +246,7 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 //	public void processMetrics(){
 	@Override
 	public void execute(SensorContext context) {
-
-	FileSystem fs = context.fileSystem();
-  
-	createResourceExtensionMapper(resourceExtensionMapper);
-   
-	Iterable<InputFile> files = fs.inputFiles(fs.predicates().hasType(InputFile.Type.MAIN));
-	
-	Loggers.get(getClass()).info("Searching for BW6 PrcoessFiles");
-	for (InputFile file : files) {
-	//	 Loggers.get(getClass()).info("Found File" + file.filename()); 
-		 String extension = file.filename().substring(file.filename().lastIndexOf("."));
-	//	 String resourceType = resourceExtensionMapper.get(extension);
-	     
-		if (extension.matches(BW6LanguageFileSuffixProperty.FILE_SUFFIXES_DEFAULT_VALUE)){
-			 Loggers.get(getClass()).info("Found BW6 Process File " + file.filename());
-
-		
-			 analyseFile(file);
-			 //context.<Integer>newMeasure()
-			   //.forMetric(getSharedResourceMetric(resourceType))
-			   //.on(file)
-			   //.withValue(1)
-			  // .save();
-		 }
-	} 
-	Loggers.get(getClass()).info("Completed Search of BW6 Resources");	  
- }
-
-	/** 	
+/** 	
 		int moduleProperties = getPropertiesCount(context,".bwm");
 		int groupsProcess = 0;
 		int activitiesProcess = 0;
@@ -315,10 +279,9 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 			}
 		}
 
-        **/
-//		noOfProcesses = noOfProcesses - subprocesscount;
-//		if(sensorContext.getMeasure(BusinessWorksMetrics.BWLANGUAGEFLAG) == null)
-//			saveMeasure(BusinessWorksMetrics.BWLANGUAGEFLAG, Boolean.TRUE);
+		noOfProcesses = noOfProcesses - subprocesscount;
+	//	if(sensorContext.getMeasure(BusinessWorksMetrics.BWLANGUAGEFLAG) == null)
+	//		saveMeasure(BusinessWorksMetrics.BWLANGUAGEFLAG, (double)1);
 		//processFileResource = sensorContext.getResource(ProcessFileResource.fromIOFile(file, project));
 	
 /** TODO 		saveMeasure(context,BusinessWorksMetrics.PROCESSES, (Integer) noOfProcesses);
@@ -429,7 +392,7 @@ public class ProcessRuleSensor extends AbstractRuleSensor {
 	
 	 */
 	
-//	}
+	}
 
 
 /** 	private void saveMeasure(final InputComponent inputComponent, SensorContext context, Metric<Integer> metric, Integer value) {
