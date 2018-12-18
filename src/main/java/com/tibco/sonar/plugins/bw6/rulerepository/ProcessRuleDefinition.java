@@ -41,7 +41,8 @@ public final class ProcessRuleDefinition implements RulesDefinition{
 			com.tibco.sonar.plugins.bw6.check.process.CheckpointInTransation.class,
 			com.tibco.sonar.plugins.bw6.check.process.JMSAcknowledgementModeCheck.class,
 			com.tibco.sonar.plugins.bw6.check.process.CriticalSectionCheck.class,
-			com.tibco.sonar.plugins.bw6.check.process.SubProcessInlineCheck.class
+			com.tibco.sonar.plugins.bw6.check.process.SubProcessInlineCheck.class,
+			com.tibco.sonar.plugins.bw6.check.process.ExceptionHandlingCheck.class
 		};
 	
 	protected String rulesDefinitionFilePath() {
