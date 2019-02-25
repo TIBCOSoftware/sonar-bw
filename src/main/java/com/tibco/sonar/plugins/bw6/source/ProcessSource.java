@@ -3,9 +3,13 @@ package com.tibco.sonar.plugins.bw6.source;
 import java.io.File;
 import java.nio.charset.Charset;
 import com.tibco.sonar.plugins.bw6.file.XmlFile;
-import com.tibco.utils.bw.common.SaxParser;
+import com.tibco.sonar.plugins.bw6.util.SaxParser;
 import com.tibco.utils.bw.model.Process;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Checks and analyzes report measurements, issues and other findings in
@@ -19,8 +23,12 @@ public class ProcessSource extends XmlSource {
 
 	public ProcessSource(File file){
 		super(file);
-		this.process = new Process();
-		process.setProcessXmlDocument(new SaxParser().parseDocument(file, true));	
+            try {
+                this.process = new Process();	
+                process.setProcessXmlDocument(new SaxParser().parseDocument(new FileInputStream(file), true));
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ProcessSource.class.getName()).log(Level.SEVERE, null, ex);
+            }
 	}
 
 	public ProcessSource(InputStream file){

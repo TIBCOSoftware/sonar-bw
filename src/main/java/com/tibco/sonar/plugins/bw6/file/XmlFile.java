@@ -23,10 +23,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.sonar.api.internal.apachecommons.io.IOUtils;
 
 /**
  * Checks and analyzes report measurements, issues and other findings in
@@ -39,7 +45,7 @@ public class XmlFile {
 	private static final Logger LOG = LoggerFactory.getLogger(XmlFile.class);
 	private static final String XML_PROLOG_START_TAG = "<?xml";
 
-	private File file;
+	private InputStream stream;
 
 	/**
 	 * Number of lines removed before xml prolog if present
@@ -48,7 +54,15 @@ public class XmlFile {
 	private boolean hasCharsBeforeProlog = false;
 
 	public XmlFile(File file) {
-		this.file = file;
+            try {
+                this.stream = new FileInputStream(file);
+            } catch (FileNotFoundException ex) {
+                java.util.logging.Logger.getLogger(XmlFile.class.getName()).log(Level.SEVERE, null, ex);
+            }
+	}
+        
+        public XmlFile(InputStream stream) {
+		this.stream = stream;
 	}
 
 	/**
@@ -56,7 +70,7 @@ public class XmlFile {
 	 * if so, check if there is any characters prefixing it.
 	 */
 	public void checkForCharactersBeforeProlog(Charset charset) {
-		if (file == null) {
+		if (stream == null) {
 			return;
 		}
 
@@ -64,8 +78,7 @@ public class XmlFile {
 			int lineNb = 1;
 			Pattern firstTagPattern = Pattern.compile("<[a-zA-Z?]+");
 
-			for (String line : Files
-					.readLines(file, charset)) {
+			for (String line : IOUtils.readLines(stream, charset)) {
 				Matcher m = firstTagPattern.matcher(line);
 				if (m.find()) {
 					int groupIndex = line.indexOf(m.group());
@@ -83,7 +96,7 @@ public class XmlFile {
 				processCharBeforePrologInFile(charset, lineNb);
 			}
 		} catch (IOException e) {
-			LOG.warn("Unable to analyse file {}", file.getAbsolutePath(), e);
+			LOG.warn("Unable to analyse file {}", stream.toString(), e);
 		}
 	}
 
@@ -97,20 +110,22 @@ public class XmlFile {
 	private void processCharBeforePrologInFile(Charset charset,
 			int lineDelta) {
 		try {
-			String content = Files.toString(file, charset);
-			File tempFile = File.createTempFile(file.getName(),".tmp");
+                        StringWriter output = new StringWriter();
+			IOUtils.copy(stream, output, charset);
+                        String content = output.toString();
+                        File tempFile = File.createTempFile("file",".tmp");
 
 			int index = content.indexOf(XML_PROLOG_START_TAG);
 			Files.write(content.substring(index), tempFile,
 					charset);
 
-			file = tempFile;
+			stream = new FileInputStream(tempFile);
 			if (lineDelta > 1) {
 				lineDeltaForIssue = lineDelta - 1;
 			}
 
 		} catch (IOException e) {
-			LOG.warn("Unable to analyse file {}", file.getAbsolutePath(), e);
+			LOG.warn("Unable to analyse file {}", stream.toString(), e);
 		}
 	}
 
@@ -118,8 +133,8 @@ public class XmlFile {
 		return lineDeltaForIssue;
 	}
 
-	public File getIOFile() {
-		return file;
+	public InputStream getSteams() {
+		return stream;
 	}
 
 	public int getPrologLine() {
