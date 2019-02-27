@@ -14,7 +14,9 @@
     <sonar.version>7.4</sonar.version>
     <sonarjava.version>5.8.0.15699</sonarjava.version>
     <sonar.sources>src/main/java</sonar.sources>
+    <sonar.analyzerCommons.version>1.10.2.456</sonar.analyzerCommons.version>
   </properties>
+ 
   
   <distributionManagement>
       <snapshotRepository>
@@ -32,17 +34,29 @@
       <groupId>org.sonarsource.sonarqube</groupId>
       <artifactId>sonar-plugin-api</artifactId>
       <!-- minimal version of SonarQube to support. Note that the groupId was "org.codehaus.sonar" before version 5.2 -->
-      <version>${sonar.apiVersion}</version>
-      <!-- mandatory scope -->
+      <version>7.4</version>
       <scope>provided</scope>
+      <!-- mandatory scope -->
 	  <exclusions>
 		  <exclusion>
 	          <groupId>com.google.guava</groupId>
 	          <artifactId>guava</artifactId>
 	      </exclusion>
-	  </exclusions>	  
-
+	  </exclusions>
+      <type>jar</type>
     </dependency>
+
+  <dependency>
+        <groupId>org.sonarsource.analyzer-commons</groupId>
+        <artifactId>sonar-analyzer-commons</artifactId>
+        <version>${sonar.analyzerCommons.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.sonarsource.analyzer-commons</groupId>
+        <artifactId>sonar-xml-parsing</artifactId>
+        <version>${sonar.analyzerCommons.version}</version>
+      </dependency>
 
 	<dependency>
 	      <!-- packaged with the plugin -->

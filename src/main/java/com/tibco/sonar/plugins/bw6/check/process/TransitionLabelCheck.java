@@ -37,10 +37,7 @@ public class TransitionLabelCheck extends AbstractProcessCheck{
 					String name = transition.getName();
 					transition.setTo(name.substring(name.indexOf("To")+2,name.length()));
 				}
-					Violation violation = new DefaultViolation(getRule(),
-							transition.getLineNumber(),
-							"The transition from "+transition.getFrom()+" to "+transition.getTo()+" doesn't have a proper label");
-					processSource.addViolation(violation);
+                                        reportIssueOnFile("The transition from "+transition.getFrom()+" to "+transition.getTo()+" doesn't have a proper label",transition.getLineNumber());
 				}
 		}
 	}

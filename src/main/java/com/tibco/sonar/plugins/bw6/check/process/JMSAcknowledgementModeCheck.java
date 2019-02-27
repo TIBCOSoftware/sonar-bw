@@ -62,10 +62,7 @@ public class JMSAcknowledgementModeCheck extends AbstractProcessCheck{
 				for (int k = 0; k < propertiesNodes.getLength(); k++) {
 					if(propertiesNodes.item(k) != null && propertiesNodes.item(k).getNodeName().equals("value")){
 						if(propertiesNodes.item(k).getAttributes().getNamedItem("ackMode") == null){
-							Violation violation = new DefaultViolation(getRule(),
-									1,
-									"Auto Acknowledgement mode is set in the JMS activity "+processNode.getName()+".  Avoid using Auto Acknowledgement to minimize the risk of data loss.");
-							processSource.addViolation(violation);
+                                                        reportIssueOnFile("Auto Acknowledgement mode is set in the JMS activity "+processNode.getName()+".  Avoid using Auto Acknowledgement to minimize the risk of data loss.");
 						}
 					}
 				}

@@ -29,10 +29,7 @@ public class ChoiceOtherwiseCheck extends AbstractProcessCheck {
 			String expr = activity.getExpression();
 			if(expr != null){
 				if(expr.contains("xsl:choose") && !expr.contains("xsl:otherwise")){
-					Violation violation = new DefaultViolation(getRule(),
-							1,
-							"The choice statement in activity input of "+activity.getName()+" does not include the option otherwise");
-					processSource.addViolation(violation);
+                                        reportIssueOnFile("The choice statement in activity input of "+activity.getName()+" does not include the option otherwise");
 				}
 			}
 		}

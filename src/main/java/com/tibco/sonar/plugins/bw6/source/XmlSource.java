@@ -20,35 +20,31 @@ package com.tibco.sonar.plugins.bw6.source;
 
 
 import org.sonar.api.utils.log.*;
-import org.apache.commons.io.FileUtils;
 
 import org.sonar.api.rules.Rule;
-import org.sonar.api.utils.SonarException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.tibco.sonar.plugins.bw6.file.XmlFile;
 import com.tibco.sonar.plugins.bw6.util.SaxParser;
 import com.tibco.sonar.plugins.bw6.violation.DefaultViolation;
 import com.tibco.sonar.plugins.bw6.violation.Violation;
-import com.tibco.sonar.plugins.bw6.sensor.AbstractMetricSensor;
-/*import com.tibco.utils.bw.helper.GvHelper;
-import com.tibco.utils.bw.helper.XmlHelper;*/
 import com.tibco.utils.bw.helper.XmlHelper;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import javax.xml.parsers.SAXParser;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+import org.sonarsource.analyzer.commons.xml.XmlFile;
 
 /**
  * A object representing a XML Source code document
@@ -74,13 +70,6 @@ public class XmlSource extends AbstractSource {
 	private Document documentNamespaceAware = null;
 	private Document documentNamespaceUnaware = null;
 
-	/**
-	 * @param file
-	 */
-	public XmlSource(File file) {
-		super();
-		this.xmlFile = new XmlFile(file);
-	}
 	
 	/**
 	 * @param xmlFile
@@ -90,13 +79,7 @@ public class XmlSource extends AbstractSource {
 		this.xmlFile = xmlFile;
 	}
 	
-        /**
-	 * @param xmlFile
-	 */
-	public XmlSource(InputStream stream) {
-		super();
-		this.xmlFile = new XmlFile(stream);
-	}
+        
         
 	/**
 	 * @param code
@@ -113,7 +96,12 @@ public class XmlSource extends AbstractSource {
 	 * @return created {@link InputStream}
 	 */
 	public InputStream createInputStream() {
-            return xmlFile.getSteams();
+            try {
+                return xmlFile.getInputFile().inputStream();
+            } catch (IOException ex) {
+                java.util.logging.Logger.getLogger(XmlSource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return null;
 	}
 
 	/**
@@ -129,50 +117,27 @@ public class XmlSource extends AbstractSource {
 				: documentNamespaceUnaware;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.tibco.sonar.plugins.bw.source.AbstractSource#parseSource(java.nio.charset.Charset)
-	 */
-	@Override
-	public boolean parseSource(Charset charset) {
-		xmlFile.checkForCharactersBeforeProlog(charset);
-
-		documentNamespaceUnaware = parseFile(false);
-		if (documentNamespaceUnaware != null) {
-			documentNamespaceAware = parseFile(true);
-		}
-		return documentNamespaceUnaware != null
-				|| documentNamespaceAware != null;
-	}
-
-	/**
-	 * @param namespaceAware
-	 * @return
-	 */
-	private Document parseFile(boolean namespaceAware) {
-		//return new SaxParser().parseDocument(createInputStream(), namespaceAware);
-		return new SaxParser().parseDocument(xmlFile.getSteams(), namespaceAware);
-	}
 
 	/**
 	 * @param node
 	 * @return
 	 */
 	public int getLineForNode(Node node) {
-		return SaxParser.getLineNumber(node) + xmlFile.getLineDelta();
+		return SaxParser.getLineNumber(node);
 	}
 
 	/**
 	 * Returns the line number where the prolog is located in the file.
 	 */
 	public int getXMLPrologLine() {
-		return xmlFile.getPrologLine();
+		return 1;
 	}
 
 	/**
 	 * @return
 	 */
 	public boolean isPrologFirstInSource() {
-		return xmlFile.hasCharsBeforeProlog();
+		return xmlFile.getPrologElement().isPresent();
 	}
 
 	/* (non-Javadoc)
@@ -364,5 +329,10 @@ public class XmlSource extends AbstractSource {
 		}
 		return violations;
 	}
+
+    @Override
+    public XmlFile getFile() {
+        return xmlFile;
+    }
 	
 }

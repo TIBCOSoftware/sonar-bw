@@ -38,10 +38,7 @@ public class MultipleTransitionCheck extends AbstractProcessCheck{
 						Activity activity = iterator.next();
 						if(activity.getName().equals(pair.getValue().getTo())){
 							if(activity.getType() != null ){
-								Violation violation = new DefaultViolation(getRule(),
-										1,
-										"There are multiple transitions converging into activity "+pair.getValue().getTo()+". When there are multiple transitions in a parallel flow, they should converge preferably in a EMPTY activity. This ensures that following activities after the EMPTY activity will have all the outputs available from parallel paths.");
-								processSource.addViolation(violation);
+                                                                reportIssueOnFile("There are multiple transitions converging into activity "+pair.getValue().getTo()+". When there are multiple transitions in a parallel flow, they should converge preferably in a EMPTY activity. This ensures that following activities after the EMPTY activity will have all the outputs available from parallel paths.");
 								activityFlag = true;
 							}
 						}

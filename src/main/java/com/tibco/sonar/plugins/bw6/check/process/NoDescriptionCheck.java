@@ -51,15 +51,11 @@ public class NoDescriptionCheck extends AbstractProcessCheck {
 					DESCRIPTION_ELEMENT_NAMESPACE, DESCRIPTION_ELEMENT_NAME);
 			if (description.getTextContent() == null
 					|| description.getTextContent().isEmpty()) {
-				Violation violation = new DefaultViolation(getRule(),
-						processSource.getLineForNode(description),
-						"Empty description for this process");
-				processSource.addViolation(violation);
+                            //TODO Add line here
+                            reportIssueOnFile("Empty description for this process");
 			}
 		} catch (Exception e) {
-			Violation violation = new DefaultViolation(getRule(), 1,
-					"No description found in this process");
-			processSource.addViolation(violation);
+                        reportIssueOnFile("No description found in this process");
 		}
 	}
 

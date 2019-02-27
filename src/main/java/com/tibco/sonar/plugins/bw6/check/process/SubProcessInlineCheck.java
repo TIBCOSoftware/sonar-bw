@@ -30,10 +30,7 @@ public class SubProcessInlineCheck
         proc = proc.substring(proc.lastIndexOf(".") + 1).concat(".bwp");
         String parentprocess = process.getName();
         parentprocess = parentprocess.substring(parentprocess.lastIndexOf(".") + 1).concat(".bwp");
-        Violation violation = new DefaultViolation(getRule(), 
-          1, 
-          "For performance reasons it is highly recommended to use Job Shared Variable instead of passing a large set of data when invoking Inline SubProcess " + proc + " from parent process " + parentprocess);
-        processSource.addViolation(violation);
+          reportIssueOnFile("For performance reasons it is highly recommended to use Job Shared Variable instead of passing a large set of data when invoking Inline SubProcess " + proc + " from parent process " + parentprocess);
       }
     }
   }

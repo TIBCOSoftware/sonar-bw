@@ -19,11 +19,9 @@ public class NumberofActivitiesCheck extends AbstractProcessCheck{
 	protected void validate(ProcessSource processSource) {
 		Process process = processSource.getProcessModel();
 		int activityCount = process.getActivities().size();
+                //TODO Remove HARDCODED AND CHANGE FOR PARAMETER RuleKey
 			if (activityCount > 24) {
-				Violation violation = new DefaultViolation(getRule(),
-						1,
-						"The process has too many activities, this reduces the process readablity");
-				processSource.addViolation(violation);
+                                reportIssueOnFile("The process has too many activities, this reduces the process readablity");
 			}
 	}
 }

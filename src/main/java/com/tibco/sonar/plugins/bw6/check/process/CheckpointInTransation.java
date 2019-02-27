@@ -83,15 +83,10 @@ public class CheckpointInTransation extends AbstractProcessCheck{
 					proc = proc.substring(proc.lastIndexOf(".")+1).concat(".bwp");
 					Violation violation = null;
 					if(process.getGroupByName(from).getType().equals("localTX")){
-						violation = new DefaultViolation(getRule(),
-								1,
-								"The Checkpoint activity in the process "+proc+" is placed within a Transaction group. Checkpoint should not be placed within or in parallel flow to a transaction.");
+                                            reportIssueOnFile("The Checkpoint activity in the process "+proc+" is placed within a Transaction group. Checkpoint should not be placed within or in parallel flow to a transaction.");
 					}else if(process.getGroupByName(from).getType().equals("critical")){
-						violation = new DefaultViolation(getRule(),
-								1,
-								"The Checkpoint activity in the process "+proc+" is placed within a Critical Section group. Checkpoint should not be placed within a Critical Section group.");
+                                            reportIssueOnFile("The Checkpoint activity in the process "+proc+" is placed within a Critical Section group. Checkpoint should not be placed within a Critical Section group.");
 					}
-					processSource.addViolation(violation);
 				}
 			}
 		}

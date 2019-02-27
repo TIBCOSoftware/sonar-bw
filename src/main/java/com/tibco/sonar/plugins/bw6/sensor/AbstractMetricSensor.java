@@ -5,6 +5,7 @@ import org.sonar.api.batch.sensor.SensorContext;
 
 import org.sonar.api.batch.fs.InputModule;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
 
 /**
@@ -24,12 +25,12 @@ public abstract class AbstractMetricSensor extends AbstractSensor {
 	 * Analyze the XML files.
 	 */
 	public void analyse(InputModule project, SensorContext sensorContext) {
-		for (java.io.File file : fileSystem.files(fileSystem.predicates().hasLanguage(languageKey))) {
+		for (InputFile file : fileSystem.inputFiles(fileSystem.predicates().hasLanguage(languageKey))) {
 			try {
 				analyseFile(file);
 			} catch (Exception e) {
 				LOGGER.error(
-						"Could not analyze the file " + file.getAbsolutePath(),e);
+						"Could not analyze the file " + file.filename(),e);
 			}
 		}
 	}

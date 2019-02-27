@@ -16,8 +16,7 @@
  * limitations under the License.
  */
 package com.tibco.sonar.plugins.bw6.sensor;
-import java.net.URI;
-import java.nio.file.Path;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -32,7 +31,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputComponent;
 import org.sonar.api.batch.fs.InputFile;
@@ -42,7 +40,6 @@ import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.batch.fs.InputModule;
-import org.sonar.api.batch.fs.InputPath;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
@@ -50,470 +47,360 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import com.tibco.sonar.plugins.bw6.check.AbstractCheck;
+import com.tibco.sonar.plugins.bw6.check.process.CheckpointAfterHttpCheck;
+import com.tibco.sonar.plugins.bw6.check.process.CheckpointAfterJDBCÇheck;
+import com.tibco.sonar.plugins.bw6.check.process.CheckpointAfterRESTCheck;
+import com.tibco.sonar.plugins.bw6.check.process.CheckpointInTransation;
+import com.tibco.sonar.plugins.bw6.check.process.ChoiceOtherwiseCheck;
+import com.tibco.sonar.plugins.bw6.check.process.CriticalSectionCheck;
 import com.tibco.sonar.plugins.bw6.check.process.DeadLockCheck;
-import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
+import com.tibco.sonar.plugins.bw6.check.process.ForEachGroupCheck;
+import com.tibco.sonar.plugins.bw6.check.process.ForEachMappingCheck;
+import com.tibco.sonar.plugins.bw6.check.process.JDBCHardCodeCheck;
+import com.tibco.sonar.plugins.bw6.check.process.JDBCWildCardCheck;
+import com.tibco.sonar.plugins.bw6.check.process.JMSAcknowledgementModeCheck;
+import com.tibco.sonar.plugins.bw6.check.process.JMSHardCodeCheck;
+import com.tibco.sonar.plugins.bw6.check.process.LogOnlyInSubprocessCheck;
+import com.tibco.sonar.plugins.bw6.check.process.MultipleTransitionCheck;
+import com.tibco.sonar.plugins.bw6.check.process.NoDescriptionCheck;
+import com.tibco.sonar.plugins.bw6.check.process.NumberofActivitiesCheck;
+import com.tibco.sonar.plugins.bw6.check.process.NumberofServicesCheck;
+import com.tibco.sonar.plugins.bw6.check.process.SubProcessInlineCheck;
+import com.tibco.sonar.plugins.bw6.check.process.TransitionLabelCheck;
 import com.tibco.sonar.plugins.bw6.metric.BusinessWorksMetrics;
 import com.tibco.sonar.plugins.bw6.rulerepository.ProcessRuleDefinition;
-import com.tibco.sonar.plugins.bw6.settings.BW6LanguageFileSuffixProperty;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.sonar.plugins.bw6.violation.DefaultViolation;
 import com.tibco.sonar.plugins.bw6.violation.Violation;
 import com.tibco.utils.bw.model.ModuleProperties;
 import com.tibco.utils.bw.model.Process;
 import com.tibco.utils.bw.model.Service;
+import java.util.Collection;
+import org.sonar.api.batch.fs.FilePredicate;
+import org.sonar.api.batch.rule.Checks;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.issue.NewIssue;
+import org.sonar.api.batch.sensor.issue.NewIssueLocation;
+
 /**
  * XmlSensor provides analysis of xml files.
- * 
+ *
  * @author Kapil Shivarkar
  */
-public class ProcessRuleSensor extends AbstractRuleSensor {
+public class ProcessRuleSensor implements Sensor {
 
-//	private InputFile processFileResource;
-	private Map<String, Process> servicetoprocess = new HashMap<String, Process>();
-	protected List<Process> processList = new ArrayList<Process>();
-	private String processname = null;
-	
-	public ProcessRuleSensor(RulesProfile profile, FileSystem fileSystem,
-			 CheckFactory checkFactory) {
-		super(profile, fileSystem,
-				ProcessRuleDefinition.REPOSITORY_KEY, BWProcessLanguage.KEY, checkFactory);
-	}
+    private Map<String, Process> servicetoprocess = new HashMap<String, Process>();
+    protected List<Process> processList = new ArrayList<Process>();
+    private String processname = null;
+    protected FileSystem fileSystem;
+    protected String languageKey;
+    protected InputModule project;
+    protected SensorContext sensorContext;
+    protected CheckFactory checkFactory;
+    private final FilePredicate mainFilesPredicate;
+    private final Checks<Object> checkReturned;
+    protected RulesProfile profile;
 
-	private static final Logger LOG = Loggers.get(ProcessRuleSensor.class);
+    
+    
+    public ProcessRuleSensor(RulesProfile profile, FileSystem fileSystem,
+            CheckFactory checkFactory ) {
+        this.fileSystem = fileSystem;
+        this.profile = profile;
+        ArrayList<Object> allChecks = new ArrayList<>();
+        allChecks.add(NoDescriptionCheck.class);
+        allChecks.add(NumberofActivitiesCheck.class);
+        allChecks.add(TransitionLabelCheck.class);
+        allChecks.add(ChoiceOtherwiseCheck.class);
+        allChecks.add(JDBCWildCardCheck.class);
+        allChecks.add(JDBCHardCodeCheck.class);
+        allChecks.add(MultipleTransitionCheck.class);
+        allChecks.add(DeadLockCheck.class);
+        allChecks.add(LogOnlyInSubprocessCheck.class);
+        allChecks.add(JMSHardCodeCheck.class);
+        allChecks.add(ForEachMappingCheck.class);
+        allChecks.add(ForEachGroupCheck.class);
+        allChecks.add(NumberofServicesCheck.class);
+        allChecks.add(CheckpointAfterRESTCheck.class);
+        allChecks.add(CheckpointAfterJDBCÇheck.class);
+        allChecks.add(CheckpointAfterHttpCheck.class);
+        allChecks.add(CheckpointInTransation.class);
+        allChecks.add(JMSAcknowledgementModeCheck.class);
+        allChecks.add(CriticalSectionCheck.class);
+        allChecks.add(SubProcessInlineCheck.class);
+        checkReturned = checkFactory.create(ProcessRuleDefinition.REPOSITORY_KEY).addAnnotatedChecks((Iterable<?>) allChecks);
 
-	public enum BWResources{		
-		HTTPClient,
-		XMLAuthentication,
-		WSSAuthentication,
-		TrustProvider,
-		ThrealPool,	
-		TCPConnection,
-		SubjectProvider,
-		SSLServerConfiguration,
-		SSLClientConfiguration,
-		SMTPResource,
-		RendezvousTransport,
-		ProxyConfiguration,
-		LDAPAuthentication,
-		KeystoreProvider,
-		JNDIConfiguration,
-		JMSConnection,
-		JDBCConnection,
-		JavaGlobalInstance,
-		IdentityProvider,
-		HTTPConnector,
-		FTPConnection,
-		FTLRealmServerConnection,
-		DataFormat,
-		SQLFile
-	}
+        this.mainFilesPredicate = fileSystem.predicates().and(
+                fileSystem.predicates().hasType(InputFile.Type.MAIN),
+                fileSystem.predicates().hasLanguage(BusinessWorksMetrics.BWLANGUAGEFLAG_KEY));
 
-	@SuppressWarnings("unchecked")
-	protected void analyseFile(InputFile file) {
-		//InputFile resource = fs.inputFile(fs.predicates().is(file));		
-	try
-	   {
-			ProcessSource sourceCode = new ProcessSource(file.inputStream());
-			Process process = sourceCode.getProcessModel();
-			process.startParsing();
-			checkSubprocess(process);
-			processList.add(process);
-		
-			if (sourceCode.parseSource(fileSystem.encoding())) {
-				for (AbstractCheck check : abstractCheck) {
-					if(!(check instanceof DeadLockCheck)){
-						RuleKey ruleKey = checks.ruleKey(check);
-						check.setRuleKey(ruleKey);
-						check.setRule(profile.getActiveRule(ruleKey.repository(), ruleKey.rule()).getRule());
-						sourceCode = check.validate(sourceCode);
-					}
-				}
-				saveIssues(sourceCode, file);
-			}
-		} catch (IOException e) {
-			// TODO:  Handle this better....
-			e.printStackTrace();
-	  }
+    }
 
-	}
-
-	public void checkSubprocess(Process process){
-		File file = new File(System.getProperty("sonar.sources")+"/META-INF/module.bwm");
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder;
-		NodeList propertyList = null;
-		boolean flag = true;
-		try {
-			dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(file);
-			doc.getDocumentElement().normalize();
-			propertyList = doc.getElementsByTagName("sca:component");
-			for (int i = 0; i < propertyList.getLength(); i++) {
-				if(process.getName().equals(propertyList.item(i).getChildNodes().item(1).getAttributes().getNamedItem("processName").getNodeValue())){
-					flag = false;
-					break;
-				}
-			}
-			process.setSubProcess(flag);
-		} catch (ParserConfigurationException e) {
-			LOG.error(e.getMessage());
-		} catch (SAXException e) {
-			LOG.error(e.getMessage());
-		} catch (IOException e) {
-			LOG.error(e.getMessage());
-		}
-
-	}
-
-	protected void analyseDeadLock(Iterable<File> filesIterable){
-		for (int i = 0; i < processList.size(); i++) {
-			Map<String, Service> services = processList.get(i).getServices();
-			for(String servicename : services.keySet()){
-				String key = servicename+"-"+services.get(servicename).getNamespace()+"-"+processList.get(i).getName();
-				servicetoprocess.put(key, processList.get(i));
-			}
-		}
-		//------All set ready to go
-		for (Iterator<Process> iterator  = processList.iterator(); iterator.hasNext();) {
-			Process process = iterator.next();
-			String proc1 = process.getName();
-			proc1 = proc1.substring(proc1.lastIndexOf(".")+1).concat(".bwp");
-			for (File file : fileSystem.files(fileSystem.predicates().hasLanguage(languageKey))) {
-				if(file.getName().equals(proc1)){
-					InputFile resource = fs.inputFile(fs.predicates().is(file));		
-					ProcessSource sourceCode = new ProcessSource(file);
-					findDeadLock(process.getServices(), process.getProcessReferenceServices(), process, sourceCode, resource);
-				}
-			}
-		}
-	}
-
-	public void findDeadLock(Map<String, Service> services, Map<String, Service> referencedServices, Process process, ProcessSource sourceCode, InputFile resource){
-		if(services.size() > 0 && referencedServices.size() > 0){
-			Set<String> serviceName = services.keySet();
-			Set<String> referenceServiceName = referencedServices.keySet();
-			Set<String> dupReferencedServiceName = new HashSet<String>(referenceServiceName);
-			dupReferencedServiceName.retainAll(serviceName);
-			if(dupReferencedServiceName.size() > 0 ){
-				String[] deadlockedService = dupReferencedServiceName.toArray(new String[dupReferencedServiceName.size()]);
-				String referencedServiceNameSpace = referencedServices.get(deadlockedService[0]).getNamespace();
-				String serviceNamespace = services.get(deadlockedService[0]).getNamespace();
-				String referenceProcessName = referencedServices.get(deadlockedService[0]).getImplementationProcess();
-				String proc2 = process.getName();
-
-				if(referencedServiceNameSpace.equals(serviceNamespace) && referenceProcessName != null && proc2.equals(referenceProcessName)){
-					for (AbstractCheck check : abstractCheck) {
-						if(check instanceof DeadLockCheck){
-							RuleKey ruleKey = checks.ruleKey(check);
-							check.setRuleKey(ruleKey);
-							check.setRule(profile.getActiveRule(ruleKey.repository(), ruleKey.rule()).getRule());
-							proc2 = proc2.substring(proc2.lastIndexOf(".")+1).concat(".bwp");
-							Violation violation;
-							if(processname == null){
-								violation = new DefaultViolation(check.getRule(),
-										1,
-										"There is a very high possibility of deadlock in the implementation of service "+deadlockedService[0] +" exposed by process "+proc2);
-
-							}else{
-								violation = new DefaultViolation(check.getRule(),
-										1,
-										"Deadlock is detected between processes "+proc2+" and "+processname+". There is a very high possibility of deadlock in the implementation of service "+deadlockedService[0] +" exposed by process "+proc2+" and consumed by process "+processname);
-								processname = null;
-							}
-							sourceCode.addViolation(violation);
-							saveIssues(sourceCode, resource);
-						}
-					}
-				}else{
-					for (String name : referenceServiceName) {
-						Process proc = servicetoprocess.get(name+"-"+referencedServices.get(name).getNamespace()+"-"+referencedServices.get(name).getImplementationProcess());
-						if(proc.getProcessReferenceServices() != null){
-							processname = null;
-							processname = proc.getName();
-							processname = processname.substring(processname.lastIndexOf(".")+1).concat(".bwp");
-							findDeadLock(services, proc.getProcessReferenceServices(), process, sourceCode, resource);					
-						}
-					}
-				}
-			}else{
-				for (String name : referenceServiceName) {
-					Process proc = servicetoprocess.get(name+"-"+referencedServices.get(name).getNamespace()+"-"+referencedServices.get(name).getImplementationProcess());
-					if(proc != null && proc.getProcessReferenceServices() != null){
-						processname = null;
-						processname = proc.getName();
-						processname = processname.substring(processname.lastIndexOf(".")+1).concat(".bwp");
-						findDeadLock(services, proc.getProcessReferenceServices(), process, sourceCode, resource);					
-					}
-				}
-
-			}
-		}
-	}
+    private static final Logger LOG = Loggers.get(ProcessRuleSensor.class);
 
 
-//	public void processMetrics(){
-	@Override
-	public void execute(SensorContext context) {
+    public enum BWResources {
+        HTTPClient,
+        XMLAuthentication,
+        WSSAuthentication,
+        TrustProvider,
+        ThrealPool,
+        TCPConnection,
+        SubjectProvider,
+        SSLServerConfiguration,
+        SSLClientConfiguration,
+        SMTPResource,
+        RendezvousTransport,
+        ProxyConfiguration,
+        LDAPAuthentication,
+        KeystoreProvider,
+        JNDIConfiguration,
+        JMSConnection,
+        JDBCConnection,
+        JavaGlobalInstance,
+        IdentityProvider,
+        HTTPConnector,
+        FTPConnection,
+        FTLRealmServerConnection,
+        DataFormat,
+        SQLFile
+    }
 
-	FileSystem fs = context.fileSystem();
-  
-	createResourceExtensionMapper(resourceExtensionMapper);
-   
-	Iterable<InputFile> files = fs.inputFiles(fs.predicates().hasType(InputFile.Type.MAIN));
-	
-	Loggers.get(getClass()).info("Searching for BW6 PrcoessFiles");
-	for (InputFile file : files) {
-	//	 Loggers.get(getClass()).info("Found File" + file.filename()); 
-		 String extension = file.filename().substring(file.filename().lastIndexOf("."));
-	//	 String resourceType = resourceExtensionMapper.get(extension);
-	     
-		if (extension.matches(BW6LanguageFileSuffixProperty.FILE_SUFFIXES_DEFAULT_VALUE)){
-			 Loggers.get(getClass()).info("Found BW6 Process File " + file.filename());
+    protected void analyseFile(InputFile file) {
+        ProcessSource sourceCode = new ProcessSource(file); // TODO:  Handle this better....
+        Process process = sourceCode.getProcessModel();
+        process.startParsing();
+        checkSubprocess(process);
+        processList.add(process);
+      
+        for (Iterator<Object> it = checkReturned.all().iterator(); it.hasNext();) {
+            AbstractCheck check = (AbstractCheck) it.next();
+            if (!(check instanceof DeadLockCheck)) {
+                RuleKey ruleKey = checkReturned.ruleKey(check);
+                check.setRuleKey(ruleKey);
+                check.setRule(profile.getActiveRule(ruleKey.repository(), ruleKey.rule()).getRule());
+                check.scanFile(sensorContext,ruleKey,sourceCode);
+            }
+        }
+        
 
-		
-			 analyseFile(file);
-			 //context.<Integer>newMeasure()
-			   //.forMetric(getSharedResourceMetric(resourceType))
-			   //.on(file)
-			   //.withValue(1)
-			  // .save();
-		 }
-	} 
-	Loggers.get(getClass()).info("Completed Search of BW6 Resources");	  
- }
+    }
 
-	/** 	
-		int moduleProperties = getPropertiesCount(context,".bwm");
-		int groupsProcess = 0;
-		int activitiesProcess = 0;
-		int transitionsProcess = 0;
-		int processStarters = 0;
-		int catchBlocks = 0;
-		int noOfProcesses = processList.size();
-		int sharedResources = getSharedResourcesCount(new File(context.config().get("sonar.sources").orElse("./")+"/Resources"));
-		int jobSharedVariable = getPropertiesCount(context,".jsv");
-		int moduleSharedVariable = getPropertiesCount(context,".msv");
-		int eventHandlers = 0;
-		int services = 0;
-		int subprocesscount = 0;
-		int subservice = 0;
-		int subreference = 0;
+    public void checkSubprocess(Process process) {
+        File file = new File(System.getProperty("sonar.sources") + "/META-INF/module.bwm");
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder;
+        NodeList propertyList = null;
+        boolean flag = true;
+        try {
+            dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(file);
+            doc.getDocumentElement().normalize();
+            propertyList = doc.getElementsByTagName("sca:component");
+            for (int i = 0; i < propertyList.getLength(); i++) {
+                if (process.getName().equals(propertyList.item(i).getChildNodes().item(1).getAttributes().getNamedItem("processName").getNodeValue())) {
+                    flag = false;
+                    break;
+                }
+            }
+            process.setSubProcess(flag);
+        } catch (ParserConfigurationException e) {
+            LOG.error(e.getMessage());
+        } catch (SAXException e) {
+            LOG.error(e.getMessage());
+        } catch (IOException e) {
+            LOG.error(e.getMessage());
+        }
 
-		for (Iterator<Process> iterator = processList.iterator(); iterator.hasNext();) {
-			Process process = iterator.next();
-			groupsProcess += process.getGroupcount();
-			activitiesProcess += process.countAllActivities();
-			transitionsProcess += process.countAllTransitions();
-			processStarters += process.getEventSourcesCount();
-			catchBlocks += process.getCatchcount();
-			eventHandlers += process.getEventHandler();
-			services += process.getServices().size();
-			if(process.isSubProcess()){
-				subprocesscount++;
-				subservice += process.getServices().size();
-				subreference += process.getProcessReferenceServices().size();
-			}
-		}
+    }
 
-        **/
-//		noOfProcesses = noOfProcesses - subprocesscount;
-//		if(sensorContext.getMeasure(BusinessWorksMetrics.BWLANGUAGEFLAG) == null)
-//			saveMeasure(BusinessWorksMetrics.BWLANGUAGEFLAG, Boolean.TRUE);
-		//processFileResource = sensorContext.getResource(ProcessFileResource.fromIOFile(file, project));
-	
-/** TODO 		saveMeasure(context,BusinessWorksMetrics.PROCESSES, (Integer) noOfProcesses);
-		saveMeasure(context,BusinessWorksMetrics.SUBPROCESSES, (Integer) subprocesscount);
-		saveMeasure(context,BusinessWorksMetrics.GROUPS, (Integer) groupsProcess);
-		saveMeasure(context,BusinessWorksMetrics.ACTIVITIES, (Integer) activitiesProcess);
-		saveMeasure(context,BusinessWorksMetrics.TRANSITIONS, (Integer) transitionsProcess);
-		saveMeasure(context,BusinessWorksMetrics.PROCESSSTARTER, (Integer) processStarters);
-		saveMeasure(context,BusinessWorksMetrics.GLOBALVARIABLES, (Integer) moduleProperties);
+    protected void analyseDeadLock(Iterable<InputFile> filesIterable) {
+        for (int i = 0; i < processList.size(); i++) {
+            Map<String, Service> services = processList.get(i).getServices();
+            for (String servicename : services.keySet()) {
+                String key = servicename + "-" + services.get(servicename).getNamespace() + "-" + processList.get(i).getName();
+                servicetoprocess.put(key, processList.get(i));
+            }
+        }
+        //------All set ready to go
+        for (Iterator<Process> iterator = processList.iterator(); iterator.hasNext();) {
+            Process process = iterator.next();
+            String proc1 = process.getName();
+            proc1 = proc1.substring(proc1.lastIndexOf(".") + 1).concat(".bwp");
+            for (InputFile file : fileSystem.inputFiles(fileSystem.predicates().hasLanguage(languageKey))) {
+                if (file.filename().equals(proc1)) {
+                    ProcessSource sourceCode = new ProcessSource(file);
+                    findDeadLock(process.getServices(), process.getProcessReferenceServices(), process, sourceCode, file);
+                }
+            }
+        }
+    }
 
-		saveMeasure(resourcePath,context,BusinessWorksMetrics.BWRESOURCES, (Integer) sharedResources);
-*/
-/** TDOO
-		saveMeasure(context,BusinessWorksMetrics.JOBSHAREDVARIABLES, (Integer) jobSharedVariable);
-		saveMeasure(context,BusinessWorksMetrics.MODULESHAREDVARIABLES, (Integer) moduleSharedVariable);
-		saveMeasure(context,BusinessWorksMetrics.CATCHBLOCK, (Integer) catchBlocks);
-		saveMeasure(context,BusinessWorksMetrics.EVENTHANDLER, (Integer) eventHandlers);
-		saveMeasure(context,BusinessWorksMetrics.SERVICES, (Integer) services);
-		saveMeasure(context,BusinessWorksMetrics.SUBSERVICES, (Integer) subservice);
-		saveMeasure(context,BusinessWorksMetrics.SUBREFERENCE, (Integer) subreference);
-	//	saveMeasure(BusinessWorksMetrics.PROJECTCOMPLEXITY, "MEDIUM");
-//		saveMeasure(BusinessWorksMetrics.CODEQUALITY, "AVERAGE");
-		
-		Metric[] metric = BusinessWorksMetrics.resourceMetrics();
-		
-		BWResources bwresource;
-		
-		for (int i = 0; i < metric.length; i++) {	
-			bwresource = BWResources.valueOf(metric[i].getName().replaceAll("\\s",""));
-			switch (bwresource) {
-			case HTTPClient:
-				saveMeasure(context,BusinessWorksMetrics.BWRESOURCES_HTTP_CONNECTION_FLAG, (Integer)1);
-				break;
-			case XMLAuthentication:
-				saveMeasure(context,BusinessWorksMetrics.XML_AUTHENTICATION_FLAG, (Integer)1);
-				break;
-			case WSSAuthentication:
-				saveMeasure(context,BusinessWorksMetrics.WSS_Authentication_FLAG, (Integer)1);
-				break;
-			case TrustProvider:
-				saveMeasure(context,BusinessWorksMetrics.Trust_Provider_Flag, (Integer)1);
-				break;
-			case ThrealPool:
-				saveMeasure(context,BusinessWorksMetrics.Threal_Pool_Flag, (Integer)1);
-				break;
-			case TCPConnection:
-				saveMeasure(context,BusinessWorksMetrics.TCP_Connection_Flag, (Integer)1);
-				break;
-			case SubjectProvider:
-				saveMeasure(context,BusinessWorksMetrics.Subject_Provider_Flag, (Integer)1);
-				break;
-			case SSLServerConfiguration:
-				saveMeasure(context,BusinessWorksMetrics.SSL_Server_Configuration_Flag, (Integer)1);
-				break;
-			case SSLClientConfiguration:
-				saveMeasure(context,BusinessWorksMetrics.SSL_Client_Configuration_Flag, (Integer)1);
-				break;
-			case SMTPResource:
-				saveMeasure(context,BusinessWorksMetrics.SMTP_Resource_Flag, (Integer)1);
-				break;
-			case RendezvousTransport:
-				saveMeasure(context,BusinessWorksMetrics.RVTRANSPORTFLAG, (Integer)1);
-				break;
-			case ProxyConfiguration:
-				saveMeasure(context,BusinessWorksMetrics.Proxy_Configuration_Flag, (Integer)1);
-				break;
-			case LDAPAuthentication:
-				saveMeasure(context,BusinessWorksMetrics.LDAP_Authentication_Flag, (Integer)1);
-				break;
-			case KeystoreProvider:
-				saveMeasure(context,BusinessWorksMetrics.Keystore_Provider_Flag, (Integer)1);
-				break;
-			case JNDIConfiguration:
-				saveMeasure(context,BusinessWorksMetrics.JNDI_Configuration_Flag, (Integer)1);
-				break;
-			case JMSConnection:
-				saveMeasure(context,BusinessWorksMetrics.BWRESOURCES_JMS_CONNECTION_FLAG, (Integer)1);
-				break;
-			case JDBCConnection:
-				saveMeasure(context,BusinessWorksMetrics.BWRESOURCES_JDBC_CONNECTION_FLAG, (Integer)1);
-				break;
-			case JavaGlobalInstance:
-				saveMeasure(context,BusinessWorksMetrics.Java_Global_Instance_Flag, (Integer)1);
-				break;
-			case IdentityProvider:
-				saveMeasure(context,BusinessWorksMetrics.Identity_Provider_Flag, (Integer)1);
-				break;
-			case HTTPConnector:
-				saveMeasure(context,BusinessWorksMetrics.BWRESOURCES_HTTP_CONNECTOR_FLAG, (Integer)1);
-				break;
-			case FTPConnection:
-				saveMeasure(context,BusinessWorksMetrics.FTP_Connection_Flag, (Integer)1);
-				break;
-			case FTLRealmServerConnection:
-				saveMeasure(context,BusinessWorksMetrics.FTL_Realm_Server_Connection_Flag, (Integer)1);
-				break;
-			case DataFormat:
-				saveMeasure(context,BusinessWorksMetrics.Data_Format_Flag, (Integer)1);
-				break;
-			case SQLFile:
-				saveMeasure(context,BusinessWorksMetrics.SQL_File_Flag, (Integer)1);
-				break;
-			default:
-				break;
-			}
-	//		saveMeasure(context, metric[i], (Integer)foundResources.get(metric[i].getName()));
-		}
-	
-	 */
-	
-//	}
+    
+    public final void reportIssueOnFile(RuleKey ruleKey, InputFile inputFile, String message, int line) {
+        NewIssue issue = sensorContext.newIssue();
+
+        NewIssueLocation location = issue.newLocation()
+                .on(inputFile)
+                .message(message);
 
 
-/** 	private void saveMeasure(final InputComponent inputComponent, SensorContext context, Metric<Integer> metric, Integer value) {
-	
-		context.<Integer>newMeasure()		
-		.forMetric(metric)
-		.withValue(value)
-		.on(inputComponent)
-        .save();
-	}
+            NewIssueLocation secondary = issue.newLocation()
+                    .on(inputFile)
+                    .at(inputFile.selectLine(line));
+            issue.addLocation(secondary);
+        
 
-	public static Map<String, Integer> foundResources = new HashMap<String, Integer>(); 
+        issue
+                .at(location)
+                .forRule(ruleKey)
+                .save();
+    }
+    
+    public void findDeadLock(Map<String, Service> services, Map<String, Service> referencedServices, Process process, ProcessSource sourceCode, InputFile resource) {
+        if (services.size() > 0 && referencedServices.size() > 0) {
+            Set<String> serviceName = services.keySet();
+            Set<String> referenceServiceName = referencedServices.keySet();
+            Set<String> dupReferencedServiceName = new HashSet<String>(referenceServiceName);
+            dupReferencedServiceName.retainAll(serviceName);
+            if (dupReferencedServiceName.size() > 0) {
+                String[] deadlockedService = dupReferencedServiceName.toArray(new String[dupReferencedServiceName.size()]);
+                String referencedServiceNameSpace = referencedServices.get(deadlockedService[0]).getNamespace();
+                String serviceNamespace = services.get(deadlockedService[0]).getNamespace();
+                String referenceProcessName = referencedServices.get(deadlockedService[0]).getImplementationProcess();
+                String proc2 = process.getName();
 
-	public static int getSharedResourcesCount(File directory) {
-		int count = 0;
-		for (File file : directory.listFiles()) {
-			if (file.isFile()) {
-				String name = file.getName();
-				String extension = name.substring(name.lastIndexOf("."));
-				String resourceType = resourceExtensionMapper.get(extension);
-				if(resourceType != null){
-					if(foundResources.get(resourceType) == null)
-						foundResources.put(resourceType, 1);
-					else
-						foundResources.put(resourceType, foundResources.get(resourceType) + 1);
-					count++;
-				}
-			}
-			if (file.isDirectory()) {
-				count += getSharedResourcesCount(file);
-			}
-		}
-		return count;
-	}
-**/
-	public int getPropertiesCount(SensorContext context, final String fileExtension){
-		
-		String projectPath= context.config().get("sonar.sources").orElse("./");
-		Loggers.get(getClass()).info("Loading properties from Project folder" + projectPath);
-		
-		File dir = new File(projectPath+"/META-INF");
-		
-		File[] files = dir.listFiles(new FilenameFilter() { 
-			public boolean accept(File dir, String filename)
-			{ return filename.endsWith(fileExtension); }
-		});
-		
-		ModuleProperties moduleprops = new ModuleProperties(files[0]);
-		if (fileExtension.equals(".jsv"))
-			return moduleprops.getPropertiesCount("jobSharedVariable");
-		else if(fileExtension.equals(".bwm"))
-			return moduleprops.getPropertiesCount("sca:property");
-		else
-			return moduleprops.getPropertiesCount("moduleSharedVariable");
-	}
+                if (referencedServiceNameSpace.equals(serviceNamespace) && referenceProcessName != null && proc2.equals(referenceProcessName)) {
+                    for (Object checkObject : checkReturned.all()) {
+                        AbstractCheck check = (AbstractCheck) checkObject;
+                        if (check instanceof DeadLockCheck) {
+                            RuleKey ruleKey = checkReturned.ruleKey(check);
+                            check.setRuleKey(ruleKey);
+                            check.setRule(profile.getActiveRule(ruleKey.repository(), ruleKey.rule()).getRule());
+                            proc2 = proc2.substring(proc2.lastIndexOf(".") + 1).concat(".bwp");
+                            Violation violation;
+                            if (processname == null) {
+                                reportIssueOnFile(check.getRuleKey(),resource,"There is a very high possibility of deadlock in the implementation of service " + deadlockedService[0] + " exposed by process " + proc2,1);
+    
 
-	public int getModulePropertiesCount(){
-		File dir = new File(System.getProperty("sonar.sources")+"/META-INF");
-		File[] files = dir.listFiles(new FilenameFilter() { 
-			public boolean accept(File dir, String filename)
-			{ return filename.endsWith(".bwm"); }
-		});
-		ModuleProperties moduleprops = new ModuleProperties(files[0]);
-		return moduleprops.getPropertiesCount("sca:property");
-	}
-	/**
-	 * This sensor only executes on projects with active XML rules.
-	 */
-	public boolean shouldExecuteOnProject(InputModule inputModule) {
-		/*return !fileSystem.files(FileQuery.onSource().onLanguage(ProcessLanguage.KEY))
-				.isEmpty();*/
-		return fileSystem.files(fileSystem.predicates().hasLanguage(languageKey)).iterator().hasNext();
+                            } else {
+                               reportIssueOnFile(check.getRuleKey(),resource,"Deadlock is detected between processes " + proc2 + " and " + processname + ". There is a very high possibility of deadlock in the implementation of service " + deadlockedService[0] + " exposed by process " + proc2 + " and consumed by process " + processname,1);
+                            }
 
-	}
+                        }
+                    }
+                } else {
+                    for (String name : referenceServiceName) {
+                        Process proc = servicetoprocess.get(name + "-" + referencedServices.get(name).getNamespace() + "-" + referencedServices.get(name).getImplementationProcess());
+                        if (proc.getProcessReferenceServices() != null) {
+                            processname = null;
+                            processname = proc.getName();
+                            processname = processname.substring(processname.lastIndexOf(".") + 1).concat(".bwp");
+                            findDeadLock(services, proc.getProcessReferenceServices(), process, sourceCode, resource);
+                        }
+                    }
+                }
+            } else {
+                for (String name : referenceServiceName) {
+                    Process proc = servicetoprocess.get(name + "-" + referencedServices.get(name).getNamespace() + "-" + referencedServices.get(name).getImplementationProcess());
+                    if (proc != null && proc.getProcessReferenceServices() != null) {
+                        processname = null;
+                        processname = proc.getName();
+                        processname = processname.substring(processname.lastIndexOf(".") + 1).concat(".bwp");
+                        findDeadLock(services, proc.getProcessReferenceServices(), process, sourceCode, resource);
+                    }
+                }
 
-	@Override
-	public String toString() {
-		return getClass().getSimpleName();
-	}
+            }
+        }
+    }
 
-	@Override
-	public void describe(SensorDescriptor arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void execute(SensorContext context) {
+
+        FileSystem fs = context.fileSystem();
+
+        //createResourceExtensionMapper(resourceExtensionMapper);
+
+        List<InputFile> inputFiles = new ArrayList<>();
+        fileSystem.inputFiles(mainFilesPredicate).forEach(inputFiles::add);
+
+        if (inputFiles.isEmpty()) {
+            return;
+        }
+
+        Loggers.get(getClass()).info("Searching for BW6 PrcoessFiles");
+        for (InputFile file : inputFiles) {
+            analyseFile(file);
+        }
+        Loggers.get(getClass()).info("Completed Search of BW6 Resources");
+
+    }
+
+    private void saveMeasure(final InputComponent inputComponent, SensorContext context, Metric metric, Integer value) {
+
+        context.newMeasure()
+                .forMetric(metric)
+                .withValue(value)
+                .on(inputComponent)
+                .save();
+    }
+
+    public static Map<String, Integer> foundResources = new HashMap<String, Integer>();
+
+    
+
+    public int getPropertiesCount(SensorContext context, final String fileExtension) {
+
+        String projectPath = context.config().get("sonar.sources").orElse("./");
+        Loggers.get(getClass()).info("Loading properties from Project folder" + projectPath);
+
+        File dir = new File(projectPath + "/META-INF");
+
+        File[] files = dir.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String filename) {
+                return filename.endsWith(fileExtension);
+            }
+        });
+
+        ModuleProperties moduleprops = new ModuleProperties(files[0]);
+        if (fileExtension.equals(".jsv")) {
+            return moduleprops.getPropertiesCount("jobSharedVariable");
+        } else if (fileExtension.equals(".bwm")) {
+            return moduleprops.getPropertiesCount("sca:property");
+        } else {
+            return moduleprops.getPropertiesCount("moduleSharedVariable");
+        }
+    }
+
+    public int getModulePropertiesCount() {
+        File dir = new File(System.getProperty("sonar.sources") + "/META-INF");
+        File[] files = dir.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String filename) {
+                return filename.endsWith(".bwm");
+            }
+        });
+        ModuleProperties moduleprops = new ModuleProperties(files[0]);
+        return moduleprops.getPropertiesCount("sca:property");
+    }
+
+    /**
+     * This sensor only executes on projects with active XML rules.
+     */
+    public boolean shouldExecuteOnProject(InputModule inputModule) {
+        return fileSystem.inputFiles(fileSystem.predicates().hasLanguage(languageKey)).iterator().hasNext();
+
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
+
+    @Override
+    public void describe(SensorDescriptor arg0) {
+        // TODO Auto-generated method stub
+
+    }
 
 }

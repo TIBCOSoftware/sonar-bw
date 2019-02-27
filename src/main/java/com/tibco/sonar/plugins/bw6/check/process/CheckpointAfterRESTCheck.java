@@ -60,10 +60,7 @@ public class CheckpointAfterRESTCheck extends AbstractProcessCheck{
 					if(onlyOneViolation){
 						String proc = process.getName();
 						proc = proc.substring(proc.lastIndexOf(".")+1).concat(".bwp");
-						Violation violation = new DefaultViolation(getRule(),
-								1,
-								"The process "+proc+" has a Checkpoint activity placed after a REST webservice call or in a parallel flow to a REST webservice call.");
-						processSource.addViolation(violation);
+                                                reportIssueOnFile("The process "+proc+" has a Checkpoint activity placed after a REST webservice call or in a parallel flow to a REST webservice call.");
 						onlyOneViolation = false;
 					}
 				}else{
