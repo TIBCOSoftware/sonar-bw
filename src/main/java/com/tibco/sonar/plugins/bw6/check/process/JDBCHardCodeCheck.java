@@ -26,16 +26,10 @@ public class JDBCHardCodeCheck extends AbstractProcessCheck {
 			Activity activity = iterator.next();
 			if(activity.getType() != null && activity.getType().contains("bw.jdbc.")){
 				if(activity.isJdbcMaxRows()){
-					Violation violation = new DefaultViolation(getRule(),
-							1,
-							"The max rows setting in the JDBC activity "+activity.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
-					processSource.addViolation(violation);
+                                        reportIssueOnFile("The max rows setting in the JDBC activity "+activity.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
 				}
 				if(activity.isJdbcTimeout()){
-					Violation violation = new DefaultViolation(getRule(),
-							1,
-							"The timeout setting in the JDBC activity "+activity.getName()+" is assigned a harcoded value. It should be defined as Process property or Module property.");
-					processSource.addViolation(violation);
+                                        reportIssueOnFile("The timeout setting in the JDBC activity "+activity.getName()+" is assigned a harcoded value. It should be defined as Process property or Module property.");
 				}
 			}
 		}

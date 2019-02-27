@@ -26,10 +26,7 @@ public class ForEachMappingCheck extends AbstractProcessCheck {
 			Activity activity = iterator.next();
 			Node node = activity.getNode();
 			if(node.getAttributes().getNamedItem("expression") != null && node.getAttributes().getNamedItem("expression").getTextContent().contains("xsl:for-each")){
-				Violation violation = new DefaultViolation(getRule(),
-						1,
-						"For-Each is used in the Input mapping of activity "+activity.getName()+". For performance reasons it is recommended to use Copy-Of instead of For-Each in the Input mapping whenever possible. ");
-				processSource.addViolation(violation);
+                                reportIssueOnFile("For-Each is used in the Input mapping of activity "+activity.getName()+". For performance reasons it is recommended to use Copy-Of instead of For-Each in the Input mapping whenever possible. ");
 			}
 		}
 	}

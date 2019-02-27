@@ -33,8 +33,6 @@ public abstract class AbstractSource implements Source {
 		return this.code;
 	}
 	
-	public abstract boolean parseSource(Charset charset);
-
 //	@SuppressWarnings({ "rawtypes" })
 //	public abstract Resource create(Resource parent, String key);
 	

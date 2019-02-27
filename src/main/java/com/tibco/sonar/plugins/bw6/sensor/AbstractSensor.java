@@ -27,6 +27,7 @@ import org.sonar.api.batch.sensor.SensorContext;
 
 import org.sonar.api.batch.fs.InputModule;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
 
 
@@ -89,29 +90,30 @@ public abstract class AbstractSensor implements Sensor {
 
 	/**
 	 * Analyze the files.
+     * @param project
 	 */
 	public void analyse(InputModule project, SensorContext sensorContext) {
 		this.project = project;
 		this.sensorContext = sensorContext;
 		/*for (java.io.File file : fileSystem.files(FileQuery.onSource()
 				.onLanguage(languageKey))) {*/
-		for (File file : fileSystem.files(fileSystem.predicates().hasLanguage(languageKey))) {
+		for (InputFile file : fileSystem.inputFiles(fileSystem.predicates().hasLanguage(languageKey))) {
 			try {
 				analyseFile(file);
 			} catch (Exception e) {
-				LOGGER.error("Could not analyze the file " + file.getAbsolutePath(),
+				LOGGER.error("Could not analyze the file " + file.filename(),
 						e);
 			}
 		}
-		analyseDeadLock(fileSystem.files(fileSystem.predicates().hasLanguage(languageKey)));
+		analyseDeadLock(fileSystem.inputFiles(fileSystem.predicates().hasLanguage(languageKey)));
 //		processMetrics();
 	}
 
-	protected abstract void analyseDeadLock(Iterable<File> filesIterable);
+	protected abstract void analyseDeadLock(Iterable<InputFile> filesIterable);
 	
 //	protected abstract void processMetrics();
 	
-	protected abstract void analyseFile(java.io.File file);
+	protected abstract void analyseFile(InputFile file);
 
 	/**
 	 * This sensor only executes on projects with language files.

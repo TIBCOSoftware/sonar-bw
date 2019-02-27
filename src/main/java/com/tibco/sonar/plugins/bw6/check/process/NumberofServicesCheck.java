@@ -22,10 +22,7 @@ public class NumberofServicesCheck extends AbstractProcessCheck{
 		if(process.getServices() != null && process.getServices().size() >5){
 			String proc = process.getName();
 			proc = proc.substring(proc.lastIndexOf(".")+1).concat(".bwp");
-			Violation violation = new DefaultViolation(getRule(),
-					1,
-					"The process "+proc+" has too many services exposed, this reduces the process readablity and is not a good design pattern.");
-			processSource.addViolation(violation);
+                        reportIssueOnFile("The process "+proc+" has too many services exposed, this reduces the process readablity and is not a good design pattern.");
 		}
 	}
 

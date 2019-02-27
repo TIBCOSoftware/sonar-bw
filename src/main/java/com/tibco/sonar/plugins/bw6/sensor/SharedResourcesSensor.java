@@ -30,7 +30,7 @@ public class SharedResourcesSensor implements Sensor {
    
    Loggers.get(getClass()).info("Searching for BW6 Resources");
    for (InputFile file : files) {
-        Loggers.get(getClass()).info("Found File" + file.filename()); 
+        Loggers.get(getClass()).info("Found File: " + file.filename()); 
         String extension = file.filename().substring(file.filename().lastIndexOf("."));
         String resourceType = resourceExtensionMapper.get(extension);
         if (resourceType != null){

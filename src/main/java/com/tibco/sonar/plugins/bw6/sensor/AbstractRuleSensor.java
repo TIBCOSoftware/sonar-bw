@@ -21,26 +21,24 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.jfree.util.Log;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-//import org.sonar.api.checks.AnnotationCheckFactory;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
-//import org.sonar.api.issue.Issuable;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.batch.fs.InputModule;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.tibco.sonar.plugins.bw6.check.*;
 import com.tibco.sonar.plugins.bw6.check.process.*;
 import com.tibco.sonar.plugins.bw6.source.Source;
 import com.tibco.sonar.plugins.bw6.source.XmlSource;
-import com.tibco.sonar.plugins.bw6.violation.Violation;
+import java.io.IOException;
+import java.util.logging.Level;
+import org.sonarsource.analyzer.commons.xml.XmlFile;
 
 /**
  * XmlSensor provides analysis of xml files.
@@ -66,7 +64,7 @@ public abstract class AbstractRuleSensor extends AbstractSensor {
 		/*this.annotationCheckFactory = AnnotationCheckFactory.create(profile,
 				repositoryKey, list);*/
 		checks = checkFactory.create(repositoryKey);
-		List<Class> allChecks = new ArrayList<Class>();
+		List<Class> allChecks = new ArrayList<>();
 		allChecks.add(NoDescriptionCheck.class);
 		allChecks.add(NumberofActivitiesCheck.class);
 		allChecks.add(TransitionLabelCheck.class);
@@ -93,7 +91,7 @@ public abstract class AbstractRuleSensor extends AbstractSensor {
 	/**
 	 * Analyze the XML files.
 	 */
-	@SuppressWarnings("unchecked")
+        @Override
 	public void analyse(InputModule project, SensorContext sensorContext) {
 		this.abstractCheck = checks.all();
 		//this.abstractCheck = annotationCheckFactory.getChecks();
@@ -101,44 +99,30 @@ public abstract class AbstractRuleSensor extends AbstractSensor {
 		super.analyse(project, sensorContext);
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void analyseFile(java.io.File file) {
 
-		//File resource = File.fromIOFile(file, project);
-		InputFile resource = fs.inputFile(fs.predicates().is(file));
-		Source sourceCode = new XmlSource(file);
-		// Do not execute any XML rule when an XML file is corrupted
-		// (SONARXML-13)
-		if (sourceCode.parseSource(fileSystem.encoding())) {
-			for (AbstractCheck check : abstractCheck) {
-				/*check.setRule(annotationCheckFactory.getActiveRule(check)
-						.getRule());*/
-				RuleKey ruleKey = checks.ruleKey(check);
-				check.setRuleKey(ruleKey);
-				check.setRule(profile.getActiveRule(ruleKey.repository(), ruleKey.rule()).getRule());
-				check.setRuleKey(ruleKey);
-				sourceCode = check.validate(sourceCode);
-			}
-	//		saveIssues(sourceCode, resource);
-		}
+            try {
+                //File resource = File.fromIOFile(file, project);
+                InputFile resource = fs.inputFile(fs.predicates().is(file));
+                XmlFile xmlFile = XmlFile.create(resource);
+                Source sourceCode = new XmlSource(xmlFile);
+                // Do not execute any XML rule when an XML file is corrupted
+                // (SONARXML-13)
+                
+                for (AbstractCheck check : abstractCheck) {
+                    /*check.setRule(annotationCheckFactory.getActiveRule(check)
+                    .getRule());*/
+                    RuleKey ruleKey = checks.ruleKey(check);
+                    check.setRuleKey(ruleKey);
+                    check.setRule(profile.getActiveRule(ruleKey.repository(), ruleKey.rule()).getRule());
+                    check.setRuleKey(ruleKey);
+                    check.validate(sourceCode);
+                }
+            } catch (IOException ex) {
+                java.util.logging.Logger.getLogger(AbstractRuleSensor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                }
+            
 	}
 
-	@SuppressWarnings("rawtypes")
-	@VisibleForTesting
-	protected void saveIssues(Source source, InputFile resource) {
-/**		for (Violation issue : source.getViolations()) {
-					Issuable issuable = resourcePerspectives.as(Issuable.class,
-					resource);
-			int lineNumber = 1; 
-			if(issue.getLine() != 0)
-				lineNumber = issue.getLine();
 
-			issuable.addIssue(issuable.newIssueBuilder()
-					.ruleKey(issue.getRule().ruleKey()).line(lineNumber)
-					.message(issue.getMessage()).build());
-		}**/
-	    LOG.warn("SAVE ISSUES CODE MISSING FROM THIS PLUGIN - NEEDS FIXING"); 
-	}
-
-//	protected abstract void processMetrics();
-}

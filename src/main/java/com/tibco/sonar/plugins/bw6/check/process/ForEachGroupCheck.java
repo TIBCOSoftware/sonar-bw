@@ -21,11 +21,8 @@ public class ForEachGroupCheck extends AbstractProcessCheck{
 		Process process = processSource.getProcessModel();
 		if(process.isHasForEachGroup()){
 			String proc = process.getName();
-			proc = proc.substring(proc.lastIndexOf(".")+1).concat(".bwp");
-			Violation violation = new DefaultViolation(getRule(),
-					1,
-					"For-Each group is used in process "+proc+". For performance reasons it is recommended to use For-Each in activity input mapping instead of using For-Each Group whenever possible. ");
-			processSource.addViolation(violation);
+			proc = proc.substring(proc.lastIndexOf(".")+1).concat(".bwp");			
+                        reportIssueOnFile("For-Each group is used in process "+proc+". For performance reasons it is recommended to use For-Each in activity input mapping instead of using For-Each Group whenever possible. ");
 		}
 	}
 }

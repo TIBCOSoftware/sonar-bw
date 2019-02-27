@@ -28,10 +28,7 @@ public class LogOnlyInSubprocessCheck extends AbstractProcessCheck{
 				if(activity.getType() !=null && activity.getType().equals("bw.generalactivities.log")){
 					String proc = processSource.getProcessModel().getName();
 					proc = proc.substring(proc.lastIndexOf(".")+1).concat(".bwp");
-					Violation violation = new DefaultViolation(getRule(),
-							1,
-							"The Log activity ["+activity.getName()+"] should be preferrably used in a sub process.  "+proc+" is not a subprocess.");
-					processSource.addViolation(violation);
+                                        reportIssueOnFile("The Log activity ["+activity.getName()+"] should be preferrably used in a sub process.  "+proc+" is not a subprocess.");
 				}
 				
 			}

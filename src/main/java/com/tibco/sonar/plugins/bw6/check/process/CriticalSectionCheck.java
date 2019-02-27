@@ -81,8 +81,7 @@ public class CriticalSectionCheck
       else if (process.getEventSourceByName(from) == null && process.getGroupByName(from) != null && process.getGroupByName(from).getType().equals("critical")) {
           String proc = process.getName();
           proc = proc.substring(proc.lastIndexOf(".") + 1).concat(".bwp");
-          final Violation violation = new DefaultViolation(this.getRule(), 1, "The activity " + activity1.getName() + " in process " + proc + " should not be used within Critical Section group.");
-          processSource.addViolation(violation);
+          reportIssueOnFile("The activity " + activity1.getName() + " in process " + proc + " should not be used within Critical Section group.");
       }
   }
 }

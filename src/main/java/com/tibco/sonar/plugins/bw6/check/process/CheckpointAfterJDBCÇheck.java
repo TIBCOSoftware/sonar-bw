@@ -11,6 +11,7 @@ import org.w3c.dom.NodeList;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.ProcessSonarWayProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.sonar.plugins.bw6.source.Source;
 import com.tibco.sonar.plugins.bw6.violation.DefaultViolation;
 import com.tibco.sonar.plugins.bw6.violation.Violation;
 import com.tibco.utils.bw.model.Activity;
@@ -60,10 +61,7 @@ public class CheckpointAfterJDBCÇheck extends AbstractProcessCheck {
 					if(onlyOneViolation){
 						String proc = process.getName();
 						proc = proc.substring(proc.lastIndexOf(".")+1).concat(".bwp");
-						Violation violation = new DefaultViolation(getRule(),
-								1,
-								"The process "+proc+" has a Checkpoint activity placed after a JDBC Query activity.");
-						processSource.addViolation(violation);
+                                                reportIssueOnFile("The process "+proc+" has a Checkpoint activity placed after a JDBC Query activity.");
 						onlyOneViolation = false;
 					}
 				}else{
@@ -80,4 +78,6 @@ public class CheckpointAfterJDBCÇheck extends AbstractProcessCheck {
 			}
 		}
 	}
+
+    
 }

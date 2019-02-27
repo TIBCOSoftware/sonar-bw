@@ -62,52 +62,28 @@ public class JMSHardCodeCheck extends AbstractProcessCheck {
 				for (int k = 0; k < propertiesNodes.getLength(); k++) {
 					if(propertiesNodes.item(k) != null && propertiesNodes.item(k).getNodeName().equals("value")){
 						if(propertiesNodes.item(k).getAttributes().getNamedItem("destinationName") != null){
-							Violation violation = new DefaultViolation(getRule(),
-									1,
-									"The Destination Name setting in the JMS activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
-							processSource.addViolation(violation);
+                                                        reportIssueOnFile("The Destination Name setting in the JMS activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
 						}
 						if(propertiesNodes.item(k).getAttributes().getNamedItem("replyToDestination") != null ||  propertiesNodes.item(k).getAttributes().getNamedItem("nullreplyToQueue") != null){
-							Violation violation = new DefaultViolation(getRule(),
-									1,
-									"The Reply to Destination setting in the JMS activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
-							processSource.addViolation(violation);
+							reportIssueOnFile("The Reply to Destination setting in the JMS activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
 						}
 						if(propertiesNodes.item(k).getAttributes().getNamedItem("maxSessions") != null){
-							Violation violation = new DefaultViolation(getRule(),
-									1,
-									"The Max Sessions setting in the JMS activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
-							processSource.addViolation(violation);
+                                                        reportIssueOnFile("The Max Sessions setting in the JMS activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
 						}
 						if(propertiesNodes.item(k).getAttributes().getNamedItem("messageSelector") != null){
-							Violation violation = new DefaultViolation(getRule(),
-									1,
-									"The Message Selector setting in the JMS activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
-							processSource.addViolation(violation);
+                                                        reportIssueOnFile("The Message Selector setting in the JMS activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
 						}
 						if(propertiesNodes.item(k).getAttributes().getNamedItem("receiveTimeout") != null){
-							Violation violation = new DefaultViolation(getRule(),
-									1,
-									"The Polling Interval setting in the JMS activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
-							processSource.addViolation(violation);
+                                                        reportIssueOnFile("The Polling Interval setting in the JMS activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
 						}
 						if(propertiesNodes.item(k).getAttributes().getNamedItem("destinationName") != null){
-							Violation violation = new DefaultViolation(getRule(),
-									1,
-									"The Destination Name setting in the JMS Event Source activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
-							processSource.addViolation(violation);
+                                                        reportIssueOnFile("The Destination Name setting in the JMS Event Source activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
 						}
 						if(propertiesNodes.item(k).getAttributes().getNamedItem("messageSelector") != null){
-							Violation violation = new DefaultViolation(getRule(),
-									1,
-									"The Message Selector setting in the JMS Event Source activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
-							processSource.addViolation(violation);
+                                                        reportIssueOnFile("The Message Selector setting in the JMS Event Source activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
 						}
 						if(propertiesNodes.item(k).getAttributes().getNamedItem("receiveTimeout") != null){
-							Violation violation = new DefaultViolation(getRule(),
-									1,
-									"The Polling Interval setting in the JMS Event Source activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
-							processSource.addViolation(violation);
+                                                        reportIssueOnFile("The Polling Interval setting in the JMS Event Source activity "+processNode.getName()+" is assigned a hardcoded value. It should be defined as Process property or Module property.");
 						}
 					}
 				}

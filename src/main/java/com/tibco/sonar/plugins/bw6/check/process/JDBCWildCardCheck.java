@@ -26,10 +26,7 @@ public class JDBCWildCardCheck extends AbstractProcessCheck{
 			Activity activity = iterator.next();
 			String sqlStatement = activity.getSqlStatement();
 			if(sqlStatement != null && sqlStatement.contains("*")){
-				Violation violation = new DefaultViolation(getRule(),
-						1,
-						"WildCards should not be used in a JDBC Query. Use correct colomn names in JDBC query for activity "+activity.getName()+" from process "+processSource.getProcessModel().getName());
-				processSource.addViolation(violation);
+                                reportIssueOnFile("WildCards should not be used in a JDBC Query. Use correct colomn names in JDBC query for activity "+activity.getName()+" from process "+processSource.getProcessModel().getName());
 			}
 		}
 		

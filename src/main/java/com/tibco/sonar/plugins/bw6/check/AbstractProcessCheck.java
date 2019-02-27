@@ -30,10 +30,9 @@ public abstract class AbstractProcessCheck extends AbstractCheck{
 	protected abstract void validate(ProcessSource processSource);
 
 	@Override
-	public <S extends Source> S validate(S source) {
+	public <S extends Source> void validate(S source) {
 		if(source instanceof ProcessSource){
 			validate((ProcessSource)source);
 		}
-		return source;
 	}
 }
