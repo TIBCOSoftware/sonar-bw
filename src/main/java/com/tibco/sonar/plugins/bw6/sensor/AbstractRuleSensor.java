@@ -85,6 +85,7 @@ public abstract class AbstractRuleSensor extends AbstractSensor {
 		allChecks.add(JMSAcknowledgementModeCheck.class);
 		allChecks.add(CriticalSectionCheck.class);
 		allChecks.add(SubProcessInlineCheck.class);
+		allChecks.add(ExceptionHandlingCheck.class);
 		checks.addAnnotatedChecks(allChecks);
 	}
 

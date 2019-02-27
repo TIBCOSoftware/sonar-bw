@@ -1,0 +1,35 @@
+image: docker:latest
+services:
+  - docker:dind
+
+variables:
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+cache:
+  paths:
+    - .m2/repository/
+    - target/
+
+stages:
+  - build
+  - package
+  - test
+  - deploy
+
+maven-build:
+  stage: build
+  image: maven:3-jdk-8
+  script:
+   - mvn $MAVEN_CLI_OPTS -DskipTests clean initialize package install deploy
+  artifacts:
+    name: "sonar-businessworks6-plugin-$CI_BUILD_ID-$CI_BUILD_REF"
+    expire_in: 1 day
+    paths:
+     - .
+  
+run-code-quality-check:
+  stage: test
+  image: maven:3-jdk-8
+  script:
+    - mvn -s .m2/settings.xml sonar:sonar 

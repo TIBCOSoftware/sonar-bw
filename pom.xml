@@ -29,22 +29,22 @@
         </repository>
     </distributionManagement>
   
-    <dependencies>
-        <dependency>
-            <groupId>org.sonarsource.sonarqube</groupId>
-            <artifactId>sonar-plugin-api</artifactId>
-            <!-- minimal version of SonarQube to support. Note that the groupId was "org.codehaus.sonar" before version 5.2 -->
-            <version>7.6</version>
-            <scope>provided</scope>
-            <!-- mandatory scope -->
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
-            <type>jar</type>
-        </dependency>
+  <dependencies>
+    <dependency>
+      <groupId>org.sonarsource.sonarqube</groupId>
+      <artifactId>sonar-plugin-api</artifactId>
+      <!-- minimal version of SonarQube to support. Note that the groupId was "org.codehaus.sonar" before version 5.2 -->
+      <version>7.4</version>
+      <scope>provided</scope>
+      <!-- mandatory scope -->
+	  <exclusions>
+		  <exclusion>
+	          <groupId>com.google.guava</groupId>
+	          <artifactId>guava</artifactId>
+	      </exclusion>
+	  </exclusions>
+      <type>jar</type>
+    </dependency>
 
         <dependency>
             <groupId>org.sonarsource.analyzer-commons</groupId>
