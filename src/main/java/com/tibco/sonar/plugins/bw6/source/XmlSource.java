@@ -90,6 +90,14 @@ public class XmlSource extends AbstractSource {
 		this.xmlFile = xmlFile;
 	}
 	
+        /**
+	 * @param xmlFile
+	 */
+	public XmlSource(InputStream stream) {
+		super();
+		this.xmlFile = new XmlFile(stream);
+	}
+        
 	/**
 	 * @param code
 	 */
@@ -105,15 +113,7 @@ public class XmlSource extends AbstractSource {
 	 * @return created {@link InputStream}
 	 */
 	public InputStream createInputStream() {
-		if (xmlFile.getIOFile() != null) {
-			try {
-				return FileUtils.openInputStream(xmlFile.getIOFile());
-			} catch (IOException e) {
-				throw new  SonarException(e);
-			}
-		} else {
-			return new ByteArrayInputStream(code.getBytes());
-		}
+            return xmlFile.getSteams();
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class XmlSource extends AbstractSource {
 	 */
 	private Document parseFile(boolean namespaceAware) {
 		//return new SaxParser().parseDocument(createInputStream(), namespaceAware);
-		return new SaxParser().parseDocument(xmlFile.getIOFile(), namespaceAware);
+		return new SaxParser().parseDocument(xmlFile.getSteams(), namespaceAware);
 	}
 
 	/**
