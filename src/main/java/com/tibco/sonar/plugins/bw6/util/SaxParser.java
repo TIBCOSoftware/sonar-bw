@@ -221,7 +221,7 @@ public final class SaxParser extends AbstractParser {
     parser.parse(input, handler);
   }*/
 
-	private void parse(File input, DefaultHandler handler, boolean namespaceAware) throws IOException, SAXException {
+	private void parse(InputStream input, DefaultHandler handler, boolean namespaceAware) throws IOException, SAXException {
 		SAXParser parser = newSaxParser(namespaceAware);
 		// read comments too, so use lexical handler.
 		parser.getXMLReader().setProperty("http://xml.org/sax/properties/lexical-handler", handler);
@@ -246,7 +246,7 @@ public final class SaxParser extends AbstractParser {
     }
   }*/
 
-	public Document parseDocument(File input, boolean namespaceAware) {
+	public Document parseDocument(InputStream input, boolean namespaceAware) {
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document document = builder.parse(input);
