@@ -7,8 +7,6 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.ProcessSonarWayProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import com.tibco.sonar.plugins.bw6.violation.DefaultViolation;
-import com.tibco.sonar.plugins.bw6.violation.Violation;
 import com.tibco.utils.bw.model.Process;
 
 @Rule(key = NumberofServicesCheck.RULE_KEY, name="Number of Exposed Services Check", priority = Priority.MAJOR, description = "This rule checks the number of exposed services within a process. It is a good design practice to construct not more than 5 services in the same process.")

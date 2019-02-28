@@ -10,8 +10,6 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.ProcessSonarWayProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import com.tibco.sonar.plugins.bw6.violation.DefaultViolation;
-import com.tibco.sonar.plugins.bw6.violation.Violation;
 import com.tibco.utils.bw.model.Activity;
 import com.tibco.utils.bw.model.EventSource;
 import com.tibco.utils.bw.model.ProcessNode;

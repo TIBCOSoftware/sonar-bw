@@ -18,7 +18,6 @@
 package com.tibco.sonar.plugins.bw6.sensor;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,12 +31,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.fs.InputComponent;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.measures.Metric;
 import org.sonar.api.batch.fs.InputModule;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.Logger;
@@ -183,7 +180,8 @@ public class ProcessRuleSensor implements Sensor {
         LOG.debug("checkSubprocess - START");
         if(process != null){
             LOG.debug("Checking if process is a subprocess: "+process.getName());
-            File file = new File(System.getProperty("sonar.sources") + "/META-INF/module.bwm");
+            File file = new File("META-INF/module.bwm");
+            LOG.debug("File location: "+file.getAbsolutePath());
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder;
             NodeList propertyList = null;
@@ -370,7 +368,7 @@ public class ProcessRuleSensor implements Sensor {
 
     public int getModulePropertiesCount() {
         LOG.debug("getModulePropertiesCount - START");
-        File dir = new File(System.getProperty("sonar.sources") + "/META-INF");
+        File dir = new File("META-INF");
         File[] files = dir.listFiles((File dir1, String filename) -> filename.endsWith(".bwm"));
         ModuleProperties moduleprops = new ModuleProperties(files[0]);
         LOG.debug("getModulePropertiesCount - END");

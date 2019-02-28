@@ -20,8 +20,8 @@ package com.tibco.sonar.plugins.bw6.colorizer;
 import org.sonar.api.web.CodeColorizerFormat;
 import org.sonar.colorizer.Tokenizer;
 
-import com.google.common.collect.ImmutableList;
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
+import java.util.ArrayList;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class BusinessWorksProcessColorizerFormat extends CodeColorizerFormat {
 
 	@Override
 	public List<Tokenizer> getTokenizers() {
-		ImmutableList.Builder<Tokenizer> builder = ImmutableList.builder();
+		List<Tokenizer>  builder = new ArrayList<>();
 
 		//builder.addAll(XmlColorizer.createTokenizers());
 		/*builder.add(new CDataDocTokenizer(span("k"), END_TAG));
@@ -45,7 +45,7 @@ public class BusinessWorksProcessColorizerFormat extends CodeColorizerFormat {
 		builder.add(new MultilinesDocTokenizer("</", ">", span("k"), END_TAG));
 		builder.add(new CustomXmlStartElementTokenizer(span("k"), END_TAG, span("c"),
 				END_TAG, span("s"), END_TAG));*/
-		return builder.build();
+		return builder;
 	}
 	
 	private static String span(String clazz) {

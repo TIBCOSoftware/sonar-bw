@@ -1,14 +1,12 @@
 package com.tibco.sonar.plugins.bw6.check.process;
 
-import com.google.common.collect.ImmutableList;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import com.tibco.sonar.plugins.bw6.violation.DefaultViolation;
-import com.tibco.sonar.plugins.bw6.violation.Violation;
 import com.tibco.utils.bw.model.Activity;
 import com.tibco.utils.bw.model.Group;
 import com.tibco.utils.bw.model.Process;
 import com.tibco.utils.bw.model.Transition;
+import java.util.Arrays;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +21,7 @@ public class CriticalSectionCheck
   extends AbstractProcessCheck
 {
   public static final String RULE_KEY = "CriticalSection";
-  public static final ImmutableList<String> CONSTANTS = ImmutableList.of("bw.http.waitForHTTPRequest", "bw.file.wait", "bw.generalactivities.sleep", "bw.jms.signalin", "bw.rv.waitforRVMessage", "bw.tcp.waitfortcp", "bw.http.sendHTTPRequest", "bw.ftl.requestreply", "bw.jms.requestreply", "bw.rv.sendRVRequest");
+  public static final List<String> CONSTANTS = Arrays.asList(new String[]{"bw.http.waitForHTTPRequest", "bw.file.wait", "bw.generalactivities.sleep", "bw.jms.signalin", "bw.rv.waitforRVMessage", "bw.tcp.waitfortcp", "bw.http.sendHTTPRequest", "bw.ftl.requestreply", "bw.jms.requestreply", "bw.rv.sendRVRequest"});
   
   
   protected void validate(ProcessSource processSource)

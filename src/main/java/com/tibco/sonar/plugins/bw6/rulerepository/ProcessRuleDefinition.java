@@ -6,7 +6,6 @@ import java.util.List;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinitionAnnotationLoader;
 
-import com.google.common.collect.ImmutableList;
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
 
 public final class ProcessRuleDefinition implements RulesDefinition{
@@ -18,7 +17,7 @@ public final class ProcessRuleDefinition implements RulesDefinition{
   
 	public static final String REPOSITORY_KEY = BWProcessLanguage.KEY + "-" + KEY;
 	protected static final String REPOSITORY_NAME = BWProcessLanguage.KEY + "-" + NAME;
-	protected static final List<String> LANGUAGE_KEYS = ImmutableList.of(BWProcessLanguage.KEY);
+	protected static final List<String> LANGUAGE_KEYS = Arrays.asList(new String[]{BWProcessLanguage.KEY});
 	
 	public static List<Class> checkRules;
 	public static Class check[] = {	
@@ -53,11 +52,6 @@ public final class ProcessRuleDefinition implements RulesDefinition{
 	}
 	private void defineRulesForLanguage(Context context, String repositoryKey, String repositoryName, String languageKey) {
 		NewRepository repository = context.createRepository(repositoryKey, languageKey).setName(repositoryName);
-		/*InputStream rulesXml = this.getClass().getResourceAsStream(rulesDefinitionFilePath());
-		if (rulesXml != null) {
-			RulesDefinitionXmlLoader rulesLoader = new RulesDefinitionXmlLoader();
-			rulesLoader.load(repository, rulesXml, Charsets.UTF_8.name());
-		}*/
 		RulesDefinitionAnnotationLoader annotationLoader = new RulesDefinitionAnnotationLoader();
 		annotationLoader.load(repository, getChecks());
 		repository.done();
@@ -74,8 +68,6 @@ public final class ProcessRuleDefinition implements RulesDefinition{
 
 	public void define(Context context) {
 		for (String languageKey : LANGUAGE_KEYS) {
-			/*defineRulesForLanguage(context, ProcessRuleDefinition.getRepositoryKeyForLanguage(languageKey), ProcessRuleDefinition.getRepositoryNameForLanguage(languageKey),
-					languageKey);*/
 			defineRulesForLanguage(context, ProcessRuleDefinition.REPOSITORY_KEY, ProcessRuleDefinition.REPOSITORY_NAME,
 					languageKey);
 		}
