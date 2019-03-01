@@ -17,7 +17,6 @@
  */
 package com.tibco.sonar.plugins.bw6.check;
 
-import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.rules.Rule;
 
@@ -27,7 +26,6 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
-import org.sonarsource.analyzer.commons.xml.XmlFile;
 
 /**
  * Abtract superclass for checks.
@@ -40,6 +38,8 @@ public abstract class AbstractCheck {
     protected RuleKey ruleKey;
     private SensorContext context;
     private InputFile inputFile;
+        
+    public abstract String getRuleKeyName();
 
     public RuleKey getRuleKey() {
         return ruleKey;
@@ -59,11 +59,11 @@ public abstract class AbstractCheck {
 
     public final  <S extends Source> void  scanFile(SensorContext context, RuleKey ruleKey, S file) {
         this.context = context;
-        this.inputFile = (InputFile) file.getFile().getInputFile();
+        this.inputFile = file.getFile().getInputFile();
         this.ruleKey = ruleKey;
         validate(file);
   }
-    
+   
     public abstract <S extends Source> void validate(S source);
 
     public final void reportIssueOnFile(String message, List<Integer> secondaryLocationLines) {
@@ -73,12 +73,11 @@ public abstract class AbstractCheck {
                 .on(inputFile)
                 .message(message);
 
-        for (Integer line : secondaryLocationLines) {
-            NewIssueLocation secondary = issue.newLocation()
-                    .on(inputFile)
-                    .at(inputFile.selectLine(line));
-            issue.addLocation(secondary);
-        }
+        secondaryLocationLines.stream().map((line) -> issue.newLocation()
+                .on(inputFile)
+                .at(inputFile.selectLine(line))).forEachOrdered((secondary) -> {
+                    issue.addLocation(secondary);
+        });
 
         issue
                 .at(location)

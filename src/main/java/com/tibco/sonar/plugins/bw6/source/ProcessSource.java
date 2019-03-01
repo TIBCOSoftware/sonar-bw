@@ -1,12 +1,8 @@
 package com.tibco.sonar.plugins.bw6.source;
 
 
-import com.tibco.sonar.plugins.bw6.util.SaxParser;
-import com.tibco.sonar.plugins.bw6.violation.Violation;
 import com.tibco.utils.bw.model.Process;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.sonar.api.batch.fs.InputFile;
@@ -40,20 +36,6 @@ public class ProcessSource extends AbstractSource {
 
     public Process getProcessModel() {
         return process;
-    }
-
-    /**
-     * @return the process
-     */
-    public Process getProcess() {
-        return process;
-    }
-
-    /**
-     * @param process the process to set
-     */
-    public void setProcess(Process process) {
-        this.process = process;
     }
 
     /**

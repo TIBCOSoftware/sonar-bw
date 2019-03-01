@@ -21,9 +21,10 @@ public class CriticalSectionCheck
   extends AbstractProcessCheck
 {
   public static final String RULE_KEY = "CriticalSection";
-  public static final List<String> CONSTANTS = Arrays.asList(new String[]{"bw.http.waitForHTTPRequest", "bw.file.wait", "bw.generalactivities.sleep", "bw.jms.signalin", "bw.rv.waitforRVMessage", "bw.tcp.waitfortcp", "bw.http.sendHTTPRequest", "bw.ftl.requestreply", "bw.jms.requestreply", "bw.rv.sendRVRequest"});
+  protected static final List<String> CONSTANTS = Arrays.asList(new String[]{"bw.http.waitForHTTPRequest", "bw.file.wait", "bw.generalactivities.sleep", "bw.jms.signalin", "bw.rv.waitforRVMessage", "bw.tcp.waitfortcp", "bw.http.sendHTTPRequest", "bw.ftl.requestreply", "bw.jms.requestreply", "bw.rv.sendRVRequest"});
   
   
+  @Override
   protected void validate(ProcessSource processSource)
   {
 	  final Process process = processSource.getProcessModel();
@@ -35,28 +36,26 @@ public class CriticalSectionCheck
           }
       }
       if (groups.size() > 0 && runvalidationflag) {
-          for (final Activity activity : process.getActivities()) {
-              if (activity.getType() != null && CriticalSectionCheck.CONSTANTS.contains((Object)activity.getType())) {
-                  final NodeList nodes = activity.getNode().getChildNodes();
-                  for (int i = 0; i < nodes.getLength(); ++i) {
-                      if (nodes.item(i).getNodeName().equals("bpws:targets")) {
-                          final NodeList transitions_To = nodes.item(i).getChildNodes();
-                          for (int j = 0; j < transitions_To.getLength(); ++j) {
-                              if (transitions_To.item(j).getNodeName().equals("bpws:target")) {
-                                  String transitionName = transitions_To.item(j).getAttributes().getNamedItem("linkName").getTextContent();
-                                  if (process.getTransitions().get(transitionName) == null) {
-                                      final Map<String, String> groupMapping = (Map<String, String>)process.getSynonymsGroupMapping();
-                                      transitionName = groupMapping.get(transitionName);
-                                  }
-                                  final Transition transition = process.getTransitions().get(transitionName);
-                                  final String from = transition.getFrom();
-                                  this.findViolation(from, process, processSource, activity);
+          process.getActivities().stream().filter((activity) -> (activity.getType() != null && CriticalSectionCheck.CONSTANTS.contains(activity.getType()))).forEachOrdered((Activity activity) -> {
+              final NodeList nodes = activity.getNode().getChildNodes();
+              for (int i = 0; i < nodes.getLength(); ++i) {
+                  if (nodes.item(i).getNodeName().equals("bpws:targets")) {
+                      final NodeList transitions_To = nodes.item(i).getChildNodes();
+                      for (int j = 0; j < transitions_To.getLength(); ++j) {
+                          if (transitions_To.item(j).getNodeName().equals("bpws:target")) {
+                              String transitionName = transitions_To.item(j).getAttributes().getNamedItem("linkName").getTextContent();
+                              if (process.getTransitions().get(transitionName) == null) {
+                                  final Map<String, String> groupMapping = (Map<String, String>)process.getSynonymsGroupMapping();
+                                  transitionName = groupMapping.get(transitionName);
                               }
+                              final Transition transition = process.getTransitions().get(transitionName);
+                              final String from = transition.getFrom();
+                              this.findViolation(from, process, processSource, activity);
                           }
                       }
                   }
               }
-          }
+              });
       }
   }
   
@@ -66,20 +65,23 @@ public class CriticalSectionCheck
           final String activityType = activity2.getType();
           if (activityType != null) {
               final Map<String, Transition> transition123 = (Map<String, Transition>)process.getTransitions();
-              for (final String key : transition123.keySet()) {
+              transition123.keySet().forEach((key) -> {
                   final int index = key.indexOf("To");
                   final String toActivity = key.substring(index + 2);
                   if (toActivity.equals(activity2.getName())) {
                       final String fromActivity = key.substring(0, index);
                       this.findViolation(fromActivity, process, processSource, activity1);
                   }
-              }
+              });
           }
       }
       else if (process.getEventSourceByName(from) == null && process.getGroupByName(from) != null && process.getGroupByName(from).getType().equals("critical")) {
-          String proc = process.getName();
-          proc = proc.substring(proc.lastIndexOf(".") + 1).concat(".bwp");
-          reportIssueOnFile("The activity " + activity1.getName() + " in process " + proc + " should not be used within Critical Section group.");
+          reportIssueOnFile("The activity " + activity1.getName() + " in process " + process.getBasename() + " should not be used within Critical Section group.");
       }
   }
+  
+  @Override
+    public String getRuleKeyName() {
+        return RULE_KEY;
+    }
 }

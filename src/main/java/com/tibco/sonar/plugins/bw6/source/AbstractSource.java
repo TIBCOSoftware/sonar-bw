@@ -1,6 +1,5 @@
 package com.tibco.sonar.plugins.bw6.source;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 

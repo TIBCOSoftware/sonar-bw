@@ -11,12 +11,13 @@ import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 
 @Rule(key="SubProcessInlineCheck", name="Data Availability to Inline SubProcess Check", priority=Priority.INFO, description="This rule checks if there is large set of data being passed everytime to Inline SubProcess. Use of Job Shared Variable is recommended in this scenario to increase performance.")
-@BelongsToProfile(title="Sonar way", priority=Priority.INFO)
+@BelongsToProfile(title="Sonar way", priority=Priority.INFO )
 public class SubProcessInlineCheck
   extends AbstractProcessCheck
 {
   public static final String RULE_KEY = "SubProcessInlineCheck";
   
+  @Override
   protected void validate(ProcessSource processSource)
   {
     Process process = processSource.getProcessModel();
@@ -32,4 +33,9 @@ public class SubProcessInlineCheck
       }
     }
   }
+  
+  @Override
+    public String getRuleKeyName() {
+        return RULE_KEY;
+    }
 }

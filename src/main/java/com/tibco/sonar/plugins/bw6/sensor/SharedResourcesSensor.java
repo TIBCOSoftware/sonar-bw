@@ -18,8 +18,8 @@ public class SharedResourcesSensor implements Sensor {
     descriptor.name("Compute size of Shared Resources");
   }
 
-  public static Map<String, Integer> foundResources = new HashMap<String, Integer>(); 
-  public static Map<String, String> resourceExtensionMapper = new HashMap<String,String>();
+  protected static Map<String, Integer> foundResources = new HashMap<String, Integer>(); 
+  protected static Map<String, String> resourceExtensionMapper = new HashMap<String,String>();
   private static final Logger LOG = Loggers.get(SharedResourcesSensor.class);
 
   @Override

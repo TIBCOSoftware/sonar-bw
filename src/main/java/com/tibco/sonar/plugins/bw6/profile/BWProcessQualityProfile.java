@@ -1,27 +1,28 @@
 package com.tibco.sonar.plugins.bw6.profile;
 
+import com.tibco.sonar.plugins.bw6.check.AbstractCheck;
 import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
-
-//import static org.sonarsource.plugins.example.rules.FooLintRulesDefinition.REPO_KEY;
+import com.tibco.sonar.plugins.bw6.rulerepository.ProcessRuleDefinition;
 import static com.tibco.sonar.plugins.bw6.rulerepository.ProcessRuleDefinition.REPOSITORY_KEY; 
+import java.util.List;
 /**
  * Default, BuiltIn Quality Profile for the projects having files of the language "BW"
  */
 public final class BWProcessQualityProfile implements BuiltInQualityProfilesDefinition {
 
+   public static final String PROFILE_NAME = "BW6 Quality Profile";
+    
    @Override
     public void define(Context context) {
-      NewBuiltInQualityProfile profile = context.createBuiltInQualityProfile("BW6 Quality Profile", BWProcessLanguage.KEY);
+      NewBuiltInQualityProfile profile = context.createBuiltInQualityProfile(PROFILE_NAME, BWProcessLanguage.KEY);
       profile.setDefault(true);
-  
-      NewBuiltInActiveRule rule1 = profile.activateRule(REPOSITORY_KEY, "CheckpointProcessHTTP");
-      rule1.overrideSeverity("BLOCKER");
-      NewBuiltInActiveRule rule2 = profile.activateRule(REPOSITORY_KEY, "CheckpointProcessJDBC");
-      rule2.overrideSeverity("MAJOR");
-      NewBuiltInActiveRule rule3 = profile.activateRule(REPOSITORY_KEY, "CheckpointProcessREST");
-      rule3.overrideSeverity("CRITICAL");
-  
+      
+       List<AbstractCheck> checks = ProcessRuleDefinition.getCheckList();
+       for(AbstractCheck check : checks){
+           profile.activateRule(REPOSITORY_KEY, check.getRuleKeyName());
+           
+       }
       profile.done();
     }
 

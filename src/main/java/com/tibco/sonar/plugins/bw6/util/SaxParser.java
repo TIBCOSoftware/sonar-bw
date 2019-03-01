@@ -28,14 +28,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.tibco.sonar.plugins.bw6.sensor.AbstractMetricSensor;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -214,12 +211,7 @@ public final class SaxParser extends AbstractParser {
 		return lineNumber == null ? 0 : lineNumber;
 	}
 
-	/* private void parse(InputStream input, DefaultHandler handler, boolean namespaceAware) throws IOException, SAXException {
-    SAXParser parser = newSaxParser(namespaceAware);
-    // read comments too, so use lexical handler.
-    parser.getXMLReader().setProperty("http://xml.org/sax/properties/lexical-handler", handler);
-    parser.parse(input, handler);
-  }*/
+
 
 	private void parse(InputStream input, DefaultHandler handler, boolean namespaceAware) throws IOException, SAXException {
 		SAXParser parser = newSaxParser(namespaceAware);
@@ -227,24 +219,6 @@ public final class SaxParser extends AbstractParser {
 		parser.getXMLReader().setProperty("http://xml.org/sax/properties/lexical-handler", handler);
 		parser.parse(input, handler);
 	}
-
-	
-	/*public Document parseDocument(InputStream input, boolean namespaceAware) {
-    try {
-     // Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-      //LocationRecordingHandler handler = new LocationRecordingHandler(document);
-      //parse(input, handler, namespaceAware);
-    	DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-    	Document document = builder.parse(input);
-    	LocationRecordingHandler handler = new LocationRecordingHandler(document);
-        parse(input, handler, namespaceAware);
-      return document;
-    } catch (Exception e) {
-      LOG.warn("Unable to analyse input stream");
-      LOG.warn("Cause: {}", e.toString());
-      return null;
-    }
-  }*/
 
 	public Document parseDocument(InputStream input, boolean namespaceAware) {
 		try {

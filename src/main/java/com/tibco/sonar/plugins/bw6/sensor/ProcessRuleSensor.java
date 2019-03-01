@@ -82,8 +82,8 @@ import org.sonar.api.batch.sensor.issue.NewIssueLocation;
  */
 public class ProcessRuleSensor implements Sensor {
 
-    private final Logger LOG = Loggers.get(ProcessRuleSensor.class);
-    private Map<String, Process> servicetoprocess = new HashMap<String, Process>();
+    private final static Logger LOG = Loggers.get(ProcessRuleSensor.class);
+    private Map<String, Process> servicetoprocess = new HashMap<>();
     protected List<Process> processList = new ArrayList<>();
     private String processname = null;
     protected FileSystem fileSystem;
@@ -93,6 +93,7 @@ public class ProcessRuleSensor implements Sensor {
     protected CheckFactory checkFactory;
     private final FilePredicate mainFilesPredicate;
     private final Checks<Object> checkReturned;
+    protected static final Map<String, Integer> foundResources = new HashMap<>();
 
     public ProcessRuleSensor(FileSystem fileSystem,
             CheckFactory checkFactory) {
@@ -213,7 +214,7 @@ public class ProcessRuleSensor implements Sensor {
 
     }
 
-    protected void analyseDeadLock(Iterable<InputFile> filesIterable) {
+    protected void analyseDeadLock() {
         LOG.debug("analyseDeadLock - START");
         for (Iterator<Process> iterator = processList.iterator(); iterator.hasNext();) {
             Process process = iterator.next();
@@ -326,9 +327,7 @@ public class ProcessRuleSensor implements Sensor {
     public void execute(SensorContext context) {
         LOG.debug("execute - START");
         this.sensorContext = context;
-
         LOG.info("Starting ProcessRuleSensor");
-        //createResourceExtensionMapper(resourceExtensionMapper);
         List<InputFile> inputFiles = new ArrayList<>();
         fileSystem.inputFiles(mainFilesPredicate).forEach(inputFiles::add);
 
@@ -337,14 +336,12 @@ public class ProcessRuleSensor implements Sensor {
         }
 
         LOG.info("Searching for BW6 PrcoessFiles");
-        inputFiles.forEach((file) -> {
-            analyseFile(file);
-        });
+        inputFiles.forEach(this::analyseFile);
         LOG.info("Completed Search of BW6 Resources");        
         LOG.debug("execute - END");
     }
 
-    public static Map<String, Integer> foundResources = new HashMap<String, Integer>();
+  
 
     public int getPropertiesCount(SensorContext context, final String fileExtension) {
         LOG.debug("getPropertiesCount - START");
@@ -377,6 +374,8 @@ public class ProcessRuleSensor implements Sensor {
 
     /**
      * This sensor only executes on projects with active XML rules.
+     * @param inputModule
+     * @return 
      */
     public boolean shouldExecuteOnProject(InputModule inputModule) {
         return fileSystem.inputFiles(fileSystem.predicates().hasLanguage(languageKey)).iterator().hasNext();
