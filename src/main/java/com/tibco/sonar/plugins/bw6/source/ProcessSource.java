@@ -1,65 +1,56 @@
 package com.tibco.sonar.plugins.bw6.source;
 
-import java.io.File;
-import java.nio.charset.Charset;
-import com.tibco.sonar.plugins.bw6.file.XmlFile;
-import com.tibco.utils.bw.common.SaxParser;
+
 import com.tibco.utils.bw.model.Process;
-import java.io.InputStream;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonarsource.analyzer.commons.xml.XmlFile;
 
 /**
  * Checks and analyzes report measurements, issues and other findings in
  * WebSourceCode.
- * 
+ *
  * @author Kapil Shivarkar
  */
-public class ProcessSource extends XmlSource {
+public class ProcessSource extends AbstractSource {
 
-	private Process process;
+    private Process process;
 
-	public ProcessSource(File file){
-		super(file);
-		this.process = new Process();
-		process.setProcessXmlDocument(new SaxParser().parseDocument(file, true));	
-	}
+    private XmlFile file;
 
-	public ProcessSource(InputStream file){
-		super(file);
-		this.process = new Process();
-		process.setProcessXmlDocument(new SaxParser().parseDocument(file, true));	
-	}
+    public ProcessSource(InputFile file) {
+        try {
+            this.file = XmlFile.create(file);
+            this.process = new Process();
+            this.process.setProcessXmlDocument(this.file.getNamespaceUnawareDocument());
+        } catch (IOException ex) {
+            Logger.getLogger(ProcessSource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
+    public void setProcessModel(Process process) {
+        this.process = process;
+    }
 
-	public ProcessSource(XmlFile xmlFile) {
-		super(xmlFile);
-		this.process = new Process();
-	}
+    public Process getProcessModel() {
+        return process;
+    }
 
-/** 	public ProcessSource(String code) {
-		super(code);
-		setCode(code);
-		this.process = new Process();
-		InputStream is = createInputStream();
-		process.setProcessXmlDocument(new SaxParser().parseDocument(is, true));		
-	}
-*/
-	@Override
-	public boolean parseSource(Charset charset) {
-		boolean result = super.parseSource(charset);
-		// TODO This can probalby be removed.
-		//if(result){
-		//	Process proc = process.setProcessXmlDocument(getDocument(true));
-		//	proc.parse();
-		//	proc.myparse();
-		//}
-		return result;
-	}
+    /**
+     * @return the file
+     */
+    public XmlFile getFile() {
+        return file;
+    }
 
-	public void setProcessModel(Process process){
-		this.process = process;
-	}
+    /**
+     * @param file the file to set
+     */
+    public void setFile(XmlFile file) {
+        this.file = file;
+    }
 
-	public Process getProcessModel(){
-		return process;
-	}
+    
 }

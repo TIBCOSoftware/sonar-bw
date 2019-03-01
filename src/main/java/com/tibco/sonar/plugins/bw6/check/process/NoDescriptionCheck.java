@@ -26,15 +26,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
-import com.tibco.sonar.plugins.bw6.profile.ProcessSonarWayProfile;
+import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import com.tibco.sonar.plugins.bw6.violation.DefaultViolation;
-import com.tibco.sonar.plugins.bw6.violation.Violation;
 import com.tibco.utils.bw.helper.XmlHelper;
 import com.tibco.utils.bw.model.Process;
 
 @Rule(key = NoDescriptionCheck.RULE_KEY, name="No Process Description Check", priority = Priority.MINOR, description = "This rule checks if there is description specified for a process.")
-@BelongsToProfile(title = ProcessSonarWayProfile.defaultProfileName, priority = Priority.MINOR)
+@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class NoDescriptionCheck extends AbstractProcessCheck {
 
 	public static final String RULE_KEY = "ProcessNoDescription";
@@ -51,16 +49,17 @@ public class NoDescriptionCheck extends AbstractProcessCheck {
 					DESCRIPTION_ELEMENT_NAMESPACE, DESCRIPTION_ELEMENT_NAME);
 			if (description.getTextContent() == null
 					|| description.getTextContent().isEmpty()) {
-				Violation violation = new DefaultViolation(getRule(),
-						processSource.getLineForNode(description),
-						"Empty description for this process");
-				processSource.addViolation(violation);
+                            //TODO Add line here
+                            reportIssueOnFile("Empty description for this process");
 			}
 		} catch (Exception e) {
-			Violation violation = new DefaultViolation(getRule(), 1,
-					"No description found in this process");
-			processSource.addViolation(violation);
+                        reportIssueOnFile("No description found in this process");
 		}
 	}
 
+        
+        @Override
+    public String getRuleKeyName() {
+        return RULE_KEY;
+    }
 }

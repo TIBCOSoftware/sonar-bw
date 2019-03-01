@@ -1,6 +1,5 @@
 package com.tibco.sonar.plugins.bw6.source;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +32,6 @@ public abstract class AbstractSource implements Source {
 		return this.code;
 	}
 	
-	public abstract boolean parseSource(Charset charset);
-
 //	@SuppressWarnings({ "rawtypes" })
 //	public abstract Resource create(Resource parent, String key);
 	

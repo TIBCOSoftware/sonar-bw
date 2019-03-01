@@ -9,16 +9,14 @@ import org.sonar.check.Rule;
 import org.w3c.dom.NodeList;
 
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
-import com.tibco.sonar.plugins.bw6.profile.ProcessSonarWayProfile;
+import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import com.tibco.sonar.plugins.bw6.violation.DefaultViolation;
-import com.tibco.sonar.plugins.bw6.violation.Violation;
 import com.tibco.utils.bw.model.Activity;
 import com.tibco.utils.bw.model.Process;
 import com.tibco.utils.bw.model.Transition;
 
 @Rule(key = CheckpointAfterRESTCheck.RULE_KEY, name="Checkpoint after REST Webservice Call Check", priority = Priority.MAJOR, description = "This rule checks the placement of a Checkpoint activity within a process. Do not place checkpoint after or in a parallel flow of REST webservice call.")
-@BelongsToProfile(title = ProcessSonarWayProfile.defaultProfileName, priority = Priority.MAJOR)
+@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class CheckpointAfterRESTCheck extends AbstractProcessCheck{
 	public static final String RULE_KEY = "CheckpointProcessREST";
 	private boolean onlyOneViolation = true;
@@ -60,10 +58,7 @@ public class CheckpointAfterRESTCheck extends AbstractProcessCheck{
 					if(onlyOneViolation){
 						String proc = process.getName();
 						proc = proc.substring(proc.lastIndexOf(".")+1).concat(".bwp");
-						Violation violation = new DefaultViolation(getRule(),
-								1,
-								"The process "+proc+" has a Checkpoint activity placed after a REST webservice call or in a parallel flow to a REST webservice call.");
-						processSource.addViolation(violation);
+                                                reportIssueOnFile("The process "+proc+" has a Checkpoint activity placed after a REST webservice call or in a parallel flow to a REST webservice call.");
 						onlyOneViolation = false;
 					}
 				}else{
@@ -80,4 +75,9 @@ public class CheckpointAfterRESTCheck extends AbstractProcessCheck{
 			}
 		}
 	}
+        
+            @Override
+    public String getRuleKeyName() {
+       return RULE_KEY;
+    }
 }

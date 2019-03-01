@@ -1,188 +1,226 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.tibco.sonar</groupId>
-  <artifactId>sonar-bw-6-plugin</artifactId>
-  <packaging>sonar-plugin</packaging>
-  <version>0.0.3-SNAPSHOT</version>
-  <name>Sonarqube BW6 Plugiin</name>
-  <description>SonarQube Plugin for Businessworks6, BWCE and TCI</description>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.tibco.sonar</groupId>
+    <artifactId>sonar-bw-6-plugin</artifactId>
+    <packaging>sonar-plugin</packaging>
+    <version>0.0.4-SNAPSHOT</version>
+    <name>Sonarqube BW6 Plugin</name>
+    <description>SonarQube Plugin for Businessworks6, BWCE and TCI</description>
   
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <sonar.apiVersion>7.4</sonar.apiVersion>
-    <jdk.min.version>1.8</jdk.min.version>
-    <sonar.version>7.4</sonar.version>
-    <sonarjava.version>5.8.0.15699</sonarjava.version>
-    <sonar.sources>src/main/java</sonar.sources>
-  </properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.apiVersion>7.4</sonar.apiVersion>
+        <jdk.min.version>1.8</jdk.min.version>
+        <sonar.version>7.4</sonar.version>
+        <sonarjava.version>5.8.0.15699</sonarjava.version>
+        <sonar.sources>src/main/java</sonar.sources>
+        <sonar.analyzerCommons.version>1.10.2.456</sonar.analyzerCommons.version>
+    </properties>
+ 
   
-  <distributionManagement>
-      <snapshotRepository>
-        <id>maven-snapshots</id>
-        <url>https://nexus.tibcopsg.net/repository/maven-snapshots/</url>
-      </snapshotRepository>
-      <repository>
-        <id>maven-releases</id>
-        <url>https://nexus.tibcopsg.net/repository/maven-releases/</url>
-      </repository>
-  </distributionManagement>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>maven-snapshots</id>
+            <url>https://nexus.tibcopsg.net/repository/maven-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>maven-releases</id>
+            <url>https://nexus.tibcopsg.net/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
   
   <dependencies>
     <dependency>
       <groupId>org.sonarsource.sonarqube</groupId>
       <artifactId>sonar-plugin-api</artifactId>
       <!-- minimal version of SonarQube to support. Note that the groupId was "org.codehaus.sonar" before version 5.2 -->
-      <version>${sonar.apiVersion}</version>
-      <!-- mandatory scope -->
+      <version>7.4</version>
       <scope>provided</scope>
+      <!-- mandatory scope -->
 	  <exclusions>
 		  <exclusion>
 	          <groupId>com.google.guava</groupId>
 	          <artifactId>guava</artifactId>
 	      </exclusion>
-	  </exclusions>	  
-
+	  </exclusions>
+      <type>jar</type>
     </dependency>
 
-	<dependency>
-	      <!-- packaged with the plugin -->
-		  <groupId>commons-lang</groupId>
-		  <artifactId>commons-lang</artifactId>
-		  <version>2.6</version>
-	</dependency>
+        <dependency>
+            <groupId>org.sonarsource.analyzer-commons</groupId>
+            <artifactId>sonar-analyzer-commons</artifactId>
+            <version>${sonar.analyzerCommons.version}</version>
+        </dependency>
 
-	<dependency>
-	       <groupId>com.google.code.gson</groupId>
-	       <artifactId>gson</artifactId>
-	       <version>2.8.5</version>
-	</dependency>
-	
-	<dependency>
-		<groupId>com.google.guava</groupId>
-		<artifactId>guava</artifactId>
-		<version>27.0-jre</version>
-	</dependency>
-    
-   <dependency>
-		<groupId>com.tibco.utils.bw</groupId>
-		<artifactId>bw6-utils</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
-	</dependency>
+        <dependency>
+            <groupId>org.sonarsource.analyzer-commons</groupId>
+            <artifactId>sonar-xml-parsing</artifactId>
+            <version>${sonar.analyzerCommons.version}</version>
+        </dependency>
 
-	<dependency>
-		<groupId>xalan</groupId>
-		<artifactId>xalan</artifactId>
-		<version>2.7.2</version>
-	</dependency>
  
-	<dependency>
-		<groupId>xerces</groupId>
-		<artifactId>xercesImpl</artifactId>
-		<version>2.12.0</version>
-	</dependency>
+        <dependency>
+            <!-- packaged with the plugin -->
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.2</version>
+        </dependency>
 
  
 
-	<dependency>
-		<groupId>org.codehaus.sonar-plugins.xml</groupId>
-		<artifactId>xml-squid</artifactId>
-		<version>1.2</version>
-	  <exclusions>
-      <exclusion>
-	      <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
-      </exclusion>
-			      <exclusion>
-	            <groupId>commons-lang</groupId>
-              <artifactId>commons-lang</artifactId>
-           </exclusion>
-      </exclusions>
+        <dependency>
+            <groupId>org.codehaus.sonar-plugins.xml</groupId>
+            <artifactId>xml-squid</artifactId>
+            <version>1.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-lang</groupId>
+                    <artifactId>commons-lang</artifactId>
+                </exclusion>
+            </exclusions>
 
-	</dependency>
+        </dependency>
 
-		<!-- Test dependencies -->
+        <!-- Test dependencies -->
 
 
-	<dependency>
-		<groupId>org.sonarsource.sonarqube</groupId>
-		<artifactId>sonar-testing-harness</artifactId>
-		<version>${sonar.apiVersion}</version>
-		<scope>test</scope>
-	</dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <scope>test</scope>
-    </dependency>
+        <dependency>
+            <groupId>org.sonarsource.sonarqube</groupId>
+            <artifactId>sonar-testing-harness</artifactId>
+            <version>${sonar.apiVersion}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
 	
-	<dependency>
-				<groupId>org.sonarsource.sslr-squid-bridge</groupId>
-				<artifactId>sslr-squid-bridge</artifactId>
-				<version>2.6.1</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.codehaus.sonar.sslr</groupId>
-						<artifactId>sslr-core</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.codehaus.sonar</groupId>
-						<artifactId>sonar-plugin-api</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.codehaus.sonar.sslr</groupId>
-						<artifactId>sslr-xpath</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.slf4j</groupId>
-						<artifactId>jcl-over-slf4j</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.slf4j</groupId>
-						<artifactId>slf4j-api</artifactId>
-					</exclusion>
-				</exclusions>
-		  </dependency>
-		
-  </dependencies>
+        <dependency>
+            <groupId>org.sonarsource.sslr-squid-bridge</groupId>
+            <artifactId>sslr-squid-bridge</artifactId>
+            <version>2.6.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.sonar.sslr</groupId>
+                    <artifactId>sslr-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.sonar</groupId>
+                    <artifactId>sonar-plugin-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.sonar.sslr</groupId>
+                    <artifactId>sslr-xpath</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jcl-over-slf4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.tibco.utils.bw</groupId>
+            <artifactId>bw6-utils</artifactId>
+            <version>1.0.4-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
   
-  <build>
-     <sourceDirectory>src/main/java</sourceDirectory>
-     <plugins>
-	     <plugin>
-	        <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
-	        <artifactId>sonar-packaging-maven-plugin</artifactId>
-	        <version>1.18.0.372</version>
-	        <extensions>true</extensions>
-	        <configuration>
-							<pluginKey>BW6Plugin</pluginKey>           
-							<pluginClass>com.tibco.sonar.plugins.bw6.plugin.BusinessWorksPlugin</pluginClass>
-					</configuration>
-	      </plugin>
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
+                <artifactId>sonar-packaging-maven-plugin</artifactId>
+                <version>1.18.0.372</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <pluginKey>BW6Plugin</pluginKey>           
+                    <pluginClass>com.tibco.sonar.plugins.bw6.plugin.BusinessWorksPlugin</pluginClass>
+                </configuration>
+            </plugin>
 
-       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
-        <configuration>
-          <source>${jdk.min.version}</source>
-          <target>${jdk.min.version}</target>
-        </configuration>
-      </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>${jdk.min.version}</source>
+                    <target>${jdk.min.version}</target>
+                </configuration>
+            </plugin>
       
-	  <plugin>
-        <!-- UTF-8 bundles are not supported by Java, so they must be converted during build -->
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>native2ascii-maven-plugin</artifactId>
-        <version>1.0-beta-1</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>native2ascii</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+            <plugin>
+                <!-- UTF-8 bundles are not supported by Java, so they must be converted during build -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>native2ascii-maven-plugin</artifactId>
+                <version>1.0-beta-1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>native2ascii</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>  
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>false</shadedArtifactAttached>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <minimizeJar>true</minimizeJar>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/LICENSE*</exclude>
+                                        <exclude>META-INF/NOTICE*</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/services/*</exclude>
+                                        <exclude>LICENSE*</exclude>
+                                        <exclude>NOTICE*</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>xerces:xercesImpl</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+                                <filter>
+                                    <artifact>xml-apis:xml-apis</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+        </plugins>
+    </build>
 </project>

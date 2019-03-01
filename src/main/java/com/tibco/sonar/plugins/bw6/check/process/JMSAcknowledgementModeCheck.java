@@ -5,71 +5,51 @@ import java.util.List;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
-import com.tibco.sonar.plugins.bw6.profile.ProcessSonarWayProfile;
+import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import com.tibco.sonar.plugins.bw6.violation.DefaultViolation;
-import com.tibco.sonar.plugins.bw6.violation.Violation;
 import com.tibco.utils.bw.model.Activity;
 import com.tibco.utils.bw.model.EventSource;
-import com.tibco.utils.bw.model.ProcessNode;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = JMSAcknowledgementModeCheck.RULE_KEY, name="JMS Acknowledgement Mode Check", priority = Priority.INFO, description = "This rule checks the acknowledgement mode used in JMS activities. Avoid using Auto Acknowledgement to minimize the risk of data loss.")
-@BelongsToProfile(title = ProcessSonarWayProfile.defaultProfileName, priority = Priority.INFO)
-public class JMSAcknowledgementModeCheck extends AbstractProcessCheck{
-	public static final String RULE_KEY = "JMSAcknowledgementMode";
-	@Override
-	protected void validate(ProcessSource processSource) {
-		List<Activity> activities = processSource.getProcessModel().getActivities();
-		for (Activity activity : activities) {
-			Node node = activity.getNode();
-			if (node != null && activity.getType() != null && activity.getType().contains("bw.jms.getmsg")) {
-				NodeList children = node.getChildNodes();
-				for (int i = 0; i < children.getLength(); i++) {
-					if(children.item(i).getNodeName().equals("tibex:config")){
-						detectViolation(children.item(i).getChildNodes().item(1), processSource, activity);
-					}
-				}
-			}
-		}
+@Rule(key = JMSAcknowledgementModeCheck.RULE_KEY, name = "JMS Acknowledgement Mode Check", priority = Priority.INFO, description = "This rule checks the acknowledgement mode used in JMS activities. Avoid using Auto Acknowledgement to minimize the risk of data loss.")
+@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.INFO)
+public class JMSAcknowledgementModeCheck extends AbstractProcessCheck {
 
-		List<EventSource> eventSources = processSource.getProcessModel().getEventSources();
+    private final static Logger LOG = Loggers.get(JMSAcknowledgementModeCheck.class);
 
-		for (EventSource eventSource : eventSources) {
-			Node node = eventSource.getNode();
-			if (node != null && eventSource.getType() != null && (eventSource.getType().contains("bw.jms.signalin") || eventSource.getType().contains("bw.jms.receive"))){
-				NodeList children = node.getChildNodes();
-				for(int i =0; i < children.getLength(); i++)
-					if(children.item(i).getNodeName().equals("tibex:eventSource")){
-						Node subchild = children.item(i).getChildNodes().item(1);
-						detectViolation(subchild, processSource, eventSource);
-					}
+    public static final String RULE_KEY = "JMSAcknowledgementMode";
 
-			}
-		}
-	}
-	
-	
-	public void detectViolation(Node bwactivity_config, ProcessSource processSource, ProcessNode processNode){
-		NodeList nodes = bwactivity_config.getChildNodes();
-		for (int j = 0; j < nodes.getLength(); j++) {
-			if(nodes.item(j) != null && nodes.item(j).getNodeName().equals("activityConfig")){
-				NodeList childNodes = nodes.item(j).getChildNodes();
-				NodeList propertiesNodes = childNodes.item(1).getChildNodes();
-				for (int k = 0; k < propertiesNodes.getLength(); k++) {
-					if(propertiesNodes.item(k) != null && propertiesNodes.item(k).getNodeName().equals("value")){
-						if(propertiesNodes.item(k).getAttributes().getNamedItem("ackMode") == null){
-							Violation violation = new DefaultViolation(getRule(),
-									1,
-									"Auto Acknowledgement mode is set in the JMS activity "+processNode.getName()+".  Avoid using Auto Acknowledgement to minimize the risk of data loss.");
-							processSource.addViolation(violation);
-						}
-					}
-				}
-			}
-		}
-	}
+    @Override
+    protected void validate(ProcessSource processSource) {
+        LOG.debug("Start validation for rule: " + RULE_KEY);
+        List<Activity> activities = processSource.getProcessModel().getActivities();
+        activities.forEach((activity) -> {
+            if (activity.getType() != null && activity.getType().contains("bw.jms.getmsg")) {
+                LOG.debug("JMS Get Message activity detected");
+                if(!activity.hasProperty("ackMode")){
+                    reportIssueOnFile("Auto Acknowledgement mode is set in the JMS activity " + activity.getName() + ".  Avoid using Auto Acknowledgement to minimize the risk of data loss.");
+                }
+            }
+        });
+        
+        List<EventSource> eventSources = processSource.getProcessModel().getEventSources();
+        eventSources.forEach((eventSource) -> {
+            if (eventSource.getType() != null && (eventSource.getType().contains("bw.jms.signalin") || eventSource.getType().contains("bw.jms.receive"))) {
+                if(!eventSource.hasProperty("ackMode")){
+                    reportIssueOnFile("Auto Acknowledgement mode is set in the JMS activity " + eventSource.getName() + ".  Avoid using Auto Acknowledgement to minimize the risk of data loss.");
+                }
+            }
+        });
+        LOG.debug("Validation ended for rule: " + RULE_KEY);
+    }
+    
+    @Override
+    public String getRuleKeyName() {
+        return RULE_KEY;
+    }
+
+    
 }

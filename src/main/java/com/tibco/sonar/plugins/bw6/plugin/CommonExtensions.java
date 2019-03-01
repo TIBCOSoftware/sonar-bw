@@ -19,10 +19,10 @@
  */
 package com.tibco.sonar.plugins.bw6.plugin;
 
-import com.google.common.collect.ImmutableList;
 //import com.tibco.sonar.plugins.bw.colorizers.BusinessWorksProcessColorizerFormat;
 import com.tibco.sonar.plugins.bw6.metric.BusinessWorksMetrics;
 import com.tibco.sonar.plugins.bw6.widget.BusinessWorksMetricsWidget;
+import java.util.ArrayList;
 
 import java.util.List;
 
@@ -33,11 +33,11 @@ public final class CommonExtensions {
 
 	@SuppressWarnings("rawtypes")
 	public static List getExtensions() {
-		ImmutableList.Builder<Object> builder = ImmutableList.builder();
+		List builder = new ArrayList();
 		builder.add(BusinessWorksMetrics.class);
 		builder.add(BusinessWorksMetricsWidget.class);
 		//builder.add(BusinessWorksProcessColorizerFormat.class);
-		return builder.build();
+		return builder;
 	}
 
 }

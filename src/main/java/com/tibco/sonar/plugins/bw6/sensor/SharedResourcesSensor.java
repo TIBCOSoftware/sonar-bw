@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.sonar.api.utils.log.Loggers;
 import com.tibco.sonar.plugins.bw6.metric.SharedResourceMetrics;
+import org.sonar.api.utils.log.Logger;
 
 public class SharedResourcesSensor implements Sensor {
   @Override
@@ -17,8 +18,9 @@ public class SharedResourcesSensor implements Sensor {
     descriptor.name("Compute size of Shared Resources");
   }
 
-  public static Map<String, Integer> foundResources = new HashMap<String, Integer>(); 
-  public static Map<String, String> resourceExtensionMapper = new HashMap<String,String>();
+  protected static Map<String, Integer> foundResources = new HashMap<String, Integer>(); 
+  protected static Map<String, String> resourceExtensionMapper = new HashMap<String,String>();
+  private static final Logger LOG = Loggers.get(SharedResourcesSensor.class);
 
   @Override
   public void execute(SensorContext context) {
@@ -28,13 +30,15 @@ public class SharedResourcesSensor implements Sensor {
    
    Iterable<InputFile> files = fs.inputFiles(fs.predicates().hasType(InputFile.Type.MAIN));
    
-   Loggers.get(getClass()).info("Searching for BW6 Resources");
+   LOG.info("Searching for BW6 Resources");
    for (InputFile file : files) {
-        Loggers.get(getClass()).info("Found File" + file.filename()); 
+        LOG.info("Found File: " + file.filename()); 
         String extension = file.filename().substring(file.filename().lastIndexOf("."));
+        LOG.debug("Extension for file: "+extension);
         String resourceType = resourceExtensionMapper.get(extension);
+        LOG.debug("Resource Type for file: "+resourceType);
         if (resourceType != null){
-            Loggers.get(getClass()).info("Found BW6 Resource " + resourceType + " " + file.filename());
+            LOG.info("Found BW6 Resource " + resourceType + " " + file.filename());
             context.<Integer>newMeasure()
               .forMetric(getSharedResourceMetric(resourceType))
               .on(file)
@@ -42,7 +46,7 @@ public class SharedResourcesSensor implements Sensor {
               .save();
         }
    } 
-   Loggers.get(getClass()).info("Completed Search of BW6 Resources");
+   LOG.info("Completed Search of BW6 Resources");
      
 }
 
