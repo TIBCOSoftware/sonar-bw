@@ -41,10 +41,11 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         com.tibco.sonar.plugins.bw6.check.process.JMSAcknowledgementModeCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.CriticalSectionCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.SubProcessInlineCheck.class,
-        com.tibco.sonar.plugins.bw6.check.process.ExceptionHandlingCheck.class
-    };
-    
-     private static AbstractCheck checkList [] = {
+        com.tibco.sonar.plugins.bw6.check.process.ExceptionHandlingCheck.class, 
+        com.tibco.sonar.plugins.bw6.check.resource.SharedResourceNotUsed.class,
+        com.tibco.sonar.plugins.bw6.check.resource.SharedResourceUsingModuleProperty.class};
+
+    private static AbstractCheck checkList[] = {
         new com.tibco.sonar.plugins.bw6.check.process.NoDescriptionCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.NumberofActivitiesCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.TransitionLabelCheck(),
@@ -65,8 +66,9 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         new com.tibco.sonar.plugins.bw6.check.process.JMSAcknowledgementModeCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.CriticalSectionCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.SubProcessInlineCheck(),
-        new com.tibco.sonar.plugins.bw6.check.process.ExceptionHandlingCheck()
-    };
+        new com.tibco.sonar.plugins.bw6.check.process.ExceptionHandlingCheck(),
+        new com.tibco.sonar.plugins.bw6.check.resource.SharedResourceNotUsed(),
+        new com.tibco.sonar.plugins.bw6.check.resource.SharedResourceUsingModuleProperty(),};
 
     protected String rulesDefinitionFilePath() {
         return "/rules.xml";
@@ -102,10 +104,9 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         checkRules = Arrays.asList(check);
         return checkRules;
     }
-    
+
     public static List<AbstractCheck> getCheckList() {
         return Arrays.asList(checkList);
     }
-
 
 }

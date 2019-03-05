@@ -9,26 +9,37 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import com.tibco.utils.bw.model.Activity;
+import com.tibco.utils.bw6.model.Activity;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = LogOnlyInSubprocessCheck.RULE_KEY, name="Log Only in Subprocess Check", priority = Priority.MAJOR, description = "If there is logging or auditing required at multiple points in your project, its advised to write logging and auditing code in a sub process and invoke this process from any point where this functionality is required. This rule checks whether LOG activity is used in sub process.")
+@Rule(key = LogOnlyInSubprocessCheck.RULE_KEY, name = "Log Only in Subprocess Check", priority = Priority.MAJOR, description = "If there is logging or auditing required at multiple points in your project, its advised to write logging and auditing code in a sub process and invoke this process from any point where this functionality is required. This rule checks whether LOG activity is used in sub process.")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
-public class LogOnlyInSubprocessCheck extends AbstractProcessCheck{
-	public static final String RULE_KEY = "LogSubprocess";
+public class LogOnlyInSubprocessCheck extends AbstractProcessCheck {
 
-	@Override
-	protected void validate(ProcessSource processSource) {
-		if(!processSource.getProcessModel().isSubProcess()){
-			List<Activity> list = processSource.getProcessModel().getActivities();
-                        list.stream().filter((activity) -> (activity.getType() !=null && activity.getType().equals("bw.generalactivities.log"))).forEachOrdered((activity) -> {
-                            reportIssueOnFile("The Log activity ["+activity.getName()+"] should be preferrably used in a sub process.  "+processSource.getProcessModel().getBasename()+" is not a subprocess.");
-                    });
-		}
-	}
-        
-        @Override
+    private final static Logger LOG = Loggers.get(LogOnlyInSubprocessCheck.class);
+    public static final String RULE_KEY = "LogSubprocess";
+
+    @Override
+    protected void validate(ProcessSource processSource) {
+        LOG.debug("Start validation for rule: " + RULE_KEY);
+        if (!processSource.getProcessModel().isSubProcess()) {
+            List<Activity> list = processSource.getProcessModel().getActivities();
+            list.stream().filter((activity) -> (activity.getType() != null && activity.getType().equals("bw.generalactivities.log"))).forEachOrdered((activity) -> {
+                reportIssueOnFile("The Log activity [" + activity.getName() + "] should be preferrably used in a sub process.  " + processSource.getProcessModel().getBasename() + " is not a subprocess.");
+            });
+        }
+        LOG.debug("Validation ended for rule: " + RULE_KEY);
+    }
+
+    @Override
     public String getRuleKeyName() {
         return RULE_KEY;
     }
-	
+
+    @Override
+    public Logger getLogger() {
+        return LOG;
+    }
+
 }
