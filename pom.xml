@@ -201,6 +201,7 @@
                 <version>1.18.0.372</version>
                 <extensions>true</extensions>
                 <configuration>
+                    <skipDependenciesPackaging>true</skipDependenciesPackaging>
                     <pluginKey>BW6Plugin</pluginKey>           
                     <pluginClass>com.tibco.sonar.plugins.bw6.plugin.BusinessWorksPlugin</pluginClass>
                 </configuration>
@@ -238,9 +239,11 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            
                             <shadedArtifactAttached>false</shadedArtifactAttached>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <minimizeJar>true</minimizeJar>
+                            
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
