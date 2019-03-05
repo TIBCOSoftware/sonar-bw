@@ -16,7 +16,7 @@ import org.sonar.api.utils.log.Loggers;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.INFO)
 public class ForEachGroupCheck extends AbstractProcessCheck {
 
-    private final static Logger LOG = Loggers.get(ForEachGroupCheck.class);
+    private static final Logger LOG = Loggers.get(ForEachGroupCheck.class);
     public static final String RULE_KEY = "ForEachGroup";
 
     @Override

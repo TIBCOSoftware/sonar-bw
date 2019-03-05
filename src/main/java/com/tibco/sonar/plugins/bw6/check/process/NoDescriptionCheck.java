@@ -37,7 +37,7 @@ import org.sonar.api.utils.log.Loggers;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class NoDescriptionCheck extends AbstractProcessCheck {
 
-    private final static Logger LOG = Loggers.get(NoDescriptionCheck.class);
+    private static final Logger LOG = Loggers.get(NoDescriptionCheck.class);
     public static final String RULE_KEY = "ProcessNoDescription";
     public static final String DESCRIPTION_ELEMENT_NAME = "documentation";
     public static final String DESCRIPTION_ELEMENT_NAMESPACE = "http://docs.oasis-open.org/wsbpel/2.0/process/executable";

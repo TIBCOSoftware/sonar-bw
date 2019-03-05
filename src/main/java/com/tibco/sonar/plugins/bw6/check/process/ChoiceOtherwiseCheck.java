@@ -1,6 +1,5 @@
 package com.tibco.sonar.plugins.bw6.check.process;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.sonar.check.BelongsToProfile;
@@ -19,7 +18,7 @@ import org.sonar.api.utils.log.Loggers;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class ChoiceOtherwiseCheck extends AbstractProcessCheck {
 
-    private final static Logger LOG = Loggers.get(ChoiceOtherwiseCheck.class);
+    private static final Logger LOG = Loggers.get(ChoiceOtherwiseCheck.class);
     public static final String RULE_KEY = "ChoiceWithNoOtherwise";
 
     @Override

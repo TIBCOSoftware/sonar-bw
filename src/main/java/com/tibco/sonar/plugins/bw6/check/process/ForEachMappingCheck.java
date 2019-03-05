@@ -17,7 +17,7 @@ import org.sonar.api.utils.log.Loggers;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.INFO)
 public class ForEachMappingCheck extends AbstractProcessCheck {
 
-    private final static Logger LOG = Loggers.get(ForEachMappingCheck.class);
+    private static final Logger LOG = Loggers.get(ForEachMappingCheck.class);
     public static final String RULE_KEY = "ForEachMapping";
 
     @Override

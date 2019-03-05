@@ -64,7 +64,7 @@ import org.sonar.api.batch.sensor.issue.NewIssueLocation;
  */
 public class ProcessRuleSensor implements Sensor {
 
-    private final static Logger LOG = Loggers.get(ProcessRuleSensor.class);
+    private static final Logger LOG = Loggers.get(ProcessRuleSensor.class);
     private Map<String, Process> servicetoprocess = new HashMap<>();
     protected List<Process> processList = new ArrayList<>();
     private String processname = null;

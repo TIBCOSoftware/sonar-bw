@@ -3,7 +3,7 @@
     <groupId>com.tibco.sonar</groupId>
     <artifactId>sonar-bw-6-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.6-SNAPSHOT</version>
     <name>Sonarqube BW6 Plugin</name>
     <description>SonarQube Plugin for Businessworks6, BWCE and TCI</description>
   
@@ -15,6 +15,7 @@
         <sonarjava.version>5.8.0.15699</sonarjava.version>
         <sonar.sources>src/main/java</sonar.sources>
         <sonar.analyzerCommons.version>1.10.2.456</sonar.analyzerCommons.version>
+        <jacoco.version>0.8.3</jacoco.version>
     </properties>
  
   
@@ -154,6 +155,46 @@
         <testSourceDirectory>src/test/java</testSourceDirectory>
 
         <plugins>
+            
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>post-unit-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Sets the path to the file which contains the execution data. -->
+                            <dataFile>target/jacoco.exec</dataFile>
+                            <!-- Sets the output directory for the code coverage report. -->
+                            <outputDirectory>target/jacoco-ut</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <systemPropertyVariables>
+                        <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            
             <plugin>
                 <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
                 <artifactId>sonar-packaging-maven-plugin</artifactId>

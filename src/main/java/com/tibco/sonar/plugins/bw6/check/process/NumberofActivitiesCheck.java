@@ -15,7 +15,7 @@ import org.sonar.check.RuleProperty;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class NumberofActivitiesCheck extends AbstractProcessCheck {
 
-    private final static Logger LOG = Loggers.get(NumberofActivitiesCheck.class);
+    private static final Logger LOG = Loggers.get(NumberofActivitiesCheck.class);
     public static final String RULE_KEY = "NumberOfActivities";
 
     @RuleProperty(key = "maxActivities", description = "Threshold of activities to be considered excessive for a single process", defaultValue = "24", type = "INTEGER")

@@ -16,7 +16,7 @@ import org.sonar.api.utils.log.Loggers;
 @Rule(key = JDBCWildCardCheck.RULE_KEY, name = "JDBC WildCard Check", priority = Priority.MAJOR, description = "This rule checks whether JDBC activities are using wildcards in the query. As a good coding practice, never use wildcards in JDBC queries.")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class JDBCWildCardCheck extends AbstractProcessCheck {
-private final static Logger LOG = Loggers.get(JDBCWildCardCheck.class);
+private static final Logger LOG = Loggers.get(JDBCWildCardCheck.class);
     public static final String RULE_KEY = "JDBCWildcards";
 
     @Override

@@ -22,7 +22,7 @@ import org.sonar.api.utils.log.Loggers;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.CRITICAL)
 public class CheckpointInTransation extends AbstractProcessCheck {
 
-    private final static Logger LOG = Loggers.get(CheckpointInTransation.class);
+    private static final Logger LOG = Loggers.get(CheckpointInTransation.class);
     public static final String RULE_KEY = "CheckpointProcessTransaction";
 
     @Override

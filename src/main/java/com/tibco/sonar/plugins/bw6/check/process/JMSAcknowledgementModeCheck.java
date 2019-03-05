@@ -18,7 +18,7 @@ import org.sonar.api.utils.log.Loggers;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.INFO)
 public class JMSAcknowledgementModeCheck extends AbstractProcessCheck {
 
-    private final static Logger LOG = Loggers.get(JMSAcknowledgementModeCheck.class);
+    private static final Logger LOG = Loggers.get(JMSAcknowledgementModeCheck.class);
 
     public static final String RULE_KEY = "JMSAcknowledgementMode";
 

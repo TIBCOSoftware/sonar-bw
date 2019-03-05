@@ -17,7 +17,7 @@ import org.sonar.api.utils.log.Loggers;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class JDBCHardCodeCheck extends AbstractProcessCheck {
 
-    private final static Logger LOG = Loggers.get(JDBCHardCodeCheck.class);
+    private static final Logger LOG = Loggers.get(JDBCHardCodeCheck.class);
     public static final String RULE_KEY = "JDBCHardCoded";
 
     @Override

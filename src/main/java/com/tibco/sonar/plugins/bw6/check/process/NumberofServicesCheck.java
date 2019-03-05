@@ -16,7 +16,7 @@ import org.sonar.check.RuleProperty;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class NumberofServicesCheck extends AbstractProcessCheck {
 
-    private final static Logger LOG = Loggers.get(NumberofServicesCheck.class);
+    private static final Logger LOG = Loggers.get(NumberofServicesCheck.class);
     public static final String RULE_KEY = "NumberOfExposedServices";
 
     @RuleProperty(key = "maxServices", description = "Threshold of services to be considered excessive for a single process", defaultValue = "5", type = "INTEGER")

@@ -13,7 +13,7 @@ import org.sonar.api.utils.log.Loggers;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class ExceptionHandlingCheck extends AbstractProcessCheck {
 
-    private final static Logger LOG = Loggers.get(ExceptionHandlingCheck.class);
+    private static final Logger LOG = Loggers.get(ExceptionHandlingCheck.class);
     public final static String RULE_KEY = "Exception handling check";
 
     @Override

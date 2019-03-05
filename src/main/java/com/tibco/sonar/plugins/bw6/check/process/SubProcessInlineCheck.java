@@ -18,7 +18,7 @@ import org.sonar.check.Rule;
 public class SubProcessInlineCheck
   extends AbstractProcessCheck
 {
-    private final static Logger LOG = Loggers.get(SubProcessInlineCheck.class);
+    private static final Logger LOG = Loggers.get(SubProcessInlineCheck.class);
   public static final String RULE_KEY = "SubProcessInlineCheck";
   
   @Override

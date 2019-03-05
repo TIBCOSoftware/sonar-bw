@@ -17,7 +17,7 @@ import org.sonarsource.analyzer.commons.xml.XmlFile;
  */
 public class SharedResourceSource extends AbstractSource {
 
-    private final static Logger LOG = Loggers.get(SharedResourceSource.class);
+    private static final Logger LOG = Loggers.get(SharedResourceSource.class);
     
     private SharedResource resource;
 
