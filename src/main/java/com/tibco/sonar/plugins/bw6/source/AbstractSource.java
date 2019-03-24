@@ -1,38 +1,20 @@
 package com.tibco.sonar.plugins.bw6.source;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.tibco.sonar.plugins.bw6.violation.Violation;
-
 public abstract class AbstractSource implements Source {
-
-	protected final List<Violation> issues;
-
+    
 	protected String code;
 	
 	protected AbstractSource(){
-		issues = new ArrayList<Violation>();
 	}
 	
-	public void addViolation(Violation violation) {
-		this.issues.add(violation);
-	}
-
-
-	public List<Violation> getViolations() {
-		return issues;
-	}
-
+        @Override
 	public void setCode(String code) {
 		this.code = code;
 	}
 	
+        @Override
 	public String getCode() {
 		return this.code;
 	}
-	
-//	@SuppressWarnings({ "rawtypes" })
-//	public abstract Resource create(Resource parent, String key);
 	
 }

@@ -1,7 +1,7 @@
 package com.tibco.sonar.plugins.bw6.source;
 
 
-import com.tibco.utils.bw.model.Process;
+import com.tibco.utils.bw6.model.Process;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,9 +25,19 @@ public class ProcessSource extends AbstractSource {
             this.file = XmlFile.create(file);
             this.process = new Process();
             this.process.setProcessXmlDocument(this.file.getNamespaceUnawareDocument());
+            process.startParsing();
         } catch (IOException ex) {
             Logger.getLogger(ProcessSource.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+       public ProcessSource(String file) {
+       
+            this.file = XmlFile.create(file);
+            this.process = new Process();
+            this.process.setProcessXmlDocument(this.file.getNamespaceUnawareDocument());
+            process.startParsing();
+       
     }
 
     public void setProcessModel(Process process) {

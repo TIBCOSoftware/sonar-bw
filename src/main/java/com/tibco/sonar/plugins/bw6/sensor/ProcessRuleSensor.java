@@ -43,32 +43,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import com.tibco.sonar.plugins.bw6.check.AbstractCheck;
-import com.tibco.sonar.plugins.bw6.check.process.CheckpointAfterHttpCheck;
-import com.tibco.sonar.plugins.bw6.check.process.CheckpointAfterJDBCÇheck;
-import com.tibco.sonar.plugins.bw6.check.process.CheckpointAfterRESTCheck;
-import com.tibco.sonar.plugins.bw6.check.process.CheckpointInTransation;
-import com.tibco.sonar.plugins.bw6.check.process.ChoiceOtherwiseCheck;
-import com.tibco.sonar.plugins.bw6.check.process.CriticalSectionCheck;
+import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.check.process.DeadLockCheck;
-import com.tibco.sonar.plugins.bw6.check.process.ForEachGroupCheck;
-import com.tibco.sonar.plugins.bw6.check.process.ForEachMappingCheck;
-import com.tibco.sonar.plugins.bw6.check.process.JDBCHardCodeCheck;
-import com.tibco.sonar.plugins.bw6.check.process.JDBCWildCardCheck;
-import com.tibco.sonar.plugins.bw6.check.process.JMSAcknowledgementModeCheck;
-import com.tibco.sonar.plugins.bw6.check.process.JMSHardCodeCheck;
-import com.tibco.sonar.plugins.bw6.check.process.LogOnlyInSubprocessCheck;
-import com.tibco.sonar.plugins.bw6.check.process.MultipleTransitionCheck;
-import com.tibco.sonar.plugins.bw6.check.process.NoDescriptionCheck;
-import com.tibco.sonar.plugins.bw6.check.process.NumberofActivitiesCheck;
-import com.tibco.sonar.plugins.bw6.check.process.NumberofServicesCheck;
-import com.tibco.sonar.plugins.bw6.check.process.SubProcessInlineCheck;
-import com.tibco.sonar.plugins.bw6.check.process.TransitionLabelCheck;
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
 import com.tibco.sonar.plugins.bw6.rulerepository.ProcessRuleDefinition;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import com.tibco.utils.bw.model.ModuleProperties;
-import com.tibco.utils.bw.model.Process;
-import com.tibco.utils.bw.model.Service;
+import com.tibco.utils.bw6.model.ModuleProperties;
+import com.tibco.utils.bw6.model.Process;
+import com.tibco.utils.bw6.model.Service;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.batch.sensor.Sensor;
@@ -82,7 +64,7 @@ import org.sonar.api.batch.sensor.issue.NewIssueLocation;
  */
 public class ProcessRuleSensor implements Sensor {
 
-    private final static Logger LOG = Loggers.get(ProcessRuleSensor.class);
+    private static final Logger LOG = Loggers.get(ProcessRuleSensor.class);
     private Map<String, Process> servicetoprocess = new HashMap<>();
     protected List<Process> processList = new ArrayList<>();
     private String processname = null;
@@ -99,60 +81,11 @@ public class ProcessRuleSensor implements Sensor {
             CheckFactory checkFactory) {
         LOG.debug("ProcessRuleSensor - START");
 
-        this.fileSystem = fileSystem;
-        ArrayList<Object> allChecks = new ArrayList<>();
-        allChecks.add(NoDescriptionCheck.class);
-        allChecks.add(NumberofActivitiesCheck.class);
-        allChecks.add(TransitionLabelCheck.class);
-        allChecks.add(ChoiceOtherwiseCheck.class);
-        allChecks.add(JDBCWildCardCheck.class);
-        allChecks.add(JDBCHardCodeCheck.class);
-        allChecks.add(MultipleTransitionCheck.class);
-        allChecks.add(DeadLockCheck.class);
-        allChecks.add(LogOnlyInSubprocessCheck.class);
-        allChecks.add(JMSHardCodeCheck.class);
-        allChecks.add(ForEachMappingCheck.class);
-        allChecks.add(ForEachGroupCheck.class);
-        allChecks.add(NumberofServicesCheck.class);
-        allChecks.add(CheckpointAfterRESTCheck.class);
-        allChecks.add(CheckpointAfterJDBCÇheck.class);
-        allChecks.add(CheckpointAfterHttpCheck.class);
-        allChecks.add(CheckpointInTransation.class);
-        allChecks.add(JMSAcknowledgementModeCheck.class);
-        allChecks.add(CriticalSectionCheck.class);
-        allChecks.add(SubProcessInlineCheck.class);
-        checkReturned = checkFactory.create(ProcessRuleDefinition.REPOSITORY_KEY).addAnnotatedChecks((Iterable<?>) allChecks);
-
+        this.fileSystem = fileSystem;        
+        checkReturned = checkFactory.create(ProcessRuleDefinition.REPOSITORY_KEY).addAnnotatedChecks((Iterable<Class>)ProcessRuleDefinition.getChecks());
         this.mainFilesPredicate = fileSystem.predicates().and(
                 fileSystem.predicates().hasLanguage(BWProcessLanguage.KEY));
         LOG.debug("ProcessRuleSensor - END");
-    }
-
-    public enum BWResources {
-        HTTPClient,
-        XMLAuthentication,
-        WSSAuthentication,
-        TrustProvider,
-        ThrealPool,
-        TCPConnection,
-        SubjectProvider,
-        SSLServerConfiguration,
-        SSLClientConfiguration,
-        SMTPResource,
-        RendezvousTransport,
-        ProxyConfiguration,
-        LDAPAuthentication,
-        KeystoreProvider,
-        JNDIConfiguration,
-        JMSConnection,
-        JDBCConnection,
-        JavaGlobalInstance,
-        IdentityProvider,
-        HTTPConnector,
-        FTPConnection,
-        FTLRealmServerConnection,
-        DataFormat,
-        SQLFile
     }
 
     protected void analyseFile(InputFile file) {
@@ -160,13 +93,13 @@ public class ProcessRuleSensor implements Sensor {
         if (file != null) {
             ProcessSource sourceCode = new ProcessSource(file); // TODO:  Handle this better....
             Process process = sourceCode.getProcessModel();
-            process.startParsing();
+         
             checkSubprocess(process);
             processList.add(process);
 
             for (Iterator<Object> it = checkReturned.all().iterator(); it.hasNext();) {
                 AbstractCheck check = (AbstractCheck) it.next();
-                if (!(check instanceof DeadLockCheck)) {
+                if (!(check instanceof DeadLockCheck) && check instanceof AbstractProcessCheck) {
                     RuleKey ruleKey = checkReturned.ruleKey(check);
                     check.setRuleKey(ruleKey);
                     check.scanFile(sensorContext, ruleKey, sourceCode);

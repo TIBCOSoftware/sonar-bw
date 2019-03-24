@@ -26,6 +26,7 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
+import org.sonar.api.utils.log.Logger;
 
 /**
  * Abtract superclass for checks.
@@ -38,8 +39,10 @@ public abstract class AbstractCheck {
     protected RuleKey ruleKey;
     private SensorContext context;
     private InputFile inputFile;
-        
+
     public abstract String getRuleKeyName();
+
+    public abstract Logger getLogger();
 
     public RuleKey getRuleKey() {
         return ruleKey;
@@ -57,16 +60,17 @@ public abstract class AbstractCheck {
         return rule;
     }
 
-    public final  <S extends Source> void  scanFile(SensorContext context, RuleKey ruleKey, S file) {
+    public final <S extends Source> void scanFile(SensorContext context, RuleKey ruleKey, S file) {
         this.context = context;
         this.inputFile = file.getFile().getInputFile();
         this.ruleKey = ruleKey;
         validate(file);
-  }
-   
+    }
+
     public abstract <S extends Source> void validate(S source);
 
-    public final void reportIssueOnFile(String message, List<Integer> secondaryLocationLines) {
+    public  void reportIssueOnFile(String message, List<Integer> secondaryLocationLines) {
+        getLogger().warn("Issue reported: [" + message + "] on component: [" + inputFile.filename() + "]");
         NewIssue issue = context.newIssue();
 
         NewIssueLocation location = issue.newLocation()
@@ -76,7 +80,7 @@ public abstract class AbstractCheck {
         secondaryLocationLines.stream().map((line) -> issue.newLocation()
                 .on(inputFile)
                 .at(inputFile.selectLine(line))).forEachOrdered((secondary) -> {
-                    issue.addLocation(secondary);
+            issue.addLocation(secondary);
         });
 
         issue
@@ -84,47 +88,43 @@ public abstract class AbstractCheck {
                 .forRule(ruleKey)
                 .save();
     }
-    
-     public final void reportIssueOnFile(String message, int line) {
+
+    public  void reportIssueOnFile(String message, int line) {
+        getLogger().warn("Issue reported: [" + message + "] on component: [" + inputFile.filename() + "]");
         NewIssue issue = context.newIssue();
 
         NewIssueLocation location = issue.newLocation()
                 .on(inputFile)
                 .message(message);
 
-        
-            NewIssueLocation secondary = issue.newLocation()
-                    .on(inputFile)
-                    .at(inputFile.selectLine(line));
-            issue.addLocation(secondary);
-        
+        NewIssueLocation secondary = issue.newLocation()
+                .on(inputFile)
+                .at(inputFile.selectLine(line));
+        issue.addLocation(secondary);
 
         issue
                 .at(location)
                 .forRule(ruleKey)
                 .save();
     }
-    
-    
-     public final void reportIssueOnFile(String message) {
+
+    public void reportIssueOnFile(String message) {
+        getLogger().warn("Issue reported: [" + message + "] on component: [" + inputFile.filename() + "]");
         NewIssue issue = context.newIssue();
 
         NewIssueLocation location = issue.newLocation()
                 .on(inputFile)
                 .message(message);
 
-        
         NewIssueLocation secondary = issue.newLocation()
                 .on(inputFile)
                 .at(inputFile.selectLine(1));
         issue.addLocation(secondary);
-        
 
         issue
                 .at(location)
                 .forRule(ruleKey)
                 .save();
     }
-
 
 }
