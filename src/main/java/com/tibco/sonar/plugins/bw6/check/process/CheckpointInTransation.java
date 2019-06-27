@@ -18,8 +18,8 @@ import com.tibco.utils.bw6.model.Transition;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = CheckpointInTransation.RULE_KEY, name = "Checkpoint inside Transaction Group Check", priority = Priority.CRITICAL, description = "This rule checks the placement of a Checkpoint activity within a process. Do not place checkpoint within or in parallel to a Transaction Group or a Critical Section Group. Checkpoint activities should be placed at points that are guaranteed to be reached before or after the transaction group is reached.")
-@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.CRITICAL)
+@Rule(key = CheckpointInTransation.RULE_KEY, name = "Checkpoint inside Transaction Group Check", priority = Priority.MAJOR, description = "This rule checks the placement of a Checkpoint activity within a process. Do not place checkpoint within or in parallel to a Transaction Group or a Critical Section Group. Checkpoint activities should be placed at points that are guaranteed to be reached before or after the transaction group is reached.")
+@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class CheckpointInTransation extends AbstractProcessCheck {
 
     private static final Logger LOG = Loggers.get(CheckpointInTransation.class);

@@ -13,8 +13,8 @@ import com.tibco.utils.bw6.model.Activity;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = LogOnlyInSubprocessCheck.RULE_KEY, name = "Log Only in Subprocess Check", priority = Priority.MAJOR, description = "If there is logging or auditing required at multiple points in your project, its advised to write logging and auditing code in a sub process and invoke this process from any point where this functionality is required. This rule checks whether LOG activity is used in sub process.")
-@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
+@Rule(key = LogOnlyInSubprocessCheck.RULE_KEY, name = "Log Only in Subprocess Check", priority = Priority.MINOR, description = "If there is logging or auditing required at multiple points in your project, its advised to write logging and auditing code in a sub process and invoke this process from any point where this functionality is required. This rule checks whether LOG activity is used in sub process.")
+@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class LogOnlyInSubprocessCheck extends AbstractProcessCheck {
 
     private static final Logger LOG = Loggers.get(LogOnlyInSubprocessCheck.class);

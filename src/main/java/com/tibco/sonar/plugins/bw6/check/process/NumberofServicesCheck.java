@@ -12,8 +12,8 @@ import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonar.check.RuleProperty;
 
-@Rule(key = NumberofServicesCheck.RULE_KEY, name = "Number of Exposed Services Check", priority = Priority.MAJOR, description = "This rule checks the number of exposed services within a process. It is a good design practice to construct not more than 5 services in the same process.")
-@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
+@Rule(key = NumberofServicesCheck.RULE_KEY, name = "Number of Exposed Services Check", priority = Priority.MINOR, description = "This rule checks the number of exposed services within a process. It is a good design practice to construct not more than 5 services in the same process.")
+@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class NumberofServicesCheck extends AbstractProcessCheck {
 
     private static final Logger LOG = Loggers.get(NumberofServicesCheck.class);

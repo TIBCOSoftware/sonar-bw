@@ -37,7 +37,7 @@ public class CheckpointAfterRESTCheck extends AbstractProcessCheck {
     }
 
     private void checkPreviousActivities(Activity activity) {
-        List<Transition> incomingTransitions = activity.getIncomingTransitions();
+        List<Transition> incomingTransitions = activity.getInputTransitions();
 
         LOG.debug("Incoming transitions: " + incomingTransitions);
         incomingTransitions.forEach((t) -> {

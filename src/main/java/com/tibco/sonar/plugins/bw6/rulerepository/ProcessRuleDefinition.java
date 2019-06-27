@@ -43,7 +43,24 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         com.tibco.sonar.plugins.bw6.check.process.SubProcessInlineCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.ExceptionHandlingCheck.class, 
         com.tibco.sonar.plugins.bw6.check.resource.SharedResourceNotUsed.class,
-        com.tibco.sonar.plugins.bw6.check.resource.SharedResourceUsingModuleProperty.class};
+        com.tibco.sonar.plugins.bw6.check.resource.SharedResourceUsingModuleProperty.class,
+        com.tibco.sonar.plugins.bw6.check.resource.HttpClientSSLShouldHaveConfidentiality.class,
+        com.tibco.sonar.plugins.bw6.check.process.OnlyOneOtherwiseConditionCheck.class,
+        com.tibco.sonar.plugins.bw6.check.process.NoOtherwiseConditionCheck.class,
+        com.tibco.sonar.plugins.bw6.check.process.DefaultTargetNamespaceCheck.class,
+        com.tibco.sonar.plugins.bw6.check.process.LastActivityAndEndActivityCheck.class,
+        com.tibco.sonar.plugins.bw6.check.process.ParseXMLFromRenderCheck.class,
+        com.tibco.sonar.plugins.bw6.check.process.ProcessWithoutTestCheck.class,
+        com.tibco.sonar.plugins.bw6.check.process.JDBCTransactionParallelFlowCheck.class,
+        com.tibco.sonar.plugins.bw6.check.process.HttpClientMustBeUsedinHTTPBindingCheck.class,
+        com.tibco.sonar.plugins.bw6.check.process.ThreadpoolUsageInJDBCActivitiesCheck.class,
+        com.tibco.sonar.plugins.bw6.check.process.ListFileActivityToCheckFileExistenceCheck.class,
+        com.tibco.sonar.plugins.bw6.check.process.GetFragmentBinaryCheck.class,
+        com.tibco.sonar.plugins.bw6.check.project.NumberOfPropertiesSameGroupCheck.class,
+        com.tibco.sonar.plugins.bw6.check.project.XMLResourceSameTargetNamespaceCheck.class,
+        com.tibco.sonar.plugins.bw6.check.project.EndpointURIFromHTTPBindingSetUsingPropertyCheck.class
+        
+    };
 
     private static AbstractCheck checkList[] = {
         new com.tibco.sonar.plugins.bw6.check.process.NoDescriptionCheck(),
@@ -68,7 +85,25 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         new com.tibco.sonar.plugins.bw6.check.process.SubProcessInlineCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.ExceptionHandlingCheck(),
         new com.tibco.sonar.plugins.bw6.check.resource.SharedResourceNotUsed(),
-        new com.tibco.sonar.plugins.bw6.check.resource.SharedResourceUsingModuleProperty(),};
+        new com.tibco.sonar.plugins.bw6.check.resource.SharedResourceUsingModuleProperty(),
+        new com.tibco.sonar.plugins.bw6.check.resource.HttpClientSSLShouldHaveConfidentiality(),
+        new com.tibco.sonar.plugins.bw6.check.process.OnlyOneOtherwiseConditionCheck(),
+        new com.tibco.sonar.plugins.bw6.check.process.NoOtherwiseConditionCheck(),
+        new com.tibco.sonar.plugins.bw6.check.process.DefaultTargetNamespaceCheck(),
+        new com.tibco.sonar.plugins.bw6.check.process.GetFragmentBinaryCheck(),
+        new com.tibco.sonar.plugins.bw6.check.process.ProcessWithoutTestCheck(),
+        new com.tibco.sonar.plugins.bw6.check.process.JDBCTransactionParallelFlowCheck(),
+        new com.tibco.sonar.plugins.bw6.check.process.HttpClientMustBeUsedinHTTPBindingCheck(),
+        new com.tibco.sonar.plugins.bw6.check.process.ThreadpoolUsageInJDBCActivitiesCheck(),
+        new com.tibco.sonar.plugins.bw6.check.process.LastActivityAndEndActivityCheck(),
+        new com.tibco.sonar.plugins.bw6.check.process.ParseXMLFromRenderCheck(),
+        new com.tibco.sonar.plugins.bw6.check.process.ListFileActivityToCheckFileExistenceCheck(),
+        new com.tibco.sonar.plugins.bw6.check.project.NumberOfPropertiesSameGroupCheck(),
+        new com.tibco.sonar.plugins.bw6.check.project.XMLResourceSameTargetNamespaceCheck(),
+        new com.tibco.sonar.plugins.bw6.check.project.EndpointURIFromHTTPBindingSetUsingPropertyCheck()
+            
+            
+    };
 
     protected String rulesDefinitionFilePath() {
         return "/rules.xml";

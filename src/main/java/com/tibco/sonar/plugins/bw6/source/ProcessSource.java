@@ -20,12 +20,13 @@ public class ProcessSource extends AbstractSource {
 
     private XmlFile file;
 
-    public ProcessSource(InputFile file) {
+    public ProcessSource(ProjectSource project, InputFile file) {
         try {
             this.file = XmlFile.create(file);
             this.process = new Process();
             this.process.setProcessXmlDocument(this.file.getNamespaceUnawareDocument());
             process.startParsing();
+            project.getProcess().add(this);
         } catch (IOException ex) {
             Logger.getLogger(ProcessSource.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -34,7 +35,7 @@ public class ProcessSource extends AbstractSource {
        public ProcessSource(String file) {
        
             this.file = XmlFile.create(file);
-            this.process = new Process();
+             this.process = new Process();
             this.process.setProcessXmlDocument(this.file.getNamespaceUnawareDocument());
             process.startParsing();
        
@@ -51,14 +52,14 @@ public class ProcessSource extends AbstractSource {
     /**
      * @return the file
      */
-    public XmlFile getFile() {
-        return file;
+    public InputFile getComponent() {
+        return file.getInputFile();
     }
 
     /**
      * @param file the file to set
      */
-    public void setFile(XmlFile file) {
+    public void setComponent(XmlFile file) {
         this.file = file;
     }
 

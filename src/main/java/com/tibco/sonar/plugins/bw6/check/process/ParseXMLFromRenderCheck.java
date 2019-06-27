@@ -22,34 +22,38 @@ package com.tibco.sonar.plugins.bw6.check.process;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.w3c.dom.Document;
 
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.model.Activity;
+import com.tibco.utils.bw6.model.Group;
 import com.tibco.utils.bw6.model.Process;
+import java.util.List;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
+import org.w3c.dom.Element;
 
-@Rule(key = NoDescriptionCheck.RULE_KEY, name = "No Process Description Check", priority = Priority.MINOR, description = "This rule checks if there is description specified for a process.")
+@Rule(key = ParseXMLFromRenderCheck.RULE_KEY, name = "Parse XML Activity using tib:render-xml input", priority = Priority.MINOR, description = "This rule checks for inefficiencies on using ParseXML activities using tib:render-xml as input when it should rely on Coertion to do same job")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
-public class NoDescriptionCheck extends AbstractProcessCheck {
+public class ParseXMLFromRenderCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(NoDescriptionCheck.class);
-    public static final String RULE_KEY = "ProcessNoDescription";
-    public static final String DESCRIPTION_ELEMENT_NAME = "documentation";
-    public static final String DESCRIPTION_ELEMENT_NAMESPACE = "http://docs.oasis-open.org/wsbpel/2.0/process/executable";
-
+    private static final Logger LOG = Loggers.get(ParseXMLFromRenderCheck.class);
+    public static final String RULE_KEY = "ParseXMLFromRender";
+    
     @Override
     protected void validate(ProcessSource processSource) {
         LOG.debug("Start validation for rule: " + RULE_KEY);
-        Process process = processSource.getProcessModel();
-        Document document = process.getProcessXmlDocument();       
-        LOG.debug("Process description for process [" + process.getBasename() + "]: " + process.getDescription());
-        if (process.getDescription() == null
-                || process.getDescription().isEmpty()) {
-            //TODO Add line here
-            reportIssueOnFile("Empty description for this process");
+        Process process = processSource.getProcessModel();            
+        if(process != null){
+            for(Activity activity : process.getActivitiesByType("bw.xml.parsexml")){
+                LOG.debug("Activty type ["+activity.getType() + "] - ["+activity.getName()+"]");
+                
+                String expression = activity.getExpression();
+                if(expression != null && expression.contains("\"tib:render-xml(")){
+                    reportIssueOnFile("ParseXML activity ["+activity.getName()+"] should be avoided as it is using for an implicit coertion");
+                }
+            }
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
     }

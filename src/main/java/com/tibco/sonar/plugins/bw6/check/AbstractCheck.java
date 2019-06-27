@@ -22,6 +22,7 @@ import org.sonar.api.rules.Rule;
 
 import com.tibco.sonar.plugins.bw6.source.Source;
 import java.util.List;
+import org.sonar.api.batch.fs.InputComponent;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.issue.NewIssue;
@@ -38,7 +39,7 @@ public abstract class AbstractCheck {
     protected Rule rule;
     protected RuleKey ruleKey;
     private SensorContext context;
-    private InputFile inputFile;
+    private InputComponent inputComponent;
 
     public abstract String getRuleKeyName();
 
@@ -62,26 +63,30 @@ public abstract class AbstractCheck {
 
     public final <S extends Source> void scanFile(SensorContext context, RuleKey ruleKey, S file) {
         this.context = context;
-        this.inputFile = file.getFile().getInputFile();
+
+        this.inputComponent = file.getComponent();
+
         this.ruleKey = ruleKey;
         validate(file);
     }
 
     public abstract <S extends Source> void validate(S source);
 
-    public  void reportIssueOnFile(String message, List<Integer> secondaryLocationLines) {
-        getLogger().warn("Issue reported: [" + message + "] on component: [" + inputFile.filename() + "]");
+    public void reportIssueOnFile(String message, List<Integer> secondaryLocationLines) {
+        getLogger().warn("Issue reported: [" + message + "] on component: [" + inputComponent.key() + "]");
         NewIssue issue = context.newIssue();
 
         NewIssueLocation location = issue.newLocation()
-                .on(inputFile)
+                .on(inputComponent)
                 .message(message);
 
-        secondaryLocationLines.stream().map((line) -> issue.newLocation()
-                .on(inputFile)
-                .at(inputFile.selectLine(line))).forEachOrdered((secondary) -> {
-            issue.addLocation(secondary);
-        });
+        if (inputComponent.isFile()) {
+            secondaryLocationLines.stream().map((line) -> issue.newLocation()
+                    .on(inputComponent)
+                    .at(((InputFile) inputComponent).selectLine(line))).forEachOrdered((secondary) -> {
+                issue.addLocation(secondary);
+            });
+        }
 
         issue
                 .at(location)
@@ -89,18 +94,46 @@ public abstract class AbstractCheck {
                 .save();
     }
 
-    public  void reportIssueOnFile(String message, int line) {
-        getLogger().warn("Issue reported: [" + message + "] on component: [" + inputFile.filename() + "]");
+    public void reportIssueOnFile(String message, InputComponent file, int line) {
+        getLogger().warn("Issue reported: [" + message + "] on component: [" + file.key() + "]");
         NewIssue issue = context.newIssue();
 
         NewIssueLocation location = issue.newLocation()
-                .on(inputFile)
+                .on(file)
                 .message(message);
 
-        NewIssueLocation secondary = issue.newLocation()
-                .on(inputFile)
-                .at(inputFile.selectLine(line));
-        issue.addLocation(secondary);
+        if (inputComponent.isFile()) {
+            NewIssueLocation secondary = issue.newLocation()
+                    .on(file)
+                    .at(((InputFile) file).selectLine(line));
+            issue.addLocation(secondary);
+        };
+
+        issue
+                .at(location)
+                .forRule(ruleKey)
+                .save();
+    }
+
+    public void reportIssueOnFile(String message, int line) {
+        int finalLine = 1;
+        if (line > 0){
+            finalLine = line;
+        }
+        
+        getLogger().warn("Issue reported: [" + message + "] on component: [" + inputComponent.key() + "]");
+        NewIssue issue = context.newIssue();
+
+        NewIssueLocation location = issue.newLocation()
+                .on(inputComponent)
+                .message(message);
+
+        if (inputComponent.isFile()) {
+            NewIssueLocation secondary = issue.newLocation()
+                    .on(inputComponent)
+                    .at(((InputFile) inputComponent).selectLine(finalLine));
+            issue.addLocation(secondary);
+        }
 
         issue
                 .at(location)
@@ -109,17 +142,19 @@ public abstract class AbstractCheck {
     }
 
     public void reportIssueOnFile(String message) {
-        getLogger().warn("Issue reported: [" + message + "] on component: [" + inputFile.filename() + "]");
+        getLogger().warn("Issue reported: [" + message + "] on component: [" + inputComponent.key() + "]");
         NewIssue issue = context.newIssue();
 
         NewIssueLocation location = issue.newLocation()
-                .on(inputFile)
+                .on(inputComponent)
                 .message(message);
 
-        NewIssueLocation secondary = issue.newLocation()
-                .on(inputFile)
-                .at(inputFile.selectLine(1));
-        issue.addLocation(secondary);
+        if (inputComponent.isFile()) {
+            NewIssueLocation secondary = issue.newLocation()
+                    .on(inputComponent)
+                    .at(((InputFile) inputComponent).selectLine(1));
+            issue.addLocation(secondary);
+        }
 
         issue
                 .at(location)

@@ -41,7 +41,7 @@ public class SharedResourceNotUsed extends AbstractResourceCheck {
                     LOG.debug("Analyzing file: " + file.filename());
                     if (!isDefinitionFile(resource, file)) {
                         try {
-                            LOG.debug("Checking file contents: "+file.filename() + "with content ["+file.contents()+"]");
+                            LOG.debug("Checking file contents: "+file.filename() + " ...");
                             if (file.contents().contains(resource.getName())) {
                                 found = found || true;
                             }

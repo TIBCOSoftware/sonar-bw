@@ -9,8 +9,8 @@ import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = ExceptionHandlingCheck.RULE_KEY, name = "Exception handling check", priority = Priority.MAJOR, description = "Check if exceptions are handled in component process.")
-@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
+@Rule(key = ExceptionHandlingCheck.RULE_KEY, name = "Exception handling check", priority = Priority.MINOR, description = "Check if exceptions are handled in component process.")
+@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class ExceptionHandlingCheck extends AbstractProcessCheck {
 
     private static final Logger LOG = Loggers.get(ExceptionHandlingCheck.class);

@@ -14,8 +14,8 @@ import java.util.List;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = CheckpointAfterHttpCheck.RULE_KEY, name = "Checkpoint after HTTP Activities Check", priority = Priority.CRITICAL, description = "This rule checks the placement of a Checkpoint activity within a process. When placing your checkpoint in a process, be careful with certain types of process starters or incoming events, so that a recovered process instance does not attempt to access resources that no longer exist. For example, consider a process with an HTTP process starter that takes a checkpoint after receiving a request but before sending a response. In this case, when the engine restarts after a crash, the recovered process instance cannot respond to the request since the HTTP socket is already closed. As a best practice, do not place Checkpoint activity right after or in parallel path to HTTP activities.")
-@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.CRITICAL)
+@Rule(key = CheckpointAfterHttpCheck.RULE_KEY, name = "Checkpoint after HTTP Activities Check", priority = Priority.MAJOR, description = "This rule checks the placement of a Checkpoint activity within a process. When placing your checkpoint in a process, be careful with certain types of process starters or incoming events, so that a recovered process instance does not attempt to access resources that no longer exist. For example, consider a process with an HTTP process starter that takes a checkpoint after receiving a request but before sending a response. In this case, when the engine restarts after a crash, the recovered process instance cannot respond to the request since the HTTP socket is already closed. As a best practice, do not place Checkpoint activity right after or in parallel path to HTTP activities.")
+@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class CheckpointAfterHttpCheck extends AbstractProcessCheck {
 
     private static final Logger LOG = Loggers.get(CheckpointAfterHttpCheck.class);
@@ -36,7 +36,7 @@ public class CheckpointAfterHttpCheck extends AbstractProcessCheck {
     }
 
     private void checkPreviousActivities(Activity activity) {
-        List<Transition> incomingTransitions = activity.getIncomingTransitions();
+        List<Transition> incomingTransitions = activity.getInputTransitions();
 
         LOG.debug("Incoming transitions: " + incomingTransitions);
         incomingTransitions.forEach((t) -> {            
