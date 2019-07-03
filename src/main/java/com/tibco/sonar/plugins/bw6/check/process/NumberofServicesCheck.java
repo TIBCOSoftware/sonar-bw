@@ -28,7 +28,7 @@ public class NumberofServicesCheck extends AbstractProcessCheck {
         Process process = processSource.getProcessModel();
         LOG.debug("Number of services for process: ["+process.getBasename()+"]: "+process.getServices().size());
         if (process.getServices() != null && process.getServices().size() > maxServices) {
-            reportIssueOnFile("The process " + process.getBasename() + " has too many services exposed, this reduces the process readablity and is not a good design pattern.");
+            reportIssueOnFile("The process [" + process.getBasename() + "] has too many services exposed, this reduces the process readablity and is not a good design pattern.");
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
     }

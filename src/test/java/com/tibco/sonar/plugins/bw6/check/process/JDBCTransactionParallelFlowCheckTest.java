@@ -1094,9 +1094,9 @@ public class JDBCTransactionParallelFlowCheckTest {
         System.out.println("testValidate");
         JDBCTransactionParallelFlowCheck instance = new JDBCTransactionParallelFlowCheck();
         JDBCTransactionParallelFlowCheck spyInstance = Mockito.spy(instance);
-        doNothing().when(spyInstance).reportIssueOnFile(any());        
+        doNothing().when(spyInstance).reportIssueOnFile(any(),anyInt());        
         spyInstance.validate(source);        
-        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString());
+        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString(),anyInt());
         
     }
     

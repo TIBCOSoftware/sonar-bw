@@ -779,9 +779,9 @@ public class JDBCHardCodeCheckTest {
         System.out.println("testValidate");
         JDBCHardCodeCheck instance = new JDBCHardCodeCheck();
         JDBCHardCodeCheck spyInstance = Mockito.spy(instance);
-        doNothing().when(spyInstance).reportIssueOnFile(any());        
+        doNothing().when(spyInstance).reportIssueOnFile(any(),anyInt());        
         spyInstance.validate(source);        
-        Mockito.verify(spyInstance,atLeastOnce()).reportIssueOnFile(anyString());
+        Mockito.verify(spyInstance,atLeastOnce()).reportIssueOnFile(anyString(),anyInt());
         
     }
     

@@ -26,33 +26,44 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSEXIT;
-import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSREPLY;
-import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSRETHROW;
-import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSTHROW;
 import com.tibco.utils.bw6.helper.XmlHelper;
+import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = LastActivityAndEndActivityCheck.RULE_KEY, name = "Last activity Is An end activity", priority = Priority.INFO, description = "This rule checks all flows are finished properly using an end activity")
-@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.INFO)
-public class LastActivityAndEndActivityCheck extends AbstractProcessCheck {
+@Rule(key = RenderXMLPrettyPrintCheck.RULE_KEY, name = "tib:render-xml input using pretty print", priority = Priority.MINOR, description = "This rule checks for inefficiencies on using tib:render-xml function specifying the pretty-print option to true")
+@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
+public class RenderXMLPrettyPrintCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(LastActivityAndEndActivityCheck.class);
-    public static final String RULE_KEY = "LastActivityAndEndActivity";
+    private static final Logger LOG = Loggers.get(RenderXMLPrettyPrintCheck.class);
+    public static final String RULE_KEY = "RenderXmlPrettyPrint";
     
     @Override
     protected void validate(ProcessSource processSource) {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         Process process = processSource.getProcessModel();            
         if(process != null){
-            process.getActivities().stream().filter((activity) -> (activity.getOutputTransitions().isEmpty())).map((activity) -> {
-                LOG.debug("Activty type ["+activity.getType() + "] - ["+activity.getName()+"] with not outcoming transitions. End activity of one flow");
-                return activity;
-            }).filter((activity) -> (activity.getType() == null || !isActivityEnd(activity.getType()))).forEachOrdered((activity) -> {
-                reportIssueOnFile("End activity ["+activity.getName()+"] shouldn't be the last activity of the flow, as this should end with an End activity",XmlHelper.getLineNumber(activity.getNode()));
-            });
+            for(Activity activity : process.getActivities()){
+                LOG.debug("Activty type ["+activity.getType() + "] - ["+activity.getName()+"]");
+                
+                String expression = activity.getExpression();
+                if(expression != null && expression.contains("\"tib:render-xml(")){
+                    
+                    Pattern pat = Pattern.compile(".*tib\\:render-xml(\\([^\\,]+?\\,[^\\,]+?\\,[^\\)]+?\\)).*",Pattern.DOTALL | Pattern.MULTILINE);
+                    Matcher mt = pat.matcher(expression);
+                    if(mt.matches()){
+                        String renderXmlExpression = mt.group(1);
+                        if(renderXmlExpression != null && renderXmlExpression.endsWith("true()")){
+                            reportIssueOnFile("render-xml function in activity ["+activity.getName()+"] should avoid to use pretty-print option for performance",XmlHelper.getLineNumber(activity.getNode()));
+                        }
+                    }
+                    
+                    
+                }
+            }
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
     }
@@ -65,9 +76,5 @@ public class LastActivityAndEndActivityCheck extends AbstractProcessCheck {
     @Override
     public Logger getLogger() {
         return LOG;
-    }
-
-    private boolean isActivityEnd(String type) {
-        return type != null && (type.equals(BPWSRETHROW) || type.equals("bw.internal.end") || type.equals(BPWSREPLY) || type.equals(BPWSEXIT) || type.equals(BPWSTHROW));
     }
 }

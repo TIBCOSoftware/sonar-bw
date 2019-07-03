@@ -6,6 +6,7 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
@@ -21,7 +22,7 @@ public class ExceptionHandlingCheck extends AbstractProcessCheck {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         if (!processSource.getProcessModel().isSubProcess()) {
             if (processSource.getProcessModel().getCatchcount() == 0) {
-                reportIssueOnFile("Exception is not handled in component process: " + processSource.getProcessModel().getName());
+                reportIssueOnFile("Exception is not handled in component process: " + processSource.getProcessModel().getName(),XmlHelper.getLineNumber(processSource.getProcessModel().getNode()));
             }
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);

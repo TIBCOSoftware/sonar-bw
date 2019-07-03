@@ -27,6 +27,7 @@ import org.w3c.dom.Document;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Process;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
@@ -49,7 +50,7 @@ public class NoDescriptionCheck extends AbstractProcessCheck {
         if (process.getDescription() == null
                 || process.getDescription().isEmpty()) {
             //TODO Add line here
-            reportIssueOnFile("Empty description for this process");
+            reportIssueOnFile("Empty description for this process",XmlHelper.getLineNumber(process.getNode()));
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
     }

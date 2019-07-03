@@ -10,6 +10,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.doNothing;
@@ -47,7 +48,7 @@ public class CriticalSectionCheckTest {
         System.out.println("testValidate");
         CriticalSectionCheck instance = new CriticalSectionCheck();
         CriticalSectionCheck spyInstance = Mockito.spy(instance);
-        doNothing().when(spyInstance).reportIssueOnFile(any());  
+        doNothing().when(spyInstance).reportIssueOnFile(any(),anyInt());  
         ProcessSource source2 = new ProcessSource("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<bpws:process exitOnStandardFault=\"no\" name=\"t2.module.Process\"\n" +
                 "    suppressJoinFailure=\"yes\"\n" +
@@ -857,7 +858,7 @@ public class CriticalSectionCheckTest {
         System.out.println(source2.getProcessModel().countAllActivities());
             System.out.println(source2.getProcessModel().getGroups().get(0).getName());
             System.out.println(source2.getProcessModel().getGroups().get(0).countAllSubActivities());
-        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString());
+        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString(),anyInt());
         
     }
     

@@ -8,6 +8,7 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.EventSource;
 import org.sonar.api.utils.log.Logger;
@@ -37,19 +38,19 @@ public class JMSHardCodeCheck extends AbstractProcessCheck {
 
     public void detectIssue(Activity activity) {
         if (activity.hasProperty("replyToDestination") || activity.hasProperty("nullreplyToQueue")) {
-            reportIssueOnFile(String.format("The Reply to Destination setting in the JMS activity {0} is assigned a hardcoded value. It should be defined as Process property or Module property.", activity.getName()));
+            reportIssueOnFile(String.format("The Reply to Destination setting in the JMS activity {0} is assigned a hardcoded value. It should be defined as Process property or Module property.", activity.getName()),XmlHelper.getLineNumber(activity.getNode()));
         }
         if (activity.hasProperty("maxSessions")) {
-            reportIssueOnFile(String.format("The Max Sessions setting in the JMS activity [%s] is assigned a hardcoded value. It should be defined as Process property or Module property.", activity.getName()));
+            reportIssueOnFile(String.format("The Max Sessions setting in the JMS activity [%s] is assigned a hardcoded value. It should be defined as Process property or Module property.", activity.getName()),XmlHelper.getLineNumber(activity.getNode()));
         }
         if (activity.hasProperty("destinationName")) {
-            reportIssueOnFile(String.format("The Destination Name setting in the JMS activity [%s] is assigned a hardcoded value. It should be defined as Process property or Module property.", activity.getName()));
+            reportIssueOnFile(String.format("The Destination Name setting in the JMS activity [%s] is assigned a hardcoded value. It should be defined as Process property or Module property.", activity.getName()),XmlHelper.getLineNumber(activity.getNode()));
         }
         if (activity.hasProperty("messageSelector")) {
-            reportIssueOnFile(String.format("The Message Selector setting in the JMS activity [%s] is assigned a hardcoded value. It should be defined as Process property or Module property.", activity.getName()));
+            reportIssueOnFile(String.format("The Message Selector setting in the JMS activity [%s] is assigned a hardcoded value. It should be defined as Process property or Module property.", activity.getName()),XmlHelper.getLineNumber(activity.getNode()));
         }        
         if (activity.hasProperty("receiveTimeout")) {
-            reportIssueOnFile(String.format("The Polling Interval setting in the JMS activity {0} is assigned a hardcoded value. It should be defined as Process property or Module property.", activity.getName()));
+            reportIssueOnFile(String.format("The Polling Interval setting in the JMS activity {0} is assigned a hardcoded value. It should be defined as Process property or Module property.", activity.getName()),XmlHelper.getLineNumber(activity.getNode()));
         }
 
     }

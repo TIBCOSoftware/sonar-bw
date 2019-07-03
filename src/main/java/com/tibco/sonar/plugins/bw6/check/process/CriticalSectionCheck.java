@@ -3,6 +3,7 @@ package com.tibco.sonar.plugins.bw6.check.process;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Group;
 import com.tibco.utils.bw6.model.Process;
@@ -33,7 +34,7 @@ public class CriticalSectionCheck
             
             if (group.getType().equals("critical")) {
                 group.getActivities().stream().filter((activity) -> (activity.getType() != null && CriticalSectionCheck.CONSTANTS.contains(activity.getType()))).forEachOrdered((Activity activity) -> {
-                    reportIssueOnFile("The activity " + activity.getName() + " in process " + process.getBasename() + " should not be used within Critical Section group.");
+                    reportIssueOnFile("The activity " + activity.getName() + " in process " + process.getBasename() + " should not be used within Critical Section group.",XmlHelper.getLineNumber(activity.getNode()));
                 });
             }
         }        

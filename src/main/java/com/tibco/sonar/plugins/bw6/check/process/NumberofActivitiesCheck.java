@@ -28,7 +28,7 @@ public class NumberofActivitiesCheck extends AbstractProcessCheck {
         int activityCount = process.getActivities().size();
         LOG.debug("Number of activities for process: ["+process.getBasename()+"]: "+activityCount);
         if (activityCount > maxActivities) {
-            reportIssueOnFile("The process " + process.getBasename() + " has too many activities, this reduces the process readablity");
+            reportIssueOnFile("The process " + process.getBasename() + " has too many activities ["+activityCount+"], this reduces the process readablity");
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
     }

@@ -14,24 +14,25 @@ import java.util.List;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = GetFragmentBinaryCheck.RULE_KEY, name = "Get Fragment using Binary", priority = Priority.MINOR, description = "GetFragment should use binary mode for performance assestment ")
+@Rule(key = SFTPPutBinaryCheck.RULE_KEY, name = "SFTP Put activity using Binary", priority = Priority.MINOR, description = "SFTP Put should use binary mode for avoiding encoding issues when transferring ")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
-public class GetFragmentBinaryCheck extends AbstractProcessCheck {
+public class SFTPPutBinaryCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(GetFragmentBinaryCheck.class);
-    public static final String RULE_KEY = "GetFragmentBinary";
+    private static final Logger LOG = Loggers.get(SFTPPutBinaryCheck.class);
+    public static final String RULE_KEY = "SFTPPutBinary";
 
     
     @Override
     protected void validate(ProcessSource processSource) {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         Process process = processSource.getProcessModel();
-        LOG.debug("Number of services for process: ["+process.getBasename()+"]: "+process.getServices().size());
-        List<Activity> activityList = process.getActivitiesByType("bw.bwlx.getfragment");
+        
+        List<Activity> activityList = process.getActivitiesByType("bw.sftp.put");
         if(activityList != null){
             for(Activity activity : activityList){
-                if("xml".equals(activity.getProperty("outputSource"))){
-                      reportIssueOnFile("The activity [" + activity.getName() + "] should have binary format configured to performance issues",XmlHelper.getLineNumber(activity.getNode()));
+                LOG.debug("Activity [SFTP Put] detected ["+activity.getName()+"] with binary ["+activity.getProperty("binary")+"]" );
+                if(!"true".equals(activity.getProperty("binary"))){
+                      reportIssueOnFile("The activity [" + activity.getName() + "] should use binary format configured to avoid encoding issues",XmlHelper.getLineNumber(activity.getNode()));
                 }
             }
         }

@@ -9,6 +9,7 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
@@ -26,7 +27,7 @@ public class LogOnlyInSubprocessCheck extends AbstractProcessCheck {
         if (!processSource.getProcessModel().isSubProcess()) {
             List<Activity> list = processSource.getProcessModel().getActivities();
             list.stream().filter((activity) -> (activity.getType() != null && activity.getType().equals("bw.generalactivities.log"))).forEachOrdered((activity) -> {
-                reportIssueOnFile("The Log activity [" + activity.getName() + "] should be preferrably used in a sub process.  " + processSource.getProcessModel().getBasename() + " is not a subprocess.");
+                reportIssueOnFile("The Log activity [" + activity.getName() + "] should be preferrably used in a sub process.  " + processSource.getProcessModel().getBasename() + " is not a subprocess.",XmlHelper.getLineNumber(activity.getNode()));
             });
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);

@@ -14,12 +14,12 @@ import java.util.List;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = GetFragmentBinaryCheck.RULE_KEY, name = "Get Fragment using Binary", priority = Priority.MINOR, description = "GetFragment should use binary mode for performance assestment ")
+@Rule(key = ParseXMLBinaryCheck.RULE_KEY, name = "ParseXML using Binary", priority = Priority.MINOR, description = "ParseXML should use binary mode for performance assestment ")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
-public class GetFragmentBinaryCheck extends AbstractProcessCheck {
+public class ParseXMLBinaryCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(GetFragmentBinaryCheck.class);
-    public static final String RULE_KEY = "GetFragmentBinary";
+    private static final Logger LOG = Loggers.get(ParseXMLBinaryCheck.class);
+    public static final String RULE_KEY = "ParseXMLBinary";
 
     
     @Override
@@ -27,10 +27,10 @@ public class GetFragmentBinaryCheck extends AbstractProcessCheck {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         Process process = processSource.getProcessModel();
         LOG.debug("Number of services for process: ["+process.getBasename()+"]: "+process.getServices().size());
-        List<Activity> activityList = process.getActivitiesByType("bw.bwlx.getfragment");
+        List<Activity> activityList = process.getActivitiesByType("bw.xml.parsexml");
         if(activityList != null){
             for(Activity activity : activityList){
-                if("xml".equals(activity.getProperty("outputSource"))){
+                if("text".equals(activity.getProperty("inputStyle"))){
                       reportIssueOnFile("The activity [" + activity.getName() + "] should have binary format configured to performance issues",XmlHelper.getLineNumber(activity.getNode()));
                 }
             }

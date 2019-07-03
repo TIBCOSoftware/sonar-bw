@@ -7,48 +7,41 @@ package com.tibco.sonar.plugins.bw6.check.process;
 
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.BeforeClass;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
-import org.sonar.api.utils.log.Logger;
 
 /**
  *
  * @author avazquez
  */
-public class MultipleTransitionCheckTest {
+public class ParseXMLBinaryCheckTest {
     
-    private static ProcessSource source;
-    
-    public MultipleTransitionCheckTest() {
+    public ParseXMLBinaryCheckTest() {
     }
+
+       private static ProcessSource source;
+ 
     
-      
     @BeforeClass
     public static void setUpClass() {
        
         source = new ProcessSource("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-"<bpws:process exitOnStandardFault=\"no\" name=\"t2.module.Process\"\n" +
+"<bpws:process exitOnStandardFault=\"no\" name=\"t1.module.Process\"\n" +
 "    suppressJoinFailure=\"yes\"\n" +
-"    targetNamespace=\"http://xmlns.example.com/20190302225941\"\n" +
+"    targetNamespace=\"http://xmlns.example.com/20190703214606\"\n" +
 "    xmlns:bpws=\"http://docs.oasis-open.org/wsbpel/2.0/process/executable\"\n" +
 "    xmlns:info=\"http://www.tibco.com/bw/process/info\"\n" +
 "    xmlns:ns=\"http://www.tibco.com/pe/EngineTypes\"\n" +
-"    xmlns:ns0=\"http://www.tibco.com/namespaces/tnt/plugins/httpreceiver+b6c34be3-a042-4a26-a505-cc59867990a3+ActivityOutputType\"\n" +
-"    xmlns:ns1=\"http://tns.tibco.com/bw/palette/internal/activityerror+bw.internal.checkpoint\"\n" +
-"    xmlns:ns2=\"http://tns.tibco.com/bw/activity/timer/xsd/output\"\n" +
-"    xmlns:ns3=\"http://www.tibco.com/namespaces/tnt/plugins/jdbc+53084000-a004-4fe2-92e8-6c352bdb024c+input\"\n" +
-"    xmlns:ns4=\"http://www.tibco.com/namespaces/tnt/plugins/jdbc+53084000-a004-4fe2-92e8-6c352bdb024c+output\"\n" +
-"    xmlns:ns5=\"http://tns.tibco.com/bw/palette/internal/activityerror+bw.jdbc.JDBCQuery\"\n" +
-"    xmlns:ns6=\"http://www.tibco.com/namespaces/tnt/plugins/restinvoke+197af7a1-9ffe-455f-99e1-e435a781caa2+RestInvokeInput\"\n" +
-"    xmlns:ns7=\"http://www.tibco.com/namespaces/tnt/plugins/restinvoke+197af7a1-9ffe-455f-99e1-e435a781caa2+RestInvokeOutput\"\n" +
-"    xmlns:ns8=\"http://tns.tibco.com/bw/palette/internal/activityerror+bw.restjson.Rest\"\n" +
+"    xmlns:ns0=\"http://tns.tibco.com/bw/activity/timer/xsd/output\"\n" +
+"    xmlns:ns1=\"http://www.tibco.com/namespaces/tnt/plugins/parsexml\"\n" +
+"    xmlns:ns2=\"http://tns.tibco.com/bw/palette/internal/activityerror+bw.xml.parsexml\"\n" +
 "    xmlns:sca=\"http://docs.oasis-open.org/ns/opencsa/sca/200912\"\n" +
 "    xmlns:sca-bpel=\"http://docs.oasis-open.org/ns/opencsa/sca-bpel/200801\"\n" +
 "    xmlns:tibex=\"http://www.tibco.com/bpel/2007/extensions\"\n" +
@@ -214,20 +207,6 @@ public class MultipleTransitionCheckTest {
 "            </complexType>\n" +
 "            <element name=\"DuplicateKeyException\" type=\"tns:DuplicateKeyExceptionType\"/>\n" +
 "        </schema>\n" +
-"        <schema elementFormDefault=\"unqualified\"\n" +
-"            targetNamespace=\"http://tns.tibco.com/bw/palette/internal/activityerror+bw.internal.checkpoint\"\n" +
-"            xmlns=\"http://www.w3.org/2001/XMLSchema\"\n" +
-"            xmlns:Q1=\"http://schemas.tibco.com/bw/pe/plugin/5.0/exceptions\" xmlns:tns=\"http://tns.tibco.com/bw/palette/internal/activityerror+bw.internal.checkpoint\">\n" +
-"            <import namespace=\"http://schemas.tibco.com/bw/pe/plugin/5.0/exceptions\"/>\n" +
-"            <import namespace=\"http://schemas.tibco.com/bw/pe/plugin/5.0/exceptions\"/>\n" +
-"            <element name=\"ActivityErrorData\" type=\"tns:ActivityErrorDataType\"/>\n" +
-"            <complexType name=\"ActivityErrorDataType\">\n" +
-"                <choice>\n" +
-"                    <element maxOccurs=\"1\" minOccurs=\"0\" ref=\"Q1:DuplicateKeyException\"/>\n" +
-"                    <element maxOccurs=\"1\" minOccurs=\"0\" ref=\"Q1:ActivityTimedOutException\"/>\n" +
-"                </choice>\n" +
-"            </complexType>\n" +
-"        </schema>\n" +
 "        <xs:schema attributeFormDefault=\"unqualified\"\n" +
 "            elementFormDefault=\"qualified\"\n" +
 "            targetNamespace=\"http://tns.tibco.com/bw/activity/timer/xsd/output\"\n" +
@@ -248,151 +227,117 @@ public class MultipleTransitionCheckTest {
 "            </xs:complexType>\n" +
 "            <xs:element name=\"TimerOutputSchema\" type=\"tns:TimerOutputSchemaType\"/>\n" +
 "        </xs:schema>\n" +
-"        <schema\n" +
-"            targetNamespace=\"http://www.tibco.com/namespaces/tnt/plugins/jdbc+53084000-a004-4fe2-92e8-6c352bdb024c+input\"\n" +
-"            xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://www.tibco.com/namespaces/tnt/plugins/jdbc+53084000-a004-4fe2-92e8-6c352bdb024c+input\">\n" +
-"            <element name=\"jdbcQueryActivityInput\">\n" +
-"                <complexType>\n" +
-"                    <sequence>\n" +
-"                        <element maxOccurs=\"1\" minOccurs=\"0\"\n" +
-"                            name=\"ServerTimeZone\" type=\"string\"/>\n" +
-"                        <element maxOccurs=\"1\" minOccurs=\"0\"\n" +
-"                            name=\"timeout\" type=\"long\"/>\n" +
-"                        <element maxOccurs=\"1\" minOccurs=\"0\"\n" +
-"                            name=\"maxRows\" type=\"long\"/>\n" +
-"                    </sequence>\n" +
-"                </complexType>\n" +
-"            </element>\n" +
-"        </schema>\n" +
-"        <schema\n" +
-"            targetNamespace=\"http://www.tibco.com/namespaces/tnt/plugins/jdbc+53084000-a004-4fe2-92e8-6c352bdb024c+output\"\n" +
-"            xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://www.tibco.com/namespaces/tnt/plugins/jdbc+53084000-a004-4fe2-92e8-6c352bdb024c+output\">\n" +
-"            <element name=\"resultSet\">\n" +
-"                <complexType>\n" +
-"                    <sequence>\n" +
-"                        <element maxOccurs=\"unbounded\" minOccurs=\"0\" name=\"Record\">\n" +
-"                            <complexType>\n" +
-"                                <sequence/>\n" +
-"                            </complexType>\n" +
-"                        </element>\n" +
-"                    </sequence>\n" +
-"                </complexType>\n" +
-"            </element>\n" +
-"        </schema>\n" +
+"        <xsd:schema\n" +
+"            targetNamespace=\"http://www.tibco.com/namespaces/tnt/plugins/parsexml\"\n" +
+"            xmlns:tns=\"http://www.tibco.com/namespaces/tnt/plugins/parsexml\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n" +
+"            <xsd:complexType name=\"configType\">\n" +
+"                <xsd:sequence>\n" +
+"                    <xsd:element form=\"unqualified\" name=\"term\" type=\"xsd:anyType\"/>\n" +
+"                    <xsd:element form=\"unqualified\" minOccurs=\"0\"\n" +
+"                        name=\"inputStyle\" type=\"xsd:string\"/>\n" +
+"                    <xsd:element form=\"unqualified\" minOccurs=\"0\"\n" +
+"                        name=\"xsdVersion\" type=\"xsd:string\"/>\n" +
+"                </xsd:sequence>\n" +
+"            </xsd:complexType>\n" +
+"            <xsd:complexType name=\"dynamicInputType\">\n" +
+"                <xsd:choice>\n" +
+"                    <xsd:element ref=\"tns:xmlBinary\"/>\n" +
+"                    <xsd:element ref=\"tns:xmlString\"/>\n" +
+"                </xsd:choice>\n" +
+"            </xsd:complexType>\n" +
+"            <xsd:element name=\"config\" type=\"tns:configType\"/>\n" +
+"            <xsd:element name=\"element\" type=\"xsd:string\"/>\n" +
+"            <xsd:element name=\"schemaRef\" type=\"xsd:string\"/>\n" +
+"            <xsd:element name=\"textEncoding\" type=\"xsd:string\"/>\n" +
+"            <xsd:element name=\"validateOutput\" type=\"xsd:boolean\"/>\n" +
+"            <xsd:element name=\"writeXsiTypes\" type=\"xsd:boolean\"/>\n" +
+"            <xsd:element name=\"xmlBinary\">\n" +
+"                <xsd:complexType>\n" +
+"                    <xsd:sequence>\n" +
+"                        <xsd:element form=\"unqualified\" name=\"bytes\" type=\"xsd:base64Binary\"/>\n" +
+"                        <xsd:element form=\"unqualified\" minOccurs=\"0\"\n" +
+"                            name=\"forceEncoding\" type=\"xsd:string\"/>\n" +
+"                    </xsd:sequence>\n" +
+"                </xsd:complexType>\n" +
+"            </xsd:element>\n" +
+"            <xsd:element name=\"xmlParserInput\" type=\"tns:dynamicInputType\"/>\n" +
+"            <xsd:element name=\"xmlString\" type=\"xsd:string\"/>\n" +
+"        </xsd:schema>\n" +
 "        <schema elementFormDefault=\"unqualified\"\n" +
-"            targetNamespace=\"http://schemas.tibco.com/bw/plugins/jdbc/5.0/jdbcExceptions\"\n" +
-"            version=\"0.1\" xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns2=\"http://schemas.tibco.com/bw/plugins/jdbc/5.0/jdbcExceptions\">\n" +
-"            <complexType name=\"ActivityExceptionType\">\n" +
+"            targetNamespace=\"http://schemas.tibco.com/bw/plugins/xml/5.0/xmlExceptions\"\n" +
+"            xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://schemas.tibco.com/bw/plugins/xml/5.0/xmlExceptions\">\n" +
+"            <element name=\"XMLException\" type=\"tns:XMLExceptionType\"/>\n" +
+"            <complexType name=\"XMLExceptionType\">\n" +
 "                <sequence>\n" +
 "                    <element name=\"msg\" type=\"string\"/>\n" +
 "                    <element minOccurs=\"0\" name=\"msgCode\" type=\"string\"/>\n" +
 "                </sequence>\n" +
 "            </complexType>\n" +
-"            <complexType name=\"PluginExceptionType\">\n" +
+"            <element name=\"UnsupportedEncodingException\" type=\"tns:UnsupportedEncodingExceptionType\"/>\n" +
+"            <complexType name=\"UnsupportedEncodingExceptionType\">\n" +
 "                <complexContent>\n" +
-"                    <extension base=\"tns2:ActivityExceptionType\"/>\n" +
-"                </complexContent>\n" +
-"            </complexType>\n" +
-"            <element name=\"JDBCPluginException\" type=\"tns2:JDBCPluginExceptionType\"/>\n" +
-"            <complexType name=\"JDBCPluginExceptionType\">\n" +
-"                <complexContent>\n" +
-"                    <extension base=\"tns2:PluginExceptionType\"/>\n" +
-"                </complexContent>\n" +
-"            </complexType>\n" +
-"            <element name=\"InvalidSQLTypeException\" type=\"tns2:InvalidSQLTypeExceptionType\"/>\n" +
-"            <complexType name=\"InvalidSQLTypeExceptionType\">\n" +
-"                <complexContent>\n" +
-"                    <extension base=\"tns2:JDBCPluginExceptionType\">\n" +
+"                    <extension base=\"tns:XMLExceptionType\">\n" +
 "                        <sequence>\n" +
-"                            <element name=\"typeName\" type=\"string\"/>\n" +
+"                            <element name=\"encoding\" type=\"string\"/>\n" +
 "                        </sequence>\n" +
 "                    </extension>\n" +
 "                </complexContent>\n" +
 "            </complexType>\n" +
-"            <element name=\"JDBCConnectionNotFoundException\" type=\"tns2:JDBCConnectionNotFoundExceptionType\"/>\n" +
-"            <complexType name=\"JDBCConnectionNotFoundExceptionType\">\n" +
+"            <complexType name=\"XMLRenderExceptionType\">\n" +
 "                <complexContent>\n" +
-"                    <extension base=\"tns2:JDBCPluginExceptionType\">\n" +
-"                        <sequence>\n" +
-"                            <element name=\"jdbcConnection\" type=\"string\"/>\n" +
-"                        </sequence>\n" +
-"                    </extension>\n" +
+"                    <extension base=\"tns:XMLExceptionType\"/>\n" +
 "                </complexContent>\n" +
 "            </complexType>\n" +
-"            <element name=\"DuplicatedFieldNameException\" type=\"tns2:DuplicatedFieldNameExceptionType\"/>\n" +
-"            <complexType name=\"DuplicatedFieldNameExceptionType\">\n" +
+"            <element name=\"XMLRenderException\" type=\"tns:XMLRenderExceptionType\"/>\n" +
+"            <complexType name=\"XMLParseExceptionType\">\n" +
 "                <complexContent>\n" +
-"                    <extension base=\"tns2:JDBCPluginExceptionType\">\n" +
-"                        <sequence>\n" +
-"                            <element name=\"fieldName\" type=\"string\"/>\n" +
-"                        </sequence>\n" +
-"                    </extension>\n" +
+"                    <extension base=\"tns:XMLExceptionType\"/>\n" +
 "                </complexContent>\n" +
 "            </complexType>\n" +
-"            <element name=\"InvalidTimeZoneException\" type=\"tns2:InvalidTimeZoneExceptionType\"/>\n" +
-"            <complexType name=\"InvalidTimeZoneExceptionType\">\n" +
+"            <element name=\"XMLParseException\" type=\"tns:XMLParseExceptionType\"/>\n" +
+"            <complexType name=\"XMLTransformExceptionType\">\n" +
 "                <complexContent>\n" +
-"                    <extension base=\"tns2:JDBCPluginExceptionType\">\n" +
-"                        <sequence>\n" +
-"                            <element name=\"timeZone\" type=\"string\"/>\n" +
-"                        </sequence>\n" +
-"                    </extension>\n" +
+"                    <extension base=\"tns:XMLExceptionType\"/>\n" +
 "                </complexContent>\n" +
 "            </complexType>\n" +
-"            <element name=\"JDBCSQLException\" type=\"tns2:JDBCSQLExceptionType\"/>\n" +
-"            <complexType name=\"JDBCSQLExceptionType\">\n" +
+"            <element name=\"XMLTransformException\" type=\"tns:XMLTransformExceptionType\"/>\n" +
+"            <complexType name=\"MissingByteCountExceptionType\">\n" +
 "                <complexContent>\n" +
-"                    <extension base=\"tns2:JDBCPluginExceptionType\">\n" +
-"                        <sequence>\n" +
-"                            <element name=\"sqlState\" type=\"string\"/>\n" +
-"                            <element name=\"detailStr\" type=\"string\"/>\n" +
-"                        </sequence>\n" +
-"                    </extension>\n" +
+"                    <extension base=\"tns:XMLExceptionType\"/>\n" +
 "                </complexContent>\n" +
 "            </complexType>\n" +
-"            <element name=\"LoginTimedOutException\" type=\"tns2:LoginTimedOutExceptionType\"/>\n" +
-"            <complexType name=\"LoginTimedOutExceptionType\">\n" +
+"            <element name=\"MissingByteCountException\" type=\"tns:MissingByteCountExceptionType\"/>\n" +
+"            <complexType name=\"ValidationExceptionType\">\n" +
 "                <complexContent>\n" +
-"                    <extension base=\"tns2:JDBCPluginExceptionType\"/>\n" +
+"                    <extension base=\"tns:XMLExceptionType\"/>\n" +
 "                </complexContent>\n" +
 "            </complexType>\n" +
+"            <element name=\"ValidationException\" type=\"tns:ValidationExceptionType\"/>\n" +
 "        </schema>\n" +
 "        <schema elementFormDefault=\"unqualified\"\n" +
-"            targetNamespace=\"http://tns.tibco.com/bw/palette/internal/activityerror+bw.jdbc.JDBCQuery\"\n" +
+"            targetNamespace=\"http://tns.tibco.com/bw/palette/internal/activityerror+bw.xml.parsexml\"\n" +
 "            xmlns=\"http://www.w3.org/2001/XMLSchema\"\n" +
-"            xmlns:Q1=\"http://schemas.tibco.com/bw/plugins/jdbc/5.0/jdbcExceptions\"\n" +
-"            xmlns:Q2=\"http://schemas.tibco.com/bw/pe/plugin/5.0/exceptions\" xmlns:tns=\"http://tns.tibco.com/bw/palette/internal/activityerror+bw.jdbc.JDBCQuery\">\n" +
-"            <import namespace=\"http://schemas.tibco.com/bw/pe/plugin/5.0/exceptions\"/>\n" +
-"            <import namespace=\"http://schemas.tibco.com/bw/plugins/jdbc/5.0/jdbcExceptions\"/>\n" +
-"            <import namespace=\"http://schemas.tibco.com/bw/plugins/jdbc/5.0/jdbcExceptions\"/>\n" +
-"            <import namespace=\"http://schemas.tibco.com/bw/plugins/jdbc/5.0/jdbcExceptions\"/>\n" +
-"            <import namespace=\"http://schemas.tibco.com/bw/plugins/jdbc/5.0/jdbcExceptions\"/>\n" +
-"            <import namespace=\"http://schemas.tibco.com/bw/plugins/jdbc/5.0/jdbcExceptions\"/>\n" +
-"            <import namespace=\"http://schemas.tibco.com/bw/plugins/jdbc/5.0/jdbcExceptions\"/>\n" +
+"            xmlns:Q1=\"http://schemas.tibco.com/bw/plugins/xml/5.0/xmlExceptions\" xmlns:tns=\"http://tns.tibco.com/bw/palette/internal/activityerror+bw.xml.parsexml\">\n" +
+"            <import namespace=\"http://schemas.tibco.com/bw/plugins/xml/5.0/xmlExceptions\"/>\n" +
+"            <import namespace=\"http://schemas.tibco.com/bw/plugins/xml/5.0/xmlExceptions\"/>\n" +
+"            <import namespace=\"http://schemas.tibco.com/bw/plugins/xml/5.0/xmlExceptions\"/>\n" +
+"            <import namespace=\"http://schemas.tibco.com/bw/plugins/xml/5.0/xmlExceptions\"/>\n" +
 "            <element name=\"ActivityErrorData\" type=\"tns:ActivityErrorDataType\"/>\n" +
 "            <complexType name=\"ActivityErrorDataType\">\n" +
 "                <choice>\n" +
-"                    <element maxOccurs=\"1\" minOccurs=\"0\" ref=\"Q1:JDBCConnectionNotFoundException\"/>\n" +
-"                    <element maxOccurs=\"1\" minOccurs=\"0\" ref=\"Q1:InvalidTimeZoneException\"/>\n" +
-"                    <element maxOccurs=\"1\" minOccurs=\"0\" ref=\"Q1:JDBCSQLException\"/>\n" +
-"                    <element maxOccurs=\"1\" minOccurs=\"0\" ref=\"Q1:LoginTimedOutException\"/>\n" +
-"                    <element maxOccurs=\"1\" minOccurs=\"0\" ref=\"Q1:InvalidSQLTypeException\"/>\n" +
-"                    <element maxOccurs=\"1\" minOccurs=\"0\" ref=\"Q1:DuplicatedFieldNameException\"/>\n" +
-"                    <element maxOccurs=\"1\" minOccurs=\"0\" ref=\"Q2:ActivityTimedOutException\"/>\n" +
+"                    <element maxOccurs=\"1\" minOccurs=\"0\" ref=\"Q1:XMLParseException\"/>\n" +
+"                    <element maxOccurs=\"1\" minOccurs=\"0\" ref=\"Q1:UnsupportedEncodingException\"/>\n" +
+"                    <element maxOccurs=\"1\" minOccurs=\"0\" ref=\"Q1:MissingByteCountException\"/>\n" +
+"                    <element maxOccurs=\"1\" minOccurs=\"0\" ref=\"Q1:ValidationException\"/>\n" +
 "                </choice>\n" +
 "            </complexType>\n" +
 "        </schema>\n" +
-"        <wsdl:definitions\n" +
-"            targetNamespace=\"http://xmlns.example.com/20190302225941\"\n" +
-"            xmlns:tns=\"http://xmlns.example.com/20190302225941\"\n" +
-"            xmlns:vprop=\"http://docs.oasis-open.org/wsbpel/2.0/varprop\"\n" +
-"            xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"/>\n" +
 "    </tibex:Types>\n" +
 "    <tibex:ProcessInfo callable=\"false\" createdBy=\"avazquez\"\n" +
-"        createdOn=\"Sat Mar 02 22:59:41 CET 2019\" description=\"\"\n" +
+"        createdOn=\"Wed Jul 03 21:46:06 CEST 2019\" description=\"\"\n" +
 "        extraErrorVars=\"true\" modifiers=\"public\"\n" +
-"        productVersion=\"6.5.0 HF4 V99 2018-11-21\" scalable=\"true\"\n" +
-"        singleton=\"true\" stateless=\"false\" type=\"IT\"/>\n" +
+"        productVersion=\"2.4.4 V39 2019-06-19\" scalable=\"true\"\n" +
+"        singleton=\"true\" stateless=\"true\" type=\"IT\"/>\n" +
 "    <tibex:ProcessInterface context=\"\" input=\"\" output=\"\"/>\n" +
 "    <tibex:ProcessTemplateConfigurations/>\n" +
 "    <notation:Diagram measurementUnit=\"Pixel\" type=\"BWProcess\"\n" +
@@ -420,7 +365,7 @@ public class MultipleTransitionCheckTest {
 "                            <children type=\"3020\">\n" +
 "                                <children type=\"4005\">\n" +
 "                                    <children type=\"3007\">\n" +
-"                                    <children type=\"4002\">\n" +
+"                                    <children type=\"4002 bw.generalactivities.timer\">\n" +
 "                                    <children type=\"4017\">\n" +
 "                                    <styles\n" +
 "                                    fontName=\"Segoe UI\"\n" +
@@ -452,8 +397,10 @@ public class MultipleTransitionCheckTest {
 "                                    gradientEndColor=\"50431\"\n" +
 "                                    gradientStartColor=\"16777215\" xsi:type=\"bwnotation:BackgroundStyle\"/>\n" +
 "                                    <element href=\"//0/@process/@activity/@activity/@activities.0\"/>\n" +
-"                                    <layoutConstraint x=\"238\"\n" +
-"                                    xsi:type=\"notation:Bounds\" y=\"177\"/>\n" +
+"                                    <layoutConstraint\n" +
+"                                    height=\"40\" width=\"40\"\n" +
+"                                    x=\"14\"\n" +
+"                                    xsi:type=\"notation:Bounds\" y=\"93\"/>\n" +
 "                                    </children>\n" +
 "                                    <children type=\"4002\">\n" +
 "                                    <children type=\"4017\">\n" +
@@ -487,45 +434,8 @@ public class MultipleTransitionCheckTest {
 "                                    gradientEndColor=\"50431\"\n" +
 "                                    gradientStartColor=\"16777215\" xsi:type=\"bwnotation:BackgroundStyle\"/>\n" +
 "                                    <element href=\"//0/@process/@activity/@activity/@activities.1\"/>\n" +
-"                                    <layoutConstraint x=\"341\"\n" +
-"                                    xsi:type=\"notation:Bounds\" y=\"76\"/>\n" +
-"                                    </children>\n" +
-"                                    <children type=\"4002 bw.generalactivities.timer\">\n" +
-"                                    <children type=\"4017\">\n" +
-"                                    <styles\n" +
-"                                    fontName=\"Segoe UI\"\n" +
-"                                    lineColor=\"0\" xsi:type=\"notation:ShapeStyle\"/>\n" +
-"                                    <layoutConstraint xsi:type=\"notation:Bounds\"/>\n" +
-"                                    </children>\n" +
-"                                    <children type=\"4017\">\n" +
-"                                    <styles\n" +
-"                                    fontName=\"Segoe UI\"\n" +
-"                                    lineColor=\"0\" xsi:type=\"notation:ShapeStyle\"/>\n" +
-"                                    <layoutConstraint xsi:type=\"notation:Bounds\"/>\n" +
-"                                    </children>\n" +
-"                                    <children type=\"4017\">\n" +
-"                                    <styles\n" +
-"                                    fontName=\"Segoe UI\"\n" +
-"                                    lineColor=\"0\" xsi:type=\"notation:ShapeStyle\"/>\n" +
-"                                    <layoutConstraint xsi:type=\"notation:Bounds\"/>\n" +
-"                                    </children>\n" +
-"                                    <children type=\"4017\">\n" +
-"                                    <styles\n" +
-"                                    fontName=\"Segoe UI\"\n" +
-"                                    lineColor=\"0\" xsi:type=\"notation:ShapeStyle\"/>\n" +
-"                                    <layoutConstraint xsi:type=\"notation:Bounds\"/>\n" +
-"                                    </children>\n" +
-"                                    <styles fontName=\"Segoe UI\"\n" +
-"                                    lineColor=\"0\" xsi:type=\"notation:ShapeStyle\"/>\n" +
-"                                    <styles\n" +
-"                                    backgroundColor=\"16777215\"\n" +
-"                                    gradientEndColor=\"50431\"\n" +
-"                                    gradientStartColor=\"16777215\" xsi:type=\"bwnotation:BackgroundStyle\"/>\n" +
-"                                    <element href=\"//0/@process/@activity/@activity/@activities.2\"/>\n" +
-"                                    <layoutConstraint\n" +
-"                                    height=\"40\" width=\"40\"\n" +
-"                                    x=\"-37\"\n" +
-"                                    xsi:type=\"notation:Bounds\" y=\"81\"/>\n" +
+"                                    <layoutConstraint x=\"151\"\n" +
+"                                    xsi:type=\"notation:Bounds\" y=\"93\"/>\n" +
 "                                    </children>\n" +
 "                                    <children type=\"4002\">\n" +
 "                                    <children type=\"4017\">\n" +
@@ -558,9 +468,9 @@ public class MultipleTransitionCheckTest {
 "                                    backgroundColor=\"16777215\"\n" +
 "                                    gradientEndColor=\"50431\"\n" +
 "                                    gradientStartColor=\"16777215\" xsi:type=\"bwnotation:BackgroundStyle\"/>\n" +
-"                                    <element href=\"//0/@process/@activity/@activity/@activities.3\"/>\n" +
-"                                    <layoutConstraint x=\"61\"\n" +
-"                                    xsi:type=\"notation:Bounds\" y=\"81\"/>\n" +
+"                                    <element href=\"//0/@process/@activity/@activity/@activities.2\"/>\n" +
+"                                    <layoutConstraint x=\"315\"\n" +
+"                                    xsi:type=\"notation:Bounds\" y=\"93\"/>\n" +
 "                                    </children>\n" +
 "                                    <styles xsi:type=\"notation:DrawerStyle\"/>\n" +
 "                                    <styles xsi:type=\"notation:SortingStyle\"/>\n" +
@@ -619,8 +529,8 @@ public class MultipleTransitionCheckTest {
 "            <bendpoints points=\"[0, 0, 0, 0]$[0, 0, 0, 0]\" xsi:type=\"notation:RelativeBendpoints\"/>\n" +
 "        </edges>\n" +
 "        <edges\n" +
-"            source=\"//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2\"\n" +
-"            target=\"//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.3\" type=\"4006\">\n" +
+"            source=\"//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.1\"\n" +
+"            target=\"//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2\" type=\"4006\">\n" +
 "            <children type=\"6002\">\n" +
 "                <layoutConstraint xsi:type=\"notation:Location\" y=\"40\"/>\n" +
 "            </children>\n" +
@@ -629,52 +539,16 @@ public class MultipleTransitionCheckTest {
 "            <element href=\"//0/@process/@activity/@activity/@links/@children.1\"/>\n" +
 "            <bendpoints points=\"[0, 0, 0, 0]$[0, 0, 0, 0]\" xsi:type=\"notation:RelativeBendpoints\"/>\n" +
 "        </edges>\n" +
-"        <edges\n" +
-"            source=\"//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.3\"\n" +
-"            target=\"//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0\" type=\"4006\">\n" +
-"            <children type=\"6002\">\n" +
-"                <layoutConstraint xsi:type=\"notation:Location\" y=\"40\"/>\n" +
-"            </children>\n" +
-"            <styles lineColor=\"0\" xsi:type=\"notation:ConnectorStyle\"/>\n" +
-"            <styles fontName=\"Segoe UI\" xsi:type=\"notation:FontStyle\"/>\n" +
-"            <element href=\"//0/@process/@activity/@activity/@links/@children.2\"/>\n" +
-"            <bendpoints points=\"[25, -5, -85, 0]$[86, 0, -24, 5]\" xsi:type=\"notation:RelativeBendpoints\"/>\n" +
-"        </edges>\n" +
-"        <edges\n" +
-"            source=\"//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2\"\n" +
-"            target=\"//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0\" type=\"4006\">\n" +
-"            <children type=\"6002\">\n" +
-"                <layoutConstraint xsi:type=\"notation:Location\" y=\"40\"/>\n" +
-"            </children>\n" +
-"            <styles lineColor=\"0\" xsi:type=\"notation:ConnectorStyle\"/>\n" +
-"            <styles fontName=\"Segoe UI\" xsi:type=\"notation:FontStyle\"/>\n" +
-"            <element href=\"//0/@process/@activity/@activity/@links/@children.3\"/>\n" +
-"            <bendpoints points=\"[25, 9, -250, -87]$[251, 87, -24, -9]\" xsi:type=\"notation:RelativeBendpoints\"/>\n" +
-"        </edges>\n" +
 "    </notation:Diagram>\n" +
 "    <bpws:variables>\n" +
 "        <bpws:variable element=\"ns:ProcessContext\"\n" +
 "            name=\"_processContext\" sca-bpel:internal=\"true\"/>\n" +
-"        <bpws:variable name=\"httpConnectorResource\"\n" +
-"            sca-bpel:hotUpdate=\"false\" sca-bpel:privateProperty=\"true\"\n" +
-"            sca-bpel:property=\"yes\"\n" +
-"            sca-bpel:sharedResourceType=\"{http://xsd.tns.tibco.com/bw/models/sharedresource/httpconnector}HttpConnectorConfiguration\" type=\"xsd:string\"/>\n" +
-"        <bpws:variable element=\"ns1:ActivityErrorData\"\n" +
-"            name=\"_error_Checkpoint\" sca-bpel:internal=\"true\"/>\n" +
+"        <bpws:variable element=\"ns0:TimerOutputSchema\" name=\"Timer\" sca-bpel:internal=\"true\"/>\n" +
+"        <bpws:variable element=\"ns1:xmlString\" name=\"ParseXml-input\" sca-bpel:internal=\"true\"/>\n" +
+"        <bpws:variable name=\"ParseXml\" sca-bpel:internal=\"true\"/>\n" +
+"        <bpws:variable element=\"ns2:ActivityErrorData\"\n" +
+"            name=\"_error_ParseXml\" sca-bpel:internal=\"true\"/>\n" +
 "        <bpws:variable element=\"ns:ErrorReport\" name=\"_error\" sca-bpel:internal=\"true\"/>\n" +
-"        <bpws:variable element=\"ns2:TimerOutputSchema\" name=\"Timer\" sca-bpel:internal=\"true\"/>\n" +
-"        <bpws:variable name=\"jdbcProperty\" sca-bpel:hotUpdate=\"false\"\n" +
-"            sca-bpel:privateProperty=\"true\" sca-bpel:property=\"yes\"\n" +
-"            sca-bpel:sharedResourceType=\"{http://xsd.tns.tibco.com/amf/models/sharedresource/jdbc}JdbcDataSource\" type=\"xsd:string\"/>\n" +
-"        <bpws:variable element=\"ns3:jdbcQueryActivityInput\"\n" +
-"            name=\"JDBCQuery-input\" sca-bpel:internal=\"true\"/>\n" +
-"        <bpws:variable element=\"ns4:resultSet\" name=\"JDBCQuery\" sca-bpel:internal=\"true\"/>\n" +
-"        <bpws:variable element=\"ns5:ActivityErrorData\"\n" +
-"            name=\"_error_JDBCQuery\" sca-bpel:internal=\"true\"/>\n" +
-"        <bpws:variable name=\"httpClientResource\"\n" +
-"            sca-bpel:hotUpdate=\"false\" sca-bpel:privateProperty=\"true\"\n" +
-"            sca-bpel:property=\"yes\"\n" +
-"            sca-bpel:sharedResourceType=\"{http://xsd.tns.tibco.com/bw/models/sharedresource/httpclient}HttpClientConfiguration\" type=\"xsd:string\"/>\n" +
 "    </bpws:variables>\n" +
 "    <bpws:extensions>\n" +
 "        <bpws:extension mustUnderstand=\"no\" namespace=\"http://www.eclipse.org/gmf/runtime/1.0.2/notation\"/>\n" +
@@ -687,38 +561,16 @@ public class MultipleTransitionCheckTest {
 "    <bpws:scope name=\"scope\">\n" +
 "        <bpws:flow name=\"flow\">\n" +
 "            <bpws:links>\n" +
-"                <bpws:link name=\"CheckpointToExit\" tibex:linkType=\"SUCCESS\"/>\n" +
-"                <bpws:link name=\"TimerToJDBCQuery\" tibex:linkType=\"SUCCESS\"/>\n" +
-"                <bpws:link name=\"JDBCQueryToCheckpoint\" tibex:linkType=\"SUCCESS\"/>\n" +
-"                <bpws:link name=\"TimerToCheckpoint\" tibex:linkType=\"SUCCESS\"/>\n" +
+"                <bpws:link name=\"TimerToParseXml\" tibex:linkType=\"SUCCESS\"/>\n" +
+"                <bpws:link name=\"ParseXmlToExit\" tibex:linkType=\"SUCCESS\"/>\n" +
 "            </bpws:links>\n" +
-"            <bpws:extensionActivity>\n" +
-"                <tibex:extActivity name=\"Checkpoint\"\n" +
-"                    tibex:xpdlId=\"ba406d85-daf3-4c47-9a8f-1b25a7232e03\"\n" +
-"                    type=\"bw.internal.checkpoint\" xmlns:tibex=\"http://www.tibco.com/bpel/2007/extensions\">\n" +
-"                    <bpws:targets>\n" +
-"                        <bpws:target linkName=\"JDBCQueryToCheckpoint\"/>\n" +
-"                        <bpws:target linkName=\"TimerToCheckpoint\"/>\n" +
-"                    </bpws:targets>\n" +
-"                    <bpws:sources>\n" +
-"                        <bpws:source linkName=\"CheckpointToExit\"/>\n" +
-"                    </bpws:sources>\n" +
-"                    <tibex:checkpoint/>\n" +
-"                </tibex:extActivity>\n" +
-"            </bpws:extensionActivity>\n" +
-"            <bpws:exit name=\"Exit\" tibex:xpdlId=\"109d8a82-d856-4b8b-9cc3-449547bc182d\">\n" +
-"                <bpws:targets>\n" +
-"                    <bpws:target linkName=\"CheckpointToExit\"/>\n" +
-"                </bpws:targets>\n" +
-"            </bpws:exit>\n" +
 "            <bpws:extensionActivity>\n" +
 "                <tibex:receiveEvent createInstance=\"yes\"\n" +
 "                    eventTimeout=\"60\" name=\"Timer\"\n" +
-"                    tibex:xpdlId=\"d60a7293-9a64-49d6-977e-bb3cbfc78ab6\"\n" +
+"                    tibex:xpdlId=\"35314ccd-641b-42d0-a150-d00ab8fcb944\"\n" +
 "                    variable=\"Timer\" xmlns:tibex=\"http://www.tibco.com/bpel/2007/extensions\">\n" +
 "                    <bpws:sources>\n" +
-"                        <bpws:source linkName=\"TimerToJDBCQuery\"/>\n" +
-"                        <bpws:source linkName=\"TimerToCheckpoint\"/>\n" +
+"                        <bpws:source linkName=\"TimerToParseXml\"/>\n" +
 "                    </bpws:sources>\n" +
 "                    <tibex:eventSource>\n" +
 "                        <bwext:BWActivity\n" +
@@ -731,10 +583,10 @@ public class MultipleTransitionCheckTest {
 "                                <properties name=\"config\" xsi:type=\"activityconfig:EMFProperty\">\n" +
 "                                    <type href=\"http://ns.tibco.com/bw/palette/generalactivities#//Timer\"/>\n" +
 "                                    <value\n" +
-"                                    endTime=\"2019-03-02T23:01:41.409+0100\"\n" +
+"                                    endTime=\"2019-07-03T21:46:33.309+0200\"\n" +
 "                                    intervalUnit=\"Second\"\n" +
 "                                    runOnce=\"true\"\n" +
-"                                    startTime=\"2019-03-02T23:01:41.409+0100\"\n" +
+"                                    startTime=\"2019-07-03T21:46:33.309+0200\"\n" +
 "                                    timeInterval=\"1\" xsi:type=\"generalactivities:Timer\"/>\n" +
 "                                </properties>\n" +
 "                            </activityConfig>\n" +
@@ -743,38 +595,42 @@ public class MultipleTransitionCheckTest {
 "                </tibex:receiveEvent>\n" +
 "            </bpws:extensionActivity>\n" +
 "            <bpws:extensionActivity>\n" +
-"                <tibex:activityExtension inputVariable=\"JDBCQuery-input\"\n" +
-"                    name=\"JDBCQuery\" outputVariable=\"JDBCQuery\"\n" +
-"                    tibex:xpdlId=\"53084000-a004-4fe2-92e8-6c352bdb024c\" xmlns:tibex=\"http://www.tibco.com/bpel/2007/extensions\">\n" +
+"                <tibex:activityExtension inputVariable=\"ParseXml-input\"\n" +
+"                    name=\"ParseXml\" outputVariable=\"ParseXml\"\n" +
+"                    tibex:xpdlId=\"ec28532f-86f6-4e38-856b-33f8981597aa\" xmlns:tibex=\"http://www.tibco.com/bpel/2007/extensions\">\n" +
 "                    <bpws:targets>\n" +
-"                        <bpws:target linkName=\"TimerToJDBCQuery\"/>\n" +
+"                        <bpws:target linkName=\"TimerToParseXml\"/>\n" +
 "                    </bpws:targets>\n" +
 "                    <bpws:sources>\n" +
-"                        <bpws:source linkName=\"JDBCQueryToCheckpoint\"/>\n" +
+"                        <bpws:source linkName=\"ParseXmlToExit\"/>\n" +
 "                    </bpws:sources>\n" +
 "                    <tibex:inputBindings>\n" +
 "                        <tibex:inputBinding\n" +
-"                            expression=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?> &lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://www.tibco.com/namespaces/tnt/plugins/jdbc+53084000-a004-4fe2-92e8-6c352bdb024c+input&quot; version=&quot;2.0&quot;> &lt;xsl:template name=&quot;JDBCQuery-input&quot; match=&quot;/&quot;> &lt;tns:jdbcQueryActivityInput/>&lt;/xsl:template> &lt;/xsl:stylesheet>\" expressionLanguage=\"urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0\"/>\n" +
+"                            expression=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?> &lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://www.tibco.com/namespaces/tnt/plugins/parsexml&quot; version=&quot;2.0&quot;> &lt;xsl:template name=&quot;ParseXml-input&quot; match=&quot;/&quot;> &lt;tns:xmlString/>&lt;/xsl:template> &lt;/xsl:stylesheet>\" expressionLanguage=\"urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0\"/>\n" +
 "                    </tibex:inputBindings>\n" +
 "                    <tibex:config>\n" +
 "                        <bwext:BWActivity\n" +
-"                            activityTypeID=\"bw.jdbc.JDBCQuery\"\n" +
+"                            activityTypeID=\"bw.xml.parsexml\"\n" +
+"                            version=\"6.0.0.20121128\"\n" +
 "                            xmlns:activityconfig=\"http://tns.tibco.com/bw/model/activityconfig\"\n" +
 "                            xmlns:bwext=\"http://tns.tibco.com/bw/model/core/bwext\"\n" +
-"                            xmlns:jdbcPalette=\"http://ns.tibco.com/bw/palette/jdbc\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
+"                            xmlns:palettexml=\"http://ns.tibco.com/bw/palette/xmlpalette\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
 "                            <activityConfig>\n" +
 "                                <properties name=\"config\" xsi:type=\"activityconfig:EMFProperty\">\n" +
-"                                    <type href=\"http://ns.tibco.com/bw/palette/jdbc#//JDBCQueryActivity\"/>\n" +
-"                                    <value maxRows=\"100\"\n" +
-"                                    sharedResourceProperty=\"jdbcProperty\"\n" +
-"                                    sqlStatement=\"select * from table1;\"\n" +
-"                                    timeout=\"10\" xsi:type=\"jdbcPalette:JDBCQueryActivity\"/>\n" +
+"                                    <type href=\"http://ns.tibco.com/bw/palette/xmlpalette#//ParseXml\"/>\n" +
+"                                    <value inputStyle=\"text\"\n" +
+"                                    validateOutput=\"true\" xsi:type=\"palettexml:ParseXml\"/>\n" +
 "                                </properties>\n" +
 "                            </activityConfig>\n" +
 "                        </bwext:BWActivity>\n" +
 "                    </tibex:config>\n" +
 "                </tibex:activityExtension>\n" +
 "            </bpws:extensionActivity>\n" +
+"            <bpws:exit name=\"Exit\" tibex:xpdlId=\"8b5a1294-f673-445a-bfb8-c4af5d9273ff\">\n" +
+"                <bpws:targets>\n" +
+"                    <bpws:target linkName=\"ParseXmlToExit\"/>\n" +
+"                </bpws:targets>\n" +
+"            </bpws:exit>\n" +
 "        </bpws:flow>\n" +
 "    </bpws:scope>\n" +
 "</bpws:process>");
@@ -792,11 +648,13 @@ public class MultipleTransitionCheckTest {
     @Test
     public void testValidate() {
         System.out.println("testValidate");
-        MultipleTransitionCheck instance = new MultipleTransitionCheck();
-        MultipleTransitionCheck spyInstance = Mockito.spy(instance);
+        ParseXMLBinaryCheck instance = new ParseXMLBinaryCheck();
+        ParseXMLBinaryCheck spyInstance = Mockito.spy(instance);
         doNothing().when(spyInstance).reportIssueOnFile(any(),anyInt());        
         spyInstance.validate(source);        
         Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString(),anyInt());
         
     }
+
+    
 }

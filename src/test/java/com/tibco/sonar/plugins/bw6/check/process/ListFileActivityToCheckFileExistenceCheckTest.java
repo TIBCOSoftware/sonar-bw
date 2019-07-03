@@ -921,9 +921,9 @@ public class ListFileActivityToCheckFileExistenceCheckTest {
         System.out.println("testValidate");
         ListFileActivityToCheckFileExistenceCheck instance = new ListFileActivityToCheckFileExistenceCheck();
         ListFileActivityToCheckFileExistenceCheck spyInstance = Mockito.spy(instance);
-        doNothing().when(spyInstance).reportIssueOnFile(any());        
+        doNothing().when(spyInstance).reportIssueOnFile(any(),anyInt());        
         spyInstance.validate(source);        
-        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString());
+        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString(),anyInt());
         
     }
     

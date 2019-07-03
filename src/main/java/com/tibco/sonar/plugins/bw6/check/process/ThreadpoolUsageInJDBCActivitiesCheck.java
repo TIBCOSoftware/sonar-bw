@@ -8,6 +8,7 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
 import org.sonar.api.utils.log.Logger;
@@ -28,7 +29,7 @@ public class ThreadpoolUsageInJDBCActivitiesCheck extends AbstractProcessCheck {
             if(activity.getType() != null && activity.getType().contains("bw.jdbc")){
                 LOG.debug("JDBC Activity detected: "+activity.getName());
                 if(!activity.getProperties().containsKey("threadPool")){
-                        reportIssueOnFile("Activity ["+activity.getName()+"] in process [" + process.getName() +"]  has not configured Thread Pool Resource.");
+                        reportIssueOnFile("Activity ["+activity.getName()+"] in process [" + process.getName() +"]  has not configured Thread Pool Resource.",XmlHelper.getLineNumber(activity.getNode()));
                 }
             }
         }

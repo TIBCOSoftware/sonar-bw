@@ -3,7 +3,7 @@
     <groupId>com.tibco.sonar</groupId>
     <artifactId>sonar-bw-6-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <name>Sonarqube BW6 Plugin</name>
     <description>SonarQube Plugin for Businessworks6, BWCE and TCI</description>
   
@@ -146,7 +146,7 @@
         <dependency>
             <groupId>com.tibco.utils.bw</groupId>
             <artifactId>bw6-utils</artifactId>
-            <version>1.3.0-SNAPSHOT</version>
+            <version>1.3.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
   

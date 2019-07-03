@@ -30,6 +30,7 @@ import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSEXIT;
 import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSREPLY;
 import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSRETHROW;
 import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSTHROW;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
 import java.util.List;
@@ -71,7 +72,7 @@ public class ListFileActivityToCheckFileExistenceCheck extends AbstractProcessCh
                     
                     if(fileTest != null){
                         if(FilenameUtils.getExtension(fileTest) != null && !"".equals(FilenameUtils.getExtension(fileTest))){
-                            reportIssueOnFile("ListFiles Activity with name ["+act.getName()+"] is being used for check for a single file existence. This should be replaced for a ReadFile activity with no check content");
+                            reportIssueOnFile("ListFiles Activity with name ["+act.getName()+"] is being used for check for a single file existence. This should be replaced for a ReadFile activity with no check content",XmlHelper.getLineNumber(act.getNode()));
                         }
                     }
                 }

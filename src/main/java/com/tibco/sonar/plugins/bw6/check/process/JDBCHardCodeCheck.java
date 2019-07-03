@@ -9,6 +9,7 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
@@ -29,10 +30,10 @@ public class JDBCHardCodeCheck extends AbstractProcessCheck {
                 LOG.debug("JDBC activity detected!");
                 
                 if (activity.hasProperty("maxRows")) {
-                    reportIssueOnFile("The max rows setting in the JDBC activity " + activity.getName() + " is assigned a hardcoded value. It should be defined as Process property or Module property.");
+                    reportIssueOnFile("The max rows setting in the JDBC activity " + activity.getName() + " is assigned a hardcoded value. It should be defined as Process property or Module property.",XmlHelper.getLineNumber(activity.getNode()));
                 }
                 if (activity.hasProperty("timeout")) {
-                    reportIssueOnFile("The timeout setting in the JDBC activity " + activity.getName() + " is assigned a harcoded value. It should be defined as Process property or Module property.");
+                    reportIssueOnFile("The timeout setting in the JDBC activity " + activity.getName() + " is assigned a harcoded value. It should be defined as Process property or Module property.",XmlHelper.getLineNumber(activity.getNode()));
                 }
             }
         }

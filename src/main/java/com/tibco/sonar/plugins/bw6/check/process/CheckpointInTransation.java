@@ -11,6 +11,7 @@ import org.w3c.dom.NodeList;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Group;
 import com.tibco.utils.bw6.model.Process;
@@ -83,9 +84,9 @@ public class CheckpointInTransation extends AbstractProcessCheck {
             if (process.getEventSourceByName(from) == null) {
                 if (process.getGroupByName(from) != null) {
                     if (process.getGroupByName(from).getType().equals("localTX")) {
-                        reportIssueOnFile("The Checkpoint activity in the process " + process.getBasename() + " is placed within a Transaction group. Checkpoint should not be placed within or in parallel flow to a transaction.");
+                        reportIssueOnFile("The Checkpoint activity in the process [" + process.getBasename() + "] is placed within a Transaction group. Checkpoint should not be placed within or in parallel flow to a transaction.",XmlHelper.getLineNumber(process.getGroupByName(from).getNode()));
                     } else if (process.getGroupByName(from).getType().equals("critical")) {
-                        reportIssueOnFile("The Checkpoint activity in the process " + process.getBasename() + " is placed within a Critical Section group. Checkpoint should not be placed within a Critical Section group.");
+                        reportIssueOnFile("The Checkpoint activity in the process [" + process.getBasename() + "] is placed within a Critical Section group. Checkpoint should not be placed within a Critical Section group.",XmlHelper.getLineNumber(process.getGroupByName(from).getNode()));
                     }
                 }
             }

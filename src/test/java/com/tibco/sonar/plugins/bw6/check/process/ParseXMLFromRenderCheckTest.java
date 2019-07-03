@@ -11,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.atLeastOnce;
@@ -1298,9 +1299,9 @@ source = new ProcessSource(processSource);
         System.out.println("testValidate");
         ParseXMLFromRenderCheck instance = new ParseXMLFromRenderCheck();
         ParseXMLFromRenderCheck spyInstance = Mockito.spy(instance);
-        doNothing().when(spyInstance).reportIssueOnFile(any());        
+        doNothing().when(spyInstance).reportIssueOnFile(any(),anyInt());        
         spyInstance.validate(source);        
-        Mockito.verify(spyInstance,atLeastOnce()).reportIssueOnFile(anyString());
+        Mockito.verify(spyInstance,atLeastOnce()).reportIssueOnFile(anyString(),anyInt());
         
     }
 }

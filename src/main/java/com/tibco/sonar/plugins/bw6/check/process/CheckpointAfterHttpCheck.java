@@ -8,6 +8,7 @@ import com.tibco.utils.bw6.model.Process;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Transition;
 import java.util.List;
@@ -42,7 +43,7 @@ public class CheckpointAfterHttpCheck extends AbstractProcessCheck {
         incomingTransitions.forEach((t) -> {            
             if (t.getFromActivity() != null && t.getFromActivity().getType().contains("bw.http.")) {
                 if (onlyOneViolation) {
-                    reportIssueOnFile("The process " + activity.getProcess().getBasename() + " has a Checkpoint activity placed after HTTP activity or in a parallel flow to a HTTP activity.");
+                    reportIssueOnFile("The process [" + activity.getProcess().getBasename() + "] has a Checkpoint activity ["+activity+"] placed after HTTP activity or in a parallel flow to a HTTP activity.",XmlHelper.getLineNumber(t.getFromActivity().getNode()));
                     onlyOneViolation = false;
                 }
             } else if (t.getFromActivity() != null){
