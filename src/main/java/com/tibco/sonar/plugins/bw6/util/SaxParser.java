@@ -53,7 +53,7 @@ public final class SaxParser extends AbstractParser {
 	/**
 	 * From http://will.thestranathans.com/post/1026712315/getting-line-numbers-from-xpath-in-java
 	 */
-	private static final class LocationRecordingHandler extends DefaultHandler implements LexicalHandler {
+	 private static final class LocationRecordingHandler extends DefaultHandler implements LexicalHandler {
 
 		private final Document doc;
 		private Locator locator;

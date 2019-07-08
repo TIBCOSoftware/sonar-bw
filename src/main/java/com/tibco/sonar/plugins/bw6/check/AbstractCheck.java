@@ -117,28 +117,33 @@ public abstract class AbstractCheck {
 
     public void reportIssueOnFile(String message, int line) {
         int finalLine = 1;
-        if (line > 0){
+        if (line > 0) {
             finalLine = line;
         }
-        
+
         getLogger().warn("Issue reported: [" + message + "] on component: [" + inputComponent.key() + "]");
         NewIssue issue = context.newIssue();
-
-        NewIssueLocation location = issue.newLocation()
-                .on(inputComponent)
-                .message(message);
 
         if (inputComponent.isFile()) {
             NewIssueLocation secondary = issue.newLocation()
                     .on(inputComponent)
-                    .at(((InputFile) inputComponent).selectLine(finalLine));
+                    .at(((InputFile) inputComponent).selectLine(finalLine))
+                    .message(message);
             issue.addLocation(secondary);
+            issue
+                    .at(secondary)
+                    .forRule(ruleKey)
+                    .save();
+        } else {
+            NewIssueLocation location = issue.newLocation()
+                    .on(inputComponent)
+                    .message(message);
+            issue
+                    .at(location)
+                    .forRule(ruleKey)
+                    .save();
         }
 
-        issue
-                .at(location)
-                .forRule(ruleKey)
-                .save();
     }
 
     public void reportIssueOnFile(String message) {
