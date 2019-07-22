@@ -6,6 +6,11 @@
 package com.tibco.sonar.plugins.bw6.check.process;
 
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -759,12 +764,15 @@ public class OnlyOneOtherwiseConditionCheckTest {
 
     @Test
     public void testValidate() {
-        System.out.println("testValidate");
-        OnlyOneOtherwiseConditionCheck instance = new OnlyOneOtherwiseConditionCheck();
-        OnlyOneOtherwiseConditionCheck spyInstance = Mockito.spy(instance);
-        doNothing().when(spyInstance).reportIssueOnFile(any(), anyInt());        
-        spyInstance.validate(source);        
-        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString(),anyInt());
+            System.out.println("testValidate");
+            OnlyOneOtherwiseConditionCheck instance = new OnlyOneOtherwiseConditionCheck();
+            OnlyOneOtherwiseConditionCheck spyInstance = Mockito.spy(instance);
+            doNothing().when(spyInstance).reportIssueOnFile(any(), anyInt());
+            spyInstance.validate(source);
+            Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString(),anyInt());
+            
+      
+
         
     }
     

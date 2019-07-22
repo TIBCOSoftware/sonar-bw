@@ -53,7 +53,9 @@ public class UnneededEmptyActivityCheck extends AbstractProcessCheck {
                 LOG.debug("Activty type ["+activity.getType() + "] - ["+activity.getName()+"]");
                 
                 if(activity.getInputTransitions().size() == 1 && activity.getOutputTransitions().size() == 1){
-                    reportIssueOnFile("Empty activity ["+activity.getName()+"] should be avoided as it is not helping to make understandable the flow",XmlHelper.getLineNumber(activity.getNode()));
+                    if(!"ERROR".equals(activity.getInputTransitions().get(0).getConditionType())){
+                        reportIssueOnFile("Empty activity ["+activity.getName()+"] should be avoided as it is not helping to make understandable the flow",XmlHelper.getLineNumber(activity.getNode()));
+                    }
                 }
             }
         }

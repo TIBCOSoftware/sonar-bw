@@ -29,10 +29,6 @@ public class JMSHardCodeCheck extends AbstractProcessCheck {
             detectIssue(activity);
         });
 
-        List<EventSource> eventSources = processSource.getProcessModel().getEventSources();
-        eventSources.stream().filter((eventSource) -> (eventSource.getType() != null && eventSource.getType().contains("bw.jms."))).forEachOrdered((eventSource) -> {
-            detectIssue(eventSource);
-        });
         LOG.debug("Validation ended for rule: " + RULE_KEY);
     }
 
@@ -40,7 +36,7 @@ public class JMSHardCodeCheck extends AbstractProcessCheck {
         if (activity.hasProperty("replyToDestination") || activity.hasProperty("nullreplyToQueue")) {
             reportIssueOnFile(String.format("The Reply to Destination setting in the JMS activity {0} is assigned a hardcoded value. It should be defined as Process property or Module property.", activity.getName()),XmlHelper.getLineNumber(activity.getNode()));
         }
-        if (activity.hasProperty("maxSessions")) {
+        if (activity.hasProperty("maxSessions") && activity.hasProperty("ackMode")) {
             reportIssueOnFile(String.format("The Max Sessions setting in the JMS activity [%s] is assigned a hardcoded value. It should be defined as Process property or Module property.", activity.getName()),XmlHelper.getLineNumber(activity.getNode()));
         }
         if (activity.hasProperty("destinationName")) {

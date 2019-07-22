@@ -31,6 +31,7 @@ import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSREPLY;
 import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSRETHROW;
 import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSTHROW;
 import com.tibco.utils.bw6.helper.XmlHelper;
+import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
@@ -47,12 +48,16 @@ public class LastActivityAndEndActivityCheck extends AbstractProcessCheck {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         Process process = processSource.getProcessModel();            
         if(process != null){
-            process.getActivities().stream().filter((activity) -> (activity.getOutputTransitions().isEmpty())).map((activity) -> {
-                LOG.debug("Activty type ["+activity.getType() + "] - ["+activity.getName()+"] with not outcoming transitions. End activity of one flow");
-                return activity;
-            }).filter((activity) -> (activity.getType() == null || !isActivityEnd(activity.getType()))).forEachOrdered((activity) -> {
-                reportIssueOnFile("End activity ["+activity.getName()+"] shouldn't be the last activity of the flow, as this should end with an End activity",XmlHelper.getLineNumber(activity.getNode()));
-            });
+  
+            
+            for(Activity activity : process.getActivities()){
+                if(activity.getOutputTransitions().isEmpty() && !process.belongActivityToGroup(activity)){
+                    if(activity.getType() == null || !isActivityEnd(activity.getType())){
+                        reportIssueOnFile("End activity ["+activity.getName()+"] shouldn't be the last activity of the flow, as this should end with an End activity",XmlHelper.getLineNumber(activity.getNode()));                      
+                    }
+                }
+            }
+           
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
     }

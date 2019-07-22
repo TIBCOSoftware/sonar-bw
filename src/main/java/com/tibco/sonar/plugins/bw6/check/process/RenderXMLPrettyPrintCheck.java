@@ -52,11 +52,15 @@ public class RenderXMLPrettyPrintCheck extends AbstractProcessCheck {
                 String expression = activity.getExpression();
                 if(expression != null && expression.contains("\"tib:render-xml(")){
                     
-                    Pattern pat = Pattern.compile(".*tib\\:render-xml(\\([^\\,]+?\\,[^\\,]+?\\,[^\\)]+?\\)).*",Pattern.DOTALL | Pattern.MULTILINE);
+                    Pattern pat = Pattern.compile(".*(tib\\:render-xml\\([^\\,]+?\\,[^\\,]+?\\,([^\\)]+?)\\)\\)).*",Pattern.DOTALL | Pattern.MULTILINE);
                     Matcher mt = pat.matcher(expression);
                     if(mt.matches()){
-                        String renderXmlExpression = mt.group(1);
-                        if(renderXmlExpression != null && renderXmlExpression.endsWith("true()")){
+                        String renderXmlExpression = mt.group(2);
+                        String wholeExpression = mt.group(1);
+                        
+                        if(renderXmlExpression != null && renderXmlExpression.endsWith("true(") ){
+                            LOG.debug("Whole epxression: "+ wholeExpression);
+                            LOG.debug("Render XML Expression: "+ renderXmlExpression);
                             reportIssueOnFile("render-xml function in activity ["+activity.getName()+"] should avoid to use pretty-print option for performance",XmlHelper.getLineNumber(activity.getNode()));
                         }
                     }

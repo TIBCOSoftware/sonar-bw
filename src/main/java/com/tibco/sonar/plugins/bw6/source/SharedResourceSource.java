@@ -31,7 +31,7 @@ public class SharedResourceSource extends AbstractSource {
             this.fileSystem = fileSystem;
             this.file = XmlFile.create(file);
             this.resource = new SharedResource();
-            this.resource.setFile(file);
+            this.resource.setName(file.filename());
             this.resource.setDocument(this.file.getNamespaceUnawareDocument());
             LOG.info("Shared Resource ["+file+"] parsed");
             project.getResource().add(this);

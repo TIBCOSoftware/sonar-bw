@@ -18,7 +18,7 @@ public class ProcessNamingConventionCheck extends AbstractProcessCheck {
     private static final Logger LOG = Loggers.get(ProcessNamingConventionCheck.class);
     public static final String RULE_KEY = "ProcessNamingConvention";
 
-    @RuleProperty(key = "pattern", description = "Regular Expression Process Name should meet", defaultValue = "[A-Z][a-z]+", type = "TEXT")
+    @RuleProperty(key = "pattern", description = "Regular Expression Process Name should meet", defaultValue = "[A-Z][a-z]+\\.bwp", type = "TEXT")
     protected String regExpPattern;
 
     @Override
@@ -27,7 +27,7 @@ public class ProcessNamingConventionCheck extends AbstractProcessCheck {
         Process process = processSource.getProcessModel();
 
         LOG.debug("Process Name: ["+process.getName()+"]");
-        if (!process.getName().matches(regExpPattern)) {
+        if (!process.getBasename().matches(regExpPattern)) {
             reportIssueOnFile("The process " + process.getBasename() + " doesn't match the process naming convention ["+regExpPattern+"]");
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
