@@ -68,7 +68,7 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         com.tibco.sonar.plugins.bw6.check.project.EndpointURIFromHTTPBindingSetUsingPropertyCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.ProcessNamingConventionCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.JMSReceiverPlusConfirmCheck.class,
-        
+        com.tibco.sonar.plugins.bw6.check.XPathCheck.class
     };
 
     private static AbstractCheck checkList[] = {
@@ -118,7 +118,8 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         new com.tibco.sonar.plugins.bw6.check.project.NumberOfPropertiesSameGroupCheck(),       
         new com.tibco.sonar.plugins.bw6.check.process.SFTPPutBinaryCheck(),       
         new com.tibco.sonar.plugins.bw6.check.project.XMLResourceSameTargetNamespaceCheck(),
-        new com.tibco.sonar.plugins.bw6.check.project.EndpointURIFromHTTPBindingSetUsingPropertyCheck()
+        new com.tibco.sonar.plugins.bw6.check.project.EndpointURIFromHTTPBindingSetUsingPropertyCheck(),
+        new com.tibco.sonar.plugins.bw6.check.XPathCheck()
             
             
     };
@@ -134,7 +135,15 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         NewRepository repository = context.createRepository(repositoryKey, languageKey).setName(repositoryName);
         RulesDefinitionAnnotationLoader annotationLoader = new RulesDefinitionAnnotationLoader();
         annotationLoader.load(repository, check);
+        
+        NewRule templateRule = repository.rule("XPathCheck");
+        if(templateRule != null){
+
+            templateRule.setTemplate(true);        
+        }
         repository.done();
+        
+        
     }
 
     public static String getRepositoryKeyForLanguage(String languageKey) {

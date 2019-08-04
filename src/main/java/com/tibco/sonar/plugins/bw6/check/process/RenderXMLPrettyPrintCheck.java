@@ -52,7 +52,7 @@ public class RenderXMLPrettyPrintCheck extends AbstractProcessCheck {
                 String expression = activity.getExpression();
                 if(expression != null && expression.contains("\"tib:render-xml(")){
                     
-                    Pattern pat = Pattern.compile(".*(tib\\:render-xml\\([^\\,]+?\\,[^\\,]+?\\,([^\\)]+?)\\)\\)).*",Pattern.DOTALL | Pattern.MULTILINE);
+                    Pattern pat = Pattern.compile(".*(tib\\:render-xml\\([^\\,><]+?\\,[^\\,><]+?\\,([^\\)><]+?)\\)\\)).*",Pattern.DOTALL | Pattern.MULTILINE);
                     Matcher mt = pat.matcher(expression);
                     if(mt.matches()){
                         String renderXmlExpression = mt.group(2);
