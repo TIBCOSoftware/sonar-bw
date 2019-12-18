@@ -68,7 +68,14 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         com.tibco.sonar.plugins.bw6.check.project.EndpointURIFromHTTPBindingSetUsingPropertyCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.ProcessNamingConventionCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.JMSReceiverPlusConfirmCheck.class,
-        com.tibco.sonar.plugins.bw6.check.XPathCheck.class
+        com.tibco.sonar.plugins.bw6.check.XPathCheck.class,
+        com.tibco.sonar.plugins.bw6.check.project.AtLeastOneStarterCheck.class,
+        com.tibco.sonar.plugins.bw6.check.project.IsMavenProjectCheck.class,
+        com.tibco.sonar.plugins.bw6.check.project.OnlyOneKeystoreApplicationModuleCheck.class,
+        com.tibco.sonar.plugins.bw6.check.project.PomXmlVersionsHarcodedCheck.class,
+        com.tibco.sonar.plugins.bw6.check.project.ProjectStructureCheck.class,
+        com.tibco.sonar.plugins.bw6.check.project.SwaggerValidationCheck.class,
+        com.tibco.sonar.plugins.bw6.check.project.XSDValidationCheck.class,
     };
 
     private static AbstractCheck checkList[] = {
@@ -119,7 +126,14 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         new com.tibco.sonar.plugins.bw6.check.process.SFTPPutBinaryCheck(),       
         new com.tibco.sonar.plugins.bw6.check.project.XMLResourceSameTargetNamespaceCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.EndpointURIFromHTTPBindingSetUsingPropertyCheck(),
-        new com.tibco.sonar.plugins.bw6.check.XPathCheck()
+        new com.tibco.sonar.plugins.bw6.check.XPathCheck(),
+        new com.tibco.sonar.plugins.bw6.check.project.AtLeastOneStarterCheck(),
+        new com.tibco.sonar.plugins.bw6.check.project.IsMavenProjectCheck(),
+        new com.tibco.sonar.plugins.bw6.check.project.OnlyOneKeystoreApplicationModuleCheck(),
+        new com.tibco.sonar.plugins.bw6.check.project.PomXmlVersionsHarcodedCheck(),
+        new com.tibco.sonar.plugins.bw6.check.project.ProjectStructureCheck(),
+        new com.tibco.sonar.plugins.bw6.check.project.SwaggerValidationCheck(),
+        new com.tibco.sonar.plugins.bw6.check.project.XSDValidationCheck(),
             
             
     };

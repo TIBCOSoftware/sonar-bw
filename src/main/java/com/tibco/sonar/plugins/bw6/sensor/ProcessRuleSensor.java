@@ -39,6 +39,8 @@ import com.tibco.sonar.plugins.bw6.source.ProjectSource;
 import com.tibco.sonar.plugins.bw6.source.SharedResourceSource;
 import com.tibco.sonar.plugins.bw6.source.XmlSource;
 import com.tibco.utils.bw6.helper.XmlHelper;
+import com.tibco.utils.bw6.model.GenericResource;
+import com.tibco.utils.bw6.model.JSONResource;
 import com.tibco.utils.bw6.model.JobSharedVariables;
 import com.tibco.utils.bw6.model.ModuleProperties;
 import com.tibco.utils.bw6.model.ModuleSharedVariables;
@@ -50,16 +52,15 @@ import com.tibco.utils.bw6.model.SharedResourceParameter;
 import com.tibco.utils.bw6.model.WsdlResource;
 import com.tibco.utils.bw6.model.XsdResource;
 import java.util.Arrays;
-import java.util.logging.Level;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.measure.Metric;
 import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
+import org.sonar.api.measures.CoreMetrics;
 import org.sonarsource.analyzer.commons.xml.XmlFile;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  * XmlSensor provides analysis of xml files.
@@ -320,7 +321,7 @@ public class ProcessRuleSensor implements Sensor {
                         XsdResource resource = bwProject.addSchema(xFile.getDocument());
                         projectSource.getMap().addFile(resource, xFile.getInputFile());
                         LOG.debug("Added schema to project: " + file.filename());
-                    } catch (IOException ex) {
+                    } catch (Exception ex) {
                     }
                 } else if (".wsdl".equals(extension)) {
                     try {
@@ -328,7 +329,7 @@ public class ProcessRuleSensor implements Sensor {
                         WsdlResource resource = bwProject.addWSDL(xFile.getDocument());
                         projectSource.getMap().addFile(resource, xFile.getInputFile());
                         LOG.debug("Added service descriptor to project: " + file.filename());
-                    } catch (IOException ex) {
+                    } catch (Exception ex) {
                     }
                 } else if (".bwt".equals(extension)) {
                     try {
@@ -344,8 +345,13 @@ public class ProcessRuleSensor implements Sensor {
                                 }
                             }
                         }
-                    } catch (IOException ex) {
+                    } catch (Exception ex) {
                     }
+                } else if (".json".equals(extension)) {
+                    LOG.debug("JSON file deteected");
+                    JSONResource resource = new JSONResource();
+                    bwProject.addJSONSchema(resource);
+                    projectSource.getMap().addFile(resource, file);                    
                 }
 
                 String resourceType = resourceExtensionMapper.get(extension);
@@ -368,15 +374,36 @@ public class ProcessRuleSensor implements Sensor {
                             }
                         }
                     }
+                    
+                    
 
                     context.<Integer>newMeasure()
                             .forMetric(getSharedResourceMetric(resourceType))
                             .on(file)
                             .withValue(1)
                             .save();
+                }else{
+                    
+                    if("pom.xml".equals(file.filename())){
+                        LOG.debug("Detected pom.xml file --> This is a maven project");
+                        try{
+                            XmlFile xFile = XmlFile.create(file);
+                            bwProject.setPomFile(xFile.getDocument());
+                        }catch(IOException ex){
+                        
+                        }
+                    }
+                    
+                    GenericResource resource = new GenericResource();                    
+                    bwProject.addOtherFile(resource);
+                    projectSource.getMap().addFile(resource, file);
                 }
             }
-
+            context.<Integer>newMeasure()
+                            .forMetric(CoreMetrics.NCLOC)
+                            .on(file)
+                            .withValue(file.lines())
+                            .save();
         }
         LOG.info("Completed Search of BW6 Resources");
     }
@@ -388,9 +415,13 @@ public class ProcessRuleSensor implements Sensor {
         inputFiles.forEach((inputFile) -> {
             ProcessSource sourceCode = new ProcessSource(projectSource, inputFile); // TODO:  Handle this better....
             Process process = sourceCode.getProcessModel();
-            checkSubprocess(process);
-            process.setProject(bwProject);
-            bwProject.addProcess(process);
+            if(process != null){
+                checkSubprocess(process);
+                process.setProject(bwProject);
+                bwProject.addProcess(process);
+            }else{
+                LOG.warn("Process couldn't be parsed from file: "+inputFiles.toString());
+            }
         });
         LOG.info("Searching for BW Process files... DONE!");
 

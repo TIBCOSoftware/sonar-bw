@@ -1,7 +1,5 @@
 package com.tibco.sonar.plugins.bw6.check.process;
 
-import java.util.Iterator;
-import java.util.Map;
 
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
@@ -10,14 +8,13 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
 import com.tibco.utils.bw6.model.Transition;
 import java.util.List;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
     
-@Rule(key = OnlyOneOtherwiseConditionCheck.RULE_KEY, name = "Only one Otherwise Condition Check", priority = Priority.MAJOR, description = "This rule checks multiple transition from an activity only one for the paths are for no matching condition because multiple ones are not supported and could lead to an unexpected runtime behavior")
+@Rule(key = OnlyOneOtherwiseConditionCheck.RULE_KEY, name = "Only one Otherwise Condition Check", priority = Priority.MAJOR, description = "This rule checks multiple transition from an activity only one for the paths are for no matching condition because multiple ones are not supported and could lead to an unexpected runtime behavior",tags = {"bug"})
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class OnlyOneOtherwiseConditionCheck extends AbstractProcessCheck {
 

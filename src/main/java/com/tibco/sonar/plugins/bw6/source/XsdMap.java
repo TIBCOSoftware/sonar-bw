@@ -5,6 +5,7 @@
  */
 package com.tibco.sonar.plugins.bw6.source;
 
+import com.tibco.utils.bw6.model.GenericResource;
 import com.tibco.utils.bw6.model.XmlResource;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,13 +17,13 @@ import org.sonar.api.batch.fs.InputFile;
  */
 public class XsdMap {
     
-    protected Map<XmlResource,InputFile> map;
+    protected Map<GenericResource,InputFile> map;
     
     public XsdMap(){
         map = new HashMap<>();
     }
 
-    public boolean addFile(XmlResource schema, InputFile file) {
+    public boolean addFile(GenericResource schema, InputFile file) {
         InputFile target = map.get(schema);
         if(target == null){
             map.put(schema, file);
@@ -31,7 +32,7 @@ public class XsdMap {
         return false;
     }
     
-    public InputFile getFile(XmlResource schema) {
+    public InputFile getFile(GenericResource schema) {
         return map.get(schema);
     }
 }

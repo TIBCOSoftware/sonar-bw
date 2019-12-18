@@ -34,7 +34,7 @@ import java.util.List;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = JDBCTransactionParallelFlowCheck.RULE_KEY, name = "JDBC Transaction Parallel Flow ", priority = Priority.MAJOR, description = "This rule checks if there is no parallel flows with JDBC activities inside a Transaction Group")
+@Rule(key = JDBCTransactionParallelFlowCheck.RULE_KEY, name = "JDBC Transaction Parallel Flow ", priority = Priority.MAJOR, description = "This rule checks if there is no parallel flows with JDBC activities inside a Transaction Group", tags = {"bug"})
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class JDBCTransactionParallelFlowCheck extends AbstractProcessCheck {
 

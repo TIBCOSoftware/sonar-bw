@@ -28,7 +28,7 @@ public class ProcessSource extends AbstractSource {
             this.process.setProcessXmlDocument(XmlHelper.getDocument(file.inputStream()) );
             process.startParsing();
             project.getProcess().add(this);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(ProcessSource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

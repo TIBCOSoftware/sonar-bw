@@ -27,7 +27,7 @@ public class BusinessWorksPlugin implements Plugin {
 	   
 		// BW6 Language Claasses
 		context.addExtensions(
-       			BW6LanguageFileSuffixProperty.class,
+       			BW6LanguageFileSuffixProperty.getPropertyDefinition(),
 		    	BWProcessLanguage.class,
 	            ProcessRuleDefinition.class,
 				ProcessRuleSensor.class,

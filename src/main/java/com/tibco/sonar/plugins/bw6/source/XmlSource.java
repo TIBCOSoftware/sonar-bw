@@ -20,6 +20,7 @@ public class XmlSource extends AbstractSource {
     public XmlSource(InputFile file) {
         try {
             this.file = XmlFile.create(file);            
+            
         } catch (IOException ex) {
             Logger.getLogger(XmlSource.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -3,7 +3,7 @@
     <groupId>com.tibco.sonar</groupId>
     <artifactId>sonar-bw-6-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
-    <version>1.2.2</version>
+    <version>1.2.3-SNAPSHOT</version>
     <name>Sonarqube BW6 Plugin</name>
     <description>SonarQube Plugin for Businessworks6, BWCE and TCI</description>
   
@@ -31,6 +31,7 @@
     </distributionManagement>
   
     <dependencies>
+   
         <dependency>
             <groupId>org.sonarsource.sonarqube</groupId>
             <artifactId>sonar-plugin-api</artifactId>
@@ -146,7 +147,30 @@
         <dependency>
             <groupId>com.tibco.utils.bw</groupId>
             <artifactId>bw6-utils</artifactId>
-            <version>1.3.4-SNAPSHOT</version>
+            <version>1.3.5-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-parser</artifactId>
+            <version>1.0.45</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-compat-spec-parser</artifactId>
+            <version>1.0.45</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.5</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
   
@@ -260,6 +284,12 @@
                                 </filter>
                                 <filter>
                                     <artifact>xerces:xercesImpl</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+                                <filter>
+                                    <artifact>gson:gson</artifact>
                                     <includes>
                                         <include>**</include>
                                     </includes>

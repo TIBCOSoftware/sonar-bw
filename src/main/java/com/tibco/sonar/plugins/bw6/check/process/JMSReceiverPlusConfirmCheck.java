@@ -11,11 +11,10 @@ import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
-import com.tibco.utils.bw6.model.EventSource;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = JMSReceiverPlusConfirmCheck.RULE_KEY, name = "Confirm Activity presence Check", priority = Priority.INFO, description = "Confirm activity should cover all OK flows with a JMS Receiver if  CLIENT ACK Mode is Selected.")
+@Rule(key = JMSReceiverPlusConfirmCheck.RULE_KEY, name = "Confirm Activity presence Check", priority = Priority.INFO, description = "Confirm activity should cover all OK flows with a JMS Receiver if  CLIENT ACK Mode is Selected.",tags = {"bug"})
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.INFO)
 public class JMSReceiverPlusConfirmCheck extends AbstractProcessCheck {
 
