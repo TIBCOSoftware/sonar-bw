@@ -76,6 +76,9 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         com.tibco.sonar.plugins.bw6.check.project.ProjectStructureCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.SwaggerValidationCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.XSDValidationCheck.class,
+        com.tibco.sonar.plugins.bw6.check.project.BindingShouldHavePolicyAssociatedCheck.class,
+        com.tibco.sonar.plugins.bw6.check.project.BindingShouldNotHaveHTTPBasicPolicyAssociatedCheck.class,
+        com.tibco.sonar.plugins.bw6.check.project.JKSValidationCheck.class        
     };
 
     private static AbstractCheck checkList[] = {
@@ -134,8 +137,9 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         new com.tibco.sonar.plugins.bw6.check.project.ProjectStructureCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.SwaggerValidationCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.XSDValidationCheck(),
-            
-            
+        new com.tibco.sonar.plugins.bw6.check.project.BindingShouldHavePolicyAssociatedCheck(),
+        new com.tibco.sonar.plugins.bw6.check.project.BindingShouldNotHaveHTTPBasicPolicyAssociatedCheck(),
+        new com.tibco.sonar.plugins.bw6.check.project.JKSValidationCheck()
     };
 
     protected String rulesDefinitionFilePath() {

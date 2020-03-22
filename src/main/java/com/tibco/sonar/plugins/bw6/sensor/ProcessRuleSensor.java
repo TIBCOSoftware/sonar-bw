@@ -283,7 +283,8 @@ public class ProcessRuleSensor implements Sensor {
         InputModule projectInputFile = context.module();
         ProjectSource projectSource = new ProjectSource(projectInputFile);
         projectSource.setProject(bwProject);
-
+        bwProject.setFile(fileSystem.baseDir());
+        
         LOG.debug("Project Input File: " + projectInputFile);
         parseProjectProperties(context, bwProject);
 
@@ -292,6 +293,13 @@ public class ProcessRuleSensor implements Sensor {
         parseResources(bwProject, projectSource, context);
 
         bwProject.parseBindings();
+        
+        
+        
+        bwProject.parsePolicies();
+        
+        bwProject.parseKeystores();
+        
 
         analyzeProject(projectSource);
 

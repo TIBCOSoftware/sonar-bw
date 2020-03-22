@@ -35,11 +35,21 @@ public class EndpointURIFromHTTPBindingSetUsingPropertyCheck extends AbstractPro
         LOG.debug("Checking project files");
         if(project != null && project.getComponents() != null){
             LOG.debug("Properties are not null");
-            for(Component comp : project.getComponents()){
-                for(Service service : comp.getServices()){
-                    Binding binding = service.getBinding();
-                    if(binding.getUri() != null && !"".equals(binding.getUri()) && !binding.isIsPropertyURI()){
-                        reportIssueOnFile("Endpoint URI from binding in component ["+comp.getName()+"] should be set using a Module Property");
+            for(int i=0;i<project.getComponents().size();i++){
+                Component comp  = project.getComponents().get(i);
+                if(comp != null){
+                    LOG.debug("Component is not null");
+                    if(comp.getServices() != null){
+                    for(int j=0; j<comp.getServices().size();j++){
+                        Service service = comp.getServices().get(j);
+                        if(service != null){
+                            LOG.debug("Component is not null");
+                            Binding binding = service.getBinding();
+                            if(binding.getUri() != null && !"".equals(binding.getUri()) && !binding.isIsPropertyURI()){
+                                reportIssueOnFile("Endpoint URI from binding in component ["+comp.getName()+"] should be set using a Module Property");
+                            }
+                        }
+                    }
                     }
                 }
             }
