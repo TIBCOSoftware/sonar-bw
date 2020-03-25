@@ -31,7 +31,7 @@ public class SharedResourceNotUsed extends AbstractResourceCheck {
     public void validate(SharedResourceSource resourceXml) {
         LOG.debug("Started rule: " + this.getClass());
         SharedResource resource = resourceXml.getResource();
-        LOG.debug("Checking project files");
+        LOG.debug("Checking project resource files");
         FileSystem fileSystem = resourceXml.getFileSystem();
         if (fileSystem != null && resource != null) {
             Iterable<InputFile> files = fileSystem.inputFiles(fileSystem.predicates().all());

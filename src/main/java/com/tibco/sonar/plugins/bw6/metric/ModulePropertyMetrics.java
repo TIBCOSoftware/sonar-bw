@@ -3,10 +3,12 @@ package com.tibco.sonar.plugins.bw6.metric;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.measures.Metrics;
+
 import java.util.List;
+
 import static java.util.Arrays.asList;
 
-public class ModulePoropertyMetrics implements Metrics{
+public class ModulePropertyMetrics implements Metrics{
 
 	/*
 	 * 

@@ -11,7 +11,7 @@ import org.sonar.api.batch.fs.InputModule;
  * Checks and analyzes report measurements, issues and other findings in
  * WebSourceCode.
  *
- * @author Kapil Shivarkar
+ * @author TIBCODX Toolkit
  */
 public class ProjectSource extends AbstractSource {
 

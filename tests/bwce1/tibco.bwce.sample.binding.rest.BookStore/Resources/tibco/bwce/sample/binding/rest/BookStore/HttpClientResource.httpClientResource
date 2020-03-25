@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jndi:namedResource xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:http="http://xsd.tns.tibco.com/bw/models/sharedresource/httpclient" xmlns:id="http://www.tibco.com/ws/2013/11/identity" xmlns:jndi="http://xsd.tns.tibco.com/amf/models/sharedresource/jndi" xmlns:sca_ext="http://www.tibco.com/ns/sca/201311" xmlns:sslclient="http://xsd.tns.tibco.com/bw/sharedresource/trinity/models/sslclient" xmi:id="_W3U1sW1UEeqeuIFCGw_WIg" name="securitytest_http_jms.module.HttpClientResource" type="http:HttpClientConfiguration">
+  <identitySet xmi:id="_r3fnYG1VEeqeuIFCGw_WIg" appliesTo="namedResource" name="HttpClientIdentitySet" provides="confidentiality">
+    <sca_ext:intentMap xmi:id="_r3fnYW1VEeqeuIFCGw_WIg" provides="sca_ext:confidentiality">
+      <sca_ext:qualifier xmi:id="_r3fnYm1VEeqeuIFCGw_WIg" name="transport">
+        <id:IdentityReference xmi:id="_r3fnY21VEeqeuIFCGw_WIg" URI="" type="sslclient:SSLClientConfiguration"/>
+      </sca_ext:qualifier>
+    </sca_ext:intentMap>
+  </identitySet>
+  <jndi:configuration xsi:type="http:HttpClientConfiguration" xmi:id="_W3ZuMG1UEeqeuIFCGw_WIg" httpClientVersion="httpcomponents" retryCount="3" idleConnectionTimeout="3000" useDefaultSSL="true" cmdExecutionIsolationStrategy="THREAD" cmdExecutionIsolationTimeout="1000" cmdExecutionTimeoutEnabled="true" cmdExecutionIsolationInterruptOnTimeout="true" cmdExecutionIsolationSemaphoreMaxConcRequests="8" cmdCircuitBreakerRequestVolumeThreshold="20" cmdCircuitBreakerSleepWindow="5000" cmdCircuitBreakerErrorThresholdPercentage="50" cmdMetricsRollingStatsTime="10000" cmdMetricsRollingStatsNumBuckets="10" cmdMetricsHealthSnapshotInterval="500" cmdRequestLogEnabled="true" tpCoreSize="10" tpMaxQueueSize="-1" tpQueueSizeRejectionThreshold="5" tpKeepAliveTime="1">
+    <tcpDetails xmi:id="_W3emsG1UEeqeuIFCGw_WIg"/>
+  </jndi:configuration>
+</jndi:namedResource>

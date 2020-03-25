@@ -41,10 +41,14 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         com.tibco.sonar.plugins.bw6.check.process.JMSAcknowledgementModeCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.CriticalSectionCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.SubProcessInlineCheck.class,
-        com.tibco.sonar.plugins.bw6.check.process.ExceptionHandlingCheck.class, 
+        com.tibco.sonar.plugins.bw6.check.process.ExceptionHandlingCheck.class,
         com.tibco.sonar.plugins.bw6.check.resource.SharedResourceNotUsed.class,
         com.tibco.sonar.plugins.bw6.check.resource.SharedResourceUsingModuleProperty.class,
         com.tibco.sonar.plugins.bw6.check.resource.HttpClientSSLShouldHaveConfidentiality.class,
+        com.tibco.sonar.plugins.bw6.check.resource.HttpConnectorShouldHaveConfidentiality.class,
+        com.tibco.sonar.plugins.bw6.check.resource.JMSConnectorShouldHaveConfidentiality.class,
+        com.tibco.sonar.plugins.bw6.check.resource.SSLServerConnectorShouldHaveTLSprotocol.class,
+        com.tibco.sonar.plugins.bw6.check.resource.SSLClientConnectorShouldHaveTLSprotocol.class,
         com.tibco.sonar.plugins.bw6.check.process.OnlyOneOtherwiseConditionCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.NoOtherwiseConditionCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.DefaultTargetNamespaceCheck.class,
@@ -61,7 +65,7 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         com.tibco.sonar.plugins.bw6.check.process.ListFileActivityToCheckFileExistenceCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.GetFragmentBinaryCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.UnneededEmptyActivityCheck.class,
-        com.tibco.sonar.plugins.bw6.check.process.SFTPPutBinaryCheck.class,       
+        com.tibco.sonar.plugins.bw6.check.process.SFTPPutBinaryCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.JMSRequestReplyNonPersistentCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.NumberOfPropertiesSameGroupCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.XMLResourceSameTargetNamespaceCheck.class,
@@ -70,6 +74,7 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         com.tibco.sonar.plugins.bw6.check.process.JMSReceiverPlusConfirmCheck.class,
         com.tibco.sonar.plugins.bw6.check.XPathCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.AtLeastOneStarterCheck.class,
+        com.tibco.sonar.plugins.bw6.check.project.BWVersionCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.IsMavenProjectCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.OnlyOneKeystoreApplicationModuleCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.PomXmlVersionsHarcodedCheck.class,
@@ -78,7 +83,7 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         com.tibco.sonar.plugins.bw6.check.project.XSDValidationCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.BindingShouldHavePolicyAssociatedCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.BindingShouldNotHaveHTTPBasicPolicyAssociatedCheck.class,
-        com.tibco.sonar.plugins.bw6.check.project.JKSValidationCheck.class        
+        com.tibco.sonar.plugins.bw6.check.project.JKSValidationCheck.class
     };
 
     private static AbstractCheck checkList[] = {
@@ -106,6 +111,10 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         new com.tibco.sonar.plugins.bw6.check.resource.SharedResourceNotUsed(),
         new com.tibco.sonar.plugins.bw6.check.resource.SharedResourceUsingModuleProperty(),
         new com.tibco.sonar.plugins.bw6.check.resource.HttpClientSSLShouldHaveConfidentiality(),
+        new com.tibco.sonar.plugins.bw6.check.resource.HttpConnectorShouldHaveConfidentiality(),
+        new com.tibco.sonar.plugins.bw6.check.resource.JMSConnectorShouldHaveConfidentiality(),
+        new com.tibco.sonar.plugins.bw6.check.resource.SSLClientConnectorShouldHaveTLSprotocol(),
+        new com.tibco.sonar.plugins.bw6.check.resource.SSLServerConnectorShouldHaveTLSprotocol(),
         new com.tibco.sonar.plugins.bw6.check.process.OnlyOneOtherwiseConditionCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.NoOtherwiseConditionCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.DefaultTargetNamespaceCheck(),
@@ -123,14 +132,15 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         new com.tibco.sonar.plugins.bw6.check.process.RenderXMLBinaryCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.ProcessNamingConventionCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.ParseXMLRenderXMLCheck(),
-        new com.tibco.sonar.plugins.bw6.check.process.JMSReceiverPlusConfirmCheck(),       
+        new com.tibco.sonar.plugins.bw6.check.process.JMSReceiverPlusConfirmCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.JMSRequestReplyNonPersistentCheck(),
-        new com.tibco.sonar.plugins.bw6.check.project.NumberOfPropertiesSameGroupCheck(),       
-        new com.tibco.sonar.plugins.bw6.check.process.SFTPPutBinaryCheck(),       
+        new com.tibco.sonar.plugins.bw6.check.project.NumberOfPropertiesSameGroupCheck(),
+        new com.tibco.sonar.plugins.bw6.check.process.SFTPPutBinaryCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.XMLResourceSameTargetNamespaceCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.EndpointURIFromHTTPBindingSetUsingPropertyCheck(),
         new com.tibco.sonar.plugins.bw6.check.XPathCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.AtLeastOneStarterCheck(),
+        new com.tibco.sonar.plugins.bw6.check.project.BWVersionCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.IsMavenProjectCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.OnlyOneKeystoreApplicationModuleCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.PomXmlVersionsHarcodedCheck(),
@@ -153,15 +163,15 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         NewRepository repository = context.createRepository(repositoryKey, languageKey).setName(repositoryName);
         RulesDefinitionAnnotationLoader annotationLoader = new RulesDefinitionAnnotationLoader();
         annotationLoader.load(repository, check);
-        
+
         NewRule templateRule = repository.rule("XPathCheck");
         if(templateRule != null){
 
-            templateRule.setTemplate(true);        
+            templateRule.setTemplate(true);
         }
         repository.done();
-        
-        
+
+
     }
 
     public static String getRepositoryKeyForLanguage(String languageKey) {

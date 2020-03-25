@@ -15,4 +15,4 @@ Require-Capability: com.tibco.bw.model; filter:="(name=bwext)",
  com.tibco.bw.sharedresource.model; filter:="(name=bw.jdbc)",
  com.tibco.bw.binding.model; filter:="(name=bw.rest)"
 TIBCO-BW-ModuleSharedVariables: META-INF/module.msv
-TIBCO-BW-Version: 1.2.0 V18 2014-09-27
+TIBCO-BW-Version: 2.5.1 V18 2014-09-27

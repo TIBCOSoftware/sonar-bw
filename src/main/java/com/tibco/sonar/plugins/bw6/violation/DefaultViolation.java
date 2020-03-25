@@ -26,7 +26,7 @@ import com.tibco.sonar.plugins.bw6.violation.Violation;
  * Checks and analyzes report measurements, violations and other findings in
  * WebSourceCode.
  * 
- * @author Kapil Shivarkar
+ * @author TIBCODX Toolkit
  */
 public class DefaultViolation implements Violation {
 

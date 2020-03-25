@@ -29,7 +29,7 @@ public class SharedResourceUsingModuleProperty extends AbstractResourceCheck {
     public void validate(SharedResourceSource resourceXml) {
         LOG.debug("Started rule: " + this.getClass());
         SharedResource resource = resourceXml.getResource();
-        LOG.debug("Checking project files");
+        LOG.debug("Checking project resource files");
         for (SharedResourceParameter prop : resource.getProperties()) {
             LOG.debug("Parameter name : [" + prop.getName() + "] value: [" + prop.getValue() + "]" + " Global Variable [" + prop.isGlobalVariable() + "] isBinding [" + prop.isBinding() + "] isRequired [" + prop.isRequired() + "]");
         }

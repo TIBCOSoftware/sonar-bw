@@ -13,7 +13,7 @@ import org.sonarsource.analyzer.commons.xml.XmlFile;
  * Checks and analyzes report measurements, issues and other findings in
  * WebSourceCode.
  *
- * @author Kapil Shivarkar
+ * @author TIBCODX Toolkit
  */
 public class SharedResourceSource extends AbstractSource {
 

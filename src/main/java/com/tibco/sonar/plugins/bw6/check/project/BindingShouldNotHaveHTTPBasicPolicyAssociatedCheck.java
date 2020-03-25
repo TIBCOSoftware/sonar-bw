@@ -17,7 +17,7 @@ import org.sonar.check.Rule;
 
 @Rule(
         key = BindingShouldNotHaveHTTPBasicPolicyAssociatedCheck.RULE_KEY,
-        name = "HTTP Binding should have a policy associated",
+        name = "HTTP Binding should not have a HTTPBasicPolicy associated",
         tags = {"security"},
         description = "To ensure that the communications are authentified all input connections should check that the binding has a policy associated",
         priority = Priority.MINOR)

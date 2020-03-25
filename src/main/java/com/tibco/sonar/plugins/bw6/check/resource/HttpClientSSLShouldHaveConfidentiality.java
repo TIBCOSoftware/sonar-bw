@@ -13,8 +13,9 @@ import org.sonar.check.Rule;
 
 @Rule(
         key = HttpClientSSLShouldHaveConfidentiality.RULE_KEY,
-        name = "HTTP Client SSL Should Have Confidentiality",
+        name = "HTTP client should have confidentiality",
         description = "HTTP Client using 443 port should have set confidentiality settings",
+        tags = {"security"},
         priority = Priority.MINOR)
 
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
@@ -28,7 +29,7 @@ public class HttpClientSSLShouldHaveConfidentiality extends AbstractResourceChec
     public void validate(SharedResourceSource resourceXml) {
         LOG.debug("Started rule: " + this.getClass());
         SharedResource resource = resourceXml.getResource();
-        LOG.debug("Checking project files");
+        LOG.debug("Checking project resource files");
 
         if (resource != null) {
             LOG.debug("Resource Type [" + resource.getType() + "]");
@@ -40,7 +41,7 @@ public class HttpClientSSLShouldHaveConfidentiality extends AbstractResourceChec
                     if ("443".equals(port.getValue())) {
                         LOG.debug("Port detected as 443");
                         if (!(resource.getParameterByName("useSSL") != null || resource.getParameterByName("useDefaultSSL") != null)) {
-                            reportIssueOnFile("HTTP Client [" + resource.getName() + "] using 443 port is not setting Confidentiality settings");
+                            reportIssueOnFile("Shared resource of type HTTP Client [" + resource.getName() + "] using 443 port is not setting Confidentiality settings");
                         }
                     }
                 }

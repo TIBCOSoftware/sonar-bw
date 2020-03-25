@@ -52,6 +52,7 @@ import com.tibco.utils.bw6.model.SharedResourceParameter;
 import com.tibco.utils.bw6.model.WsdlResource;
 import com.tibco.utils.bw6.model.XsdResource;
 import java.util.Arrays;
+import java.util.jar.Manifest;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.measure.Metric;
 import org.sonar.api.batch.rule.Checks;
@@ -65,7 +66,7 @@ import org.w3c.dom.Element;
 /**
  * XmlSensor provides analysis of xml files.
  *
- * @author Kapil Shivarkar
+ * @author TIBCODX Toolkit
  */
 public class ProcessRuleSensor implements Sensor {
 
@@ -87,7 +88,7 @@ public class ProcessRuleSensor implements Sensor {
 
         this.fileSystem = fileSystem;
         checkReturned = checkFactory.create(ProcessRuleDefinition.REPOSITORY_KEY).addAnnotatedChecks((Iterable<Class>) ProcessRuleDefinition.getChecks());
-        
+
         this.mainFilesPredicate = fileSystem.predicates().and(
                 fileSystem.predicates().hasLanguage(BWProcessLanguage.KEY));
         LOG.debug("ProcessRuleSensor - END");
@@ -276,7 +277,7 @@ public class ProcessRuleSensor implements Sensor {
         LOG.debug("execute - START");
         this.sensorContext = context;
 
-        LOG.info("Starting ProcessRuleSensor");
+        LOG.info("Start of parsing + analyze + other utilities check");
         List<InputFile> inputFiles = new ArrayList<>();
 
         Project bwProject = new Project();
@@ -284,31 +285,24 @@ public class ProcessRuleSensor implements Sensor {
         ProjectSource projectSource = new ProjectSource(projectInputFile);
         projectSource.setProject(bwProject);
         bwProject.setFile(fileSystem.baseDir());
-        
+
         LOG.debug("Project Input File: " + projectInputFile);
+
         parseProjectProperties(context, bwProject);
-
         parseProcesses(inputFiles, projectSource, bwProject);
-
         parseResources(bwProject, projectSource, context);
 
         bwProject.parseBindings();
-        
-        
-        
         bwProject.parsePolicies();
-        
         bwProject.parseKeystores();
-        
 
         analyzeProject(projectSource);
-
         analyzeProcess(projectSource);
 
         checkResources(projectSource);
-        
         checkCustom();
 
+        LOG.info("End of parsing + analyze + other utilities check");
         LOG.debug("execute - END");
     }
 
@@ -316,7 +310,7 @@ public class ProcessRuleSensor implements Sensor {
         createResourceExtensionMapper(resourceExtensionMapper);
         Iterable<InputFile> files = fileSystem.inputFiles(fileSystem.predicates().hasType(InputFile.Type.MAIN));
 
-        LOG.info("Searching for BW6 Resources");
+        LOG.info("Searching for BW Resources");
         for (InputFile file : files) {
             LOG.info("Found File: " + file.filename());
             if (file.filename().lastIndexOf(".") > 0) {
@@ -359,7 +353,7 @@ public class ProcessRuleSensor implements Sensor {
                     LOG.debug("JSON file deteected");
                     JSONResource resource = new JSONResource();
                     bwProject.addJSONSchema(resource);
-                    projectSource.getMap().addFile(resource, file);                    
+                    projectSource.getMap().addFile(resource, file);
                 }
 
                 String resourceType = resourceExtensionMapper.get(extension);
@@ -382,8 +376,8 @@ public class ProcessRuleSensor implements Sensor {
                             }
                         }
                     }
-                    
-                    
+
+
 
                     context.<Integer>newMeasure()
                             .forMetric(getSharedResourceMetric(resourceType))
@@ -391,18 +385,29 @@ public class ProcessRuleSensor implements Sensor {
                             .withValue(1)
                             .save();
                 }else{
-                    
+
                     if("pom.xml".equals(file.filename())){
                         LOG.debug("Detected pom.xml file --> This is a maven project");
                         try{
                             XmlFile xFile = XmlFile.create(file);
                             bwProject.setPomFile(xFile.getDocument());
                         }catch(IOException ex){
-                        
+
                         }
                     }
-                    
-                    GenericResource resource = new GenericResource();                    
+
+                    if("MANIFEST.MF".equals(file.filename())){
+                        LOG.debug("Detected MANIFEST.MF");
+                        try{
+                            Manifest xmanifest = new Manifest(file.inputStream());
+                            bwProject.setManifest(xmanifest);
+
+                        }catch(IOException ex){
+                                ex.printStackTrace();
+                        }
+                    }
+
+                    GenericResource resource = new GenericResource();
                     bwProject.addOtherFile(resource);
                     projectSource.getMap().addFile(resource, file);
                 }

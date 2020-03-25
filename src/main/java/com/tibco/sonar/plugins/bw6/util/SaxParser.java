@@ -42,7 +42,7 @@ import java.util.Map.Entry;
 /**
  * Parse XML files and add linenumbers in the document.
  *
- * @author Kapil Shivarkar
+ * @author TIBCODX Toolkit
  */
 public final class SaxParser extends AbstractParser {
 
