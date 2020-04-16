@@ -11,9 +11,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.apiVersion>7.4</sonar.apiVersion>
         <jdk.min.version>1.8</jdk.min.version>
-        <sonar.version>7.4</sonar.version>
-        <sonarjava.version>5.8.0.15699</sonarjava.version>
+        <sonar.version>7.4</sonar.version>        
         <sonar.sources>src/main/java</sonar.sources>
+        <sonar.language>java</sonar.language>
         <sonar.analyzerCommons.version>1.10.2.456</sonar.analyzerCommons.version>
         <jacoco.version>0.8.3</jacoco.version>
     </properties>

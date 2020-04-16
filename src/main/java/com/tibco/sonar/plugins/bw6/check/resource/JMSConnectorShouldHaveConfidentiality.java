@@ -37,7 +37,7 @@ public class JMSConnectorShouldHaveConfidentiality extends AbstractResourceCheck
             if ("jms:JMSConnectionFactory".equals(resource.getType())) {
                 LOG.debug("Detected resource as JMS Connector. Continue to check details");
 
-                if (!(resource.getParameterByName("provides") != null || "confidentiality".equals(resource.getParameterByName("provides")))) {
+                if (!(resource.getParameterByName("provides") != null || "confidentiality".equals(resource.getParameterByName("provides").getValue()))) {
                     reportIssueOnFile("Shared resource of type JMS Connector [" + resource.getName() + "] is not using security confidentiality");
                 }
             }

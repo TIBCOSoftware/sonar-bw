@@ -38,8 +38,8 @@ public class ProcessSource extends AbstractSource {
            
             this.file = XmlFile.create(file);
              this.process = new Process();
-            this.process.setProcessXmlDocument(XmlHelper.getDocument(file));
-            process.startParsing();
+             this.process.setProcessXmlDocument(XmlHelper.getDocument(file));
+                process.startParsing();
        
     }
 

@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.xml.stream.XMLInputFactory;
 
 /**
  * Parse XML files and add linenumbers in the document.
@@ -222,7 +223,10 @@ public final class SaxParser extends AbstractParser {
 
 	public Document parseDocument(InputStream input, boolean namespaceAware) {
 		try {
-			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                        DocumentBuilderFactory factory = DocumentBuilderFactory.newDefaultInstance();                        
+                        factory.setFeature(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
+                        factory.setFeature(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
+			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse(input);
 			LocationRecordingHandler handler = new LocationRecordingHandler(document);
 			parse(input, handler, namespaceAware);

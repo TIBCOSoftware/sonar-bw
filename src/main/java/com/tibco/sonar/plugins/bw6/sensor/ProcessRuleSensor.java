@@ -53,6 +53,7 @@ import com.tibco.utils.bw6.model.WsdlResource;
 import com.tibco.utils.bw6.model.XsdResource;
 import java.util.Arrays;
 import java.util.jar.Manifest;
+import javax.xml.stream.XMLInputFactory;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.measure.Metric;
 import org.sonar.api.batch.rule.Checks;
@@ -137,11 +138,13 @@ public class ProcessRuleSensor implements Sensor {
             LOG.debug("Checking if process is a subprocess: " + process.getName());
             File file = new File("META-INF/module.bwm");
             LOG.debug("File location: " + file.getAbsolutePath());
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newDefaultInstance();       
             DocumentBuilder dBuilder;
             NodeList propertyList = null;
             boolean flag = true;
             try {
+                dbFactory.setFeature(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
+                dbFactory.setFeature(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
                 dBuilder = dbFactory.newDocumentBuilder();
                 Document doc = dBuilder.parse(file);
                 doc.getDocumentElement().normalize();
@@ -403,7 +406,7 @@ public class ProcessRuleSensor implements Sensor {
                             bwProject.setManifest(xmanifest);
 
                         }catch(IOException ex){
-                                ex.printStackTrace();
+                               LOG.error("Error reading the MANIFEST.MF file",ex);
                         }
                     }
 

@@ -32,7 +32,7 @@ public class SSLClientConnectorShouldHaveTLSprotocol extends AbstractResourceChe
             LOG.debug("Resource Type [" + resource.getType() + "]");
             if ("sslclient:SSLClientConfiguration".equals(resource.getType())) {
                 LOG.debug("Detected resource as SSLClient Connector. Continue to check details");
-                if (!(resource.getParameterByName("sslProtocol") != null) || !("SSLv3".equals(resource.getParameterByName("sslProtocol")))) {
+                if (!(resource.getParameterByName("sslProtocol") != null) || !("SSLv3".equals(resource.getParameterByName("sslProtocol").getValue()))) {
                     reportIssueOnFile("Shared resource of type SSLClient Connector [" + resource.getName() + "] is not using recommended TLS protocol");
                 }
 
