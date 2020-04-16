@@ -19,7 +19,7 @@ stages:
 
 maven-build:
   stage: build
-  image: maven:3-jdk-8
+  image: maven:3-jdk-9
   script:
    - mvn $MAVEN_CLI_OPTS -DskipTests clean initialize package install deploy
   artifacts:
