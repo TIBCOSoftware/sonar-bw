@@ -1,0 +1,13 @@
+
+
+<h3>Basic Description</h3>
+
+<p>This rule checks the acknowledgement mode used in JMS activities.</p>
+
+<h3>Why this is important?</h3>
+
+<p>We have different Acknowledgement when we are receiving messages from a JMS destination, that we can configure. If we use the AUTO that means that the message will be confirmed as soon as it is processed for the JMS Receiver activity so in case there is a failure during the process the message will never return to the queue for a retry and you need to implement your own error procedure outside the options out of the box provided by the EMS server itself</p>
+
+<h3>How to fix it?</h3>
+<p>It is recommened to use the CLIENT ACK mode in your developments and provide a Confirm activity when the process has ended its work into a successful way</p>
+

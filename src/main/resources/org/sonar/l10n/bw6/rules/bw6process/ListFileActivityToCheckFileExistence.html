@@ -1,0 +1,16 @@
+
+
+<h3>Basic Description</h3>
+
+<p>Using List File activity to check if a single file exists is less performant than using ReadFile without fileContent check </p>
+
+<h3>Why this is important?</h3>
+
+<p>
+   Usually when we need to check the existence of a file we have two options. First of all is use Read File activity that can raise an known fault regarding the existence of the file, and another is to List the folder content to check if the expected file is there. Both options are valid and works as expected, but the performance of the first one is quite better than the other. 
+   And also the time doesn't depend on external factors as the number of files in the folder and so on.
+</p>
+
+<h3>How to fix it?</h3>
+<p>Check your process design and if you're using List activity to only check the persence of an expected file change that for using the Read File activity with the fileContent unchecked to make sure you're not reading the content of the file if this is not really needed</p>
+

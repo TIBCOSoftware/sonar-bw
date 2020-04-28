@@ -1,0 +1,14 @@
+
+
+<h3>Basic Description</h3>
+
+<p>This rule checks all activities input mapping for choice statement. As a coding best practice, the choice statement should always include the option otherwise.</p>
+
+<h3>Why this is important?</h3>
+
+If we have a Mapper activity when there is a choice of different components we should add a otherwise clause to make sure that we have covered all the possible scenarios. It is usual that even in situation that by design only certain data it will be received you could face new situations when the wrong unexpected data comes into the mapper and we should provide
+a mapper that is stronger enough to act right in those situations. The absence of the otherwise can lead to unexpected behavior of the rest of the application.
+
+<h3>How to fix it?</h3>
+<p>When you're adding a choice option in your mapper make sure you select the option to add the otherwise action and it has a relevant mapping in case the result of the evaluation is none of the options available in your choice element</p>
+

@@ -17,7 +17,7 @@ import org.sonar.check.Rule;
 @Rule(
         key = EndpointURIFromHTTPBindingSetUsingPropertyCheck.RULE_KEY,
         name = "Endpoint URI from SOAP/HTTP Binding Set using property",
-        description = "Endpount URI from SOAP/HTTP Binding should be set using a Module Property",
+        description = "Endpoint URI from SOAP/HTTP Binding should be set using a Module Property",
         priority = Priority.MINOR)
 
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)

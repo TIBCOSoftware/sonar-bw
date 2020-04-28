@@ -1,0 +1,14 @@
+
+
+<h3>Basic Description</h3>
+
+<p>This rule checks JDBC activities for hardcoded values for fields Timeout and MaxRows. Use Process property or Module property. </p>
+
+<h3>Why this is important?</h3>
+
+<p>Harcode some values that could be needed to change on deployment based because the performance of an external resources like the Database is a bad practice. Regarding the timeout it is directly impacted for environment details: performance of the database server, network latency and so on. Regarding the maximum number of rows is directly impacted of the data that is store in the database, so should be always mapped with properties that we can update without needed to repackage the software
+</p>
+
+<h3>How to fix it?</h3>
+<p>Change the configuration of your JDBC activities to link the timeout configuration and maximum rows to a Property value</p>
+

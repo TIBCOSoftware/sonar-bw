@@ -1,0 +1,15 @@
+
+
+<h3>Basic Description</h3>
+
+<p>SFTP Put should use binary mode for avoiding encoding issues when transferring </p>
+
+<h3>Why this is important?</h3>
+
+<p>
+   When we're updating files to an FTP/SFTP server if we're using the ASCII we are dependant on the codification used inside our text files, so to avoid that use always the Binary option for the SFTP Put Activity to make sure no transformation is done as part of the transferring process
+</p>
+
+<h3>How to fix it?</h3>
+<p>Change the configuration of your SFTP Put activity to set the option to Binary Transmission</p>
+

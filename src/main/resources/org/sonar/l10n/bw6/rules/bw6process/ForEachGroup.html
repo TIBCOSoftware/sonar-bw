@@ -1,0 +1,13 @@
+
+
+<h3>Basic Description</h3>
+
+<p>This rule checks the ForEach group. It is recommended to use For-Each activity input mapping instead of using For-Each/Iteration Group wherever possible. Do not use iteration groups just for mapping repeating elements. </p>
+
+<h3>Why this is important?</h3>
+
+Groups are very handy options and very straighforward to do some logic but we should be aware of using the right tool for the right job and even that we can use foreach groups to iterate over a number of components just to do a Mapping activity. In those cases, this practice should be avoided. The main reason is that the number of logic executed is quite big, because we will execute a Mapping activity that at the end is a XSL Process for each of the elements. Instead of that if we incorporate the for-each inside the Mapping activity we only are going to execute a single XSL processing activity for all teh components so the number of internal mappings, variables and logic is lower. 
+
+<h3>How to fix it?</h3>
+<p>Check the For-each Groups you have in your developments and check if you can replace their current logic with an for-each inside a Input Mapping for the activity you need it.</p>
+

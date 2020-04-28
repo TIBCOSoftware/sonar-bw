@@ -16,12 +16,12 @@ import java.util.regex.Pattern;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = ParseXMLRenderXMLCheck.RULE_KEY, name = "ParseXML using Binary", priority = Priority.MINOR, description = "ParseXML should use binary mode for performance assestment ")
+@Rule(key = ParseXMLRenderXMLCheck.RULE_KEY, name = "Parse XML Activity using RenderXML output as input", priority = Priority.MINOR, description = "This rule checks for inefficiencies on using ParseXML activities using output for RenderXML activity as input when it should rely on Coertion to do same job ")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class ParseXMLRenderXMLCheck extends AbstractProcessCheck {
 
     private static final Logger LOG = Loggers.get(ParseXMLRenderXMLCheck.class);
-    public static final String RULE_KEY = "ParseXMLRenderXML";
+    public static final String RULE_KEY = "ParseXMLRenderXMLActivity";
 
     
     @Override

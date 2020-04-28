@@ -1,0 +1,14 @@
+
+
+<h3>Basic Description</h3>
+
+<p>This rule checks JMS activities for hardcoded values for fields Timeout, Destinaton, Reply to Destination, Message Selector, Polling Interval. Use Process property or Module property. </p>
+
+<h3>Why this is important?</h3>
+
+<p> Harcode some values that could be needed to change on deployment based because the performance of an external resources like the EMS Server is a bad practice. 
+</p>
+
+<h3>How to fix it?</h3>
+<p>Change the configuration (Timeout, Destinaton, Reply to Destination, Message Selector, Polling Interval) of your JMS  activities to link the JMS configuration to  Property values. </p>
+

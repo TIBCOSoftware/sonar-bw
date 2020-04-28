@@ -1,20 +1,24 @@
 package com.tibco.sonar.plugins.bw6.rulerepository;
 
+import com.google.common.io.Resources;
 import com.tibco.sonar.plugins.bw6.check.AbstractCheck;
 import java.util.Arrays;
 import java.util.List;
 
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinitionAnnotationLoader;
-
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
+import java.io.File;
+import java.io.IOException;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import org.apache.commons.io.FileUtils;
 
 public final class ProcessRuleDefinition implements RulesDefinition {
 
     protected static final String KEY = "process";
     protected static final String NAME = "process";
 
-    public static final String REPOSITORY_KEY = BWProcessLanguage.KEY + "-" + KEY;
+    public static final String REPOSITORY_KEY = BWProcessLanguage.KEY + KEY;
     protected static final String REPOSITORY_NAME = BWProcessLanguage.KEY + "-" + NAME;
     protected static final List<String> LANGUAGE_KEYS = Arrays.asList(new String[]{BWProcessLanguage.KEY});
 
@@ -159,18 +163,33 @@ public final class ProcessRuleDefinition implements RulesDefinition {
     public ProcessRuleDefinition() {
     }
 
+    private void setDescriptionFromHtml(NewRule rule) {
+        String htmlPath = "/org/sonar/l10n/bw6/rules/bw6process/" + rule.key() + ".html";
+        String description = "<p></p>";
+        try {
+
+            description = Resources.toString(this.getClass().getResource(htmlPath),UTF_8);            
+        } catch (Exception e) {
+            description= "<p>Description not available</p>";
+        }
+        rule.setHtmlDescription(description);
+    }
+
     private void defineRulesForLanguage(Context context, String repositoryKey, String repositoryName, String languageKey) {
         NewRepository repository = context.createRepository(repositoryKey, languageKey).setName(repositoryName);
         RulesDefinitionAnnotationLoader annotationLoader = new RulesDefinitionAnnotationLoader();
         annotationLoader.load(repository, check);
 
+        for (NewRule rule : repository.rules()) {
+            setDescriptionFromHtml(rule);
+        }
+
         NewRule templateRule = repository.rule("XPathCheck");
-        if(templateRule != null){
+        if (templateRule != null) {
 
             templateRule.setTemplate(true);
         }
         repository.done();
-
 
     }
 
