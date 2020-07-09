@@ -415,11 +415,16 @@ public class ProcessRuleSensor implements Sensor {
                     projectSource.getMap().addFile(resource, file);
                 }
             }
+            
+            try{
             context.<Integer>newMeasure()
                             .forMetric(CoreMetrics.NCLOC)
                             .on(file)
                             .withValue(file.lines())
                             .save();
+            }catch(Exception ex){
+                LOG.warn("Already registered the following measure: ",ex);
+            }
         }
         LOG.info("Completed Search of BW6 Resources");
     }
