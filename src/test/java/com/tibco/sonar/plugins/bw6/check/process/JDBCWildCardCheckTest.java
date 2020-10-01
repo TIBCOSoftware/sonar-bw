@@ -779,9 +779,9 @@ public class JDBCWildCardCheckTest {
         System.out.println("testValidate");
         JDBCWildCardCheck instance = new JDBCWildCardCheck();
         JDBCWildCardCheck spyInstance = Mockito.spy(instance);
-        doNothing().when(spyInstance).reportIssueOnFile(any());        
+        doNothing().when(spyInstance).reportIssueOnFile(any(),anyInt());        
         spyInstance.validate(source);        
-        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString());
+        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString(),anyInt());
         
     }
     

@@ -3,6 +3,7 @@ package com.tibco.sonar.plugins.bw6.check.process;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Group;
 import com.tibco.utils.bw6.model.Process;
@@ -15,8 +16,8 @@ import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 
-@Rule(key = "CriticalSection", name = "Activities in Critical Section Check", priority = Priority.CRITICAL, description = "Critical section groups cause multiple concurrently running process instances to wait for one process instance to execute the activities in the group. As a result, there may be performance implications when using these groups. This rules checks that the Critical Section group does not include any activities that wait for incoming events or have long durations, such as Request/Reply activities, Wait For (Signal-In) activities, Sleep activity, or other activities that require a long time to execute.")
-@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.CRITICAL)
+@Rule(key = "CriticalSection", name = "Activities in Critical Section Check", priority = Priority.INFO, description = "Critical section groups cause multiple concurrently running process instances to wait for one process instance to execute the activities in the group. As a result, there may be performance implications when using these groups. This rules checks that the Critical Section group does not include any activities that wait for incoming events or have long durations, such as Request/Reply activities, Wait For (Signal-In) activities, Sleep activity, or other activities that require a long time to execute.")
+@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.INFO)
 public class CriticalSectionCheck
         extends AbstractProcessCheck {
 
@@ -33,7 +34,7 @@ public class CriticalSectionCheck
             
             if (group.getType().equals("critical")) {
                 group.getActivities().stream().filter((activity) -> (activity.getType() != null && CriticalSectionCheck.CONSTANTS.contains(activity.getType()))).forEachOrdered((Activity activity) -> {
-                    reportIssueOnFile("The activity " + activity.getName() + " in process " + process.getBasename() + " should not be used within Critical Section group.");
+                    reportIssueOnFile("The activity " + activity.getName() + " in process " + process.getBasename() + " should not be used within Critical Section group.",XmlHelper.getLineNumber(activity.getNode()));
                 });
             }
         }        

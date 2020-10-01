@@ -1,6 +1,7 @@
 package com.tibco.sonar.plugins.bw6.profile;
 
 import com.tibco.sonar.plugins.bw6.check.AbstractCheck;
+import com.tibco.sonar.plugins.bw6.check.XPathCheck;
 import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
 import com.tibco.sonar.plugins.bw6.rulerepository.ProcessRuleDefinition;
@@ -20,7 +21,9 @@ public final class BWProcessQualityProfile implements BuiltInQualityProfilesDefi
       
        List<AbstractCheck> checks = ProcessRuleDefinition.getCheckList();
        for(AbstractCheck check : checks){
-           profile.activateRule(REPOSITORY_KEY, check.getRuleKeyName());
+           if(! (check instanceof XPathCheck)){
+            profile.activateRule(REPOSITORY_KEY, check.getRuleKeyName());
+           }
            
        }
       profile.done();

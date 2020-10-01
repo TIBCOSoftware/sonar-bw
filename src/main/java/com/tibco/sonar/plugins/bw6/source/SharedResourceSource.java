@@ -13,7 +13,7 @@ import org.sonarsource.analyzer.commons.xml.XmlFile;
  * Checks and analyzes report measurements, issues and other findings in
  * WebSourceCode.
  *
- * @author Kapil Shivarkar
+ * @author TIBCODX Toolkit
  */
 public class SharedResourceSource extends AbstractSource {
 
@@ -25,15 +25,16 @@ public class SharedResourceSource extends AbstractSource {
     
     protected FileSystem fileSystem;
 
-    public SharedResourceSource(FileSystem fileSystem,InputFile file) {
+    public SharedResourceSource(ProjectSource project,FileSystem fileSystem,InputFile file) {
         try {
             LOG.info("Parsing Shared Resource ["+file+"]");
             this.fileSystem = fileSystem;
             this.file = XmlFile.create(file);
             this.resource = new SharedResource();
-            this.resource.setFile(file);
+            this.resource.setName(file.filename());
             this.resource.setDocument(this.file.getNamespaceUnawareDocument());
             LOG.info("Shared Resource ["+file+"] parsed");
+            project.getResource().add(this);
         } catch (IOException ex) {
             LOG.error("Error while parsing shared resource in file ["+file+"]",ex);
         }
@@ -51,14 +52,14 @@ public class SharedResourceSource extends AbstractSource {
     /**
      * @return the file
      */
-    public XmlFile getFile() {
-        return file;
-    }
+    public InputFile getComponent() {
+        return file.getInputFile();
+    }    
 
     /**
      * @param file the file to set
      */
-    public void setFile(XmlFile file) {
+    public void setComponent(XmlFile file) {
         this.file = file;
     }
 

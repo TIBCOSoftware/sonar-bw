@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.transavia.integration</groupId>
+        <artifactId>bw-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <groupId>com.transavia.integration.services.oz.is.acars</groupId>
+    <artifactId>parent</artifactId>
+    <version>3.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>Acars_Adapter</module>
+		<module>DeployConfig</module>
+        <!--module>UnitTests</module-->
+    </modules>
+    <scm>
+        <developerConnection>scm:svn:https://svtransvn01/esb/services/Acars_Adapter/trunk/source</developerConnection>
+    </scm>
+    <properties>
+        <sonar.projectName>Acars_Adapter_1_0</sonar.projectName>
+        <sonar.profile>tibco_bw514</sonar.profile>
+    </properties>
+</project>

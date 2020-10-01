@@ -3,33 +3,32 @@
     <groupId>com.tibco.sonar</groupId>
     <artifactId>sonar-bw-6-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
-    <version>1.2.0</version>
+    <version>1.3.6-SNAPSHOT</version>
     <name>Sonarqube BW6 Plugin</name>
     <description>SonarQube Plugin for Businessworks6, BWCE and TCI</description>
-  
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.apiVersion>7.4</sonar.apiVersion>
         <jdk.min.version>1.8</jdk.min.version>
-        <sonar.version>7.4</sonar.version>
-        <sonarjava.version>5.8.0.15699</sonarjava.version>
+        <sonar.version>7.4</sonar.version>        
         <sonar.sources>src/main/java</sonar.sources>
+        <sonar.language>java</sonar.language>
         <sonar.analyzerCommons.version>1.10.2.456</sonar.analyzerCommons.version>
         <jacoco.version>0.8.3</jacoco.version>
     </properties>
- 
-  
+
     <distributionManagement>
         <snapshotRepository>
-            <id>maven-snapshots</id>
-            <url>https://nexus.tibcopsg.net/repository/maven-snapshots/</url>
+        <id>maven-snapshots</id>
+        <url>https://nexus.tibcopsg.net/repository/maven-snapshots/</url>
         </snapshotRepository>
         <repository>
-            <id>maven-releases</id>
-            <url>https://nexus.tibcopsg.net/repository/maven-releases/</url>
+        <id>maven-releases</id>
+        <url>https://nexus.tibcopsg.net/repository/maven-releases/</url>
         </repository>
     </distributionManagement>
-  
+
     <dependencies>
         <dependency>
             <groupId>org.sonarsource.sonarqube</groupId>
@@ -46,35 +45,27 @@
             </exclusions>
             <type>jar</type>
         </dependency>
-
         <dependency>
             <groupId>org.sonarsource.analyzer-commons</groupId>
             <artifactId>sonar-analyzer-commons</artifactId>
             <version>${sonar.analyzerCommons.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.sonarsource.analyzer-commons</groupId>
             <artifactId>sonar-xml-parsing</artifactId>
             <version>${sonar.analyzerCommons.version}</version>
         </dependency>
-
- 
         <dependency>
             <!-- packaged with the plugin -->
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
         </dependency>
-
         <dependency>
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
             <version>2.7.2</version>
         </dependency>
-
- 
-
         <dependency>
             <groupId>org.codehaus.sonar-plugins.xml</groupId>
             <artifactId>xml-squid</artifactId>
@@ -89,12 +80,9 @@
                     <artifactId>commons-lang</artifactId>
                 </exclusion>
             </exclusions>
-
         </dependency>
 
         <!-- Test dependencies -->
-
-
         <dependency>
             <groupId>org.sonarsource.sonarqube</groupId>
             <artifactId>sonar-testing-harness</artifactId>
@@ -114,8 +102,6 @@
             <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
-
-	
         <dependency>
             <groupId>org.sonarsource.sslr-squid-bridge</groupId>
             <artifactId>sslr-squid-bridge</artifactId>
@@ -146,16 +132,36 @@
         <dependency>
             <groupId>com.tibco.utils.bw</groupId>
             <artifactId>bw6-utils</artifactId>
-            <version>1.0.5-SNAPSHOT</version>
+            <version>1.3.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-parser</artifactId>
+            <version>1.0.45</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-compat-spec-parser</artifactId>
+            <version>1.0.45</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.5</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
-  
+
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
-
         <plugins>
-            
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -194,7 +200,7 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
                 <artifactId>sonar-packaging-maven-plugin</artifactId>
@@ -202,7 +208,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <skipDependenciesPackaging>true</skipDependenciesPackaging>
-                    <pluginKey>BW6Plugin</pluginKey>           
+                    <pluginKey>BW6Plugin</pluginKey>
                     <pluginClass>com.tibco.sonar.plugins.bw6.plugin.BusinessWorksPlugin</pluginClass>
                 </configuration>
             </plugin>
@@ -216,7 +222,7 @@
                     <target>${jdk.min.version}</target>
                 </configuration>
             </plugin>
-      
+
             <plugin>
                 <!-- UTF-8 bundles are not supported by Java, so they must be converted during build -->
                 <groupId>org.codehaus.mojo</groupId>
@@ -230,8 +236,9 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>  
+            <plugin>
                 <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -239,11 +246,11 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            
+
                             <shadedArtifactAttached>false</shadedArtifactAttached>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <minimizeJar>true</minimizeJar>
-                            
+
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
@@ -264,6 +271,12 @@
                                     </includes>
                                 </filter>
                                 <filter>
+                                    <artifact>gson:gson</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+                                <filter>
                                     <artifact>xml-apis:xml-apis</artifact>
                                     <includes>
                                         <include>**</include>
@@ -274,7 +287,16 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.21.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>

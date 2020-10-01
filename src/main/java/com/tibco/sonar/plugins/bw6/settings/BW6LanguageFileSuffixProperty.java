@@ -7,7 +7,7 @@ import org.sonar.api.resources.Qualifiers;
 public class BW6LanguageFileSuffixProperty {
 
     public static final String CATEGORY = "TIBCO";
-    public static final String SUB_CATEGORY = "BusinessWorks";
+    public static final String SUB_CATEGORY = "BusinessWorks 6.x / BWCE";
 
     public static final String FILE_SUFFIXES_KEY = "sonar.bw6.file.suffixes";
     protected static final String[] DEFAULT_FILE_SUFFIXES = {".bwp"};

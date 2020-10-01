@@ -15,8 +15,8 @@ import com.tibco.utils.bw6.model.Transition;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
     
-@Rule(key = TransitionLabelCheck.RULE_KEY, name = "Transition Labels Check", priority = Priority.MAJOR, description = "This rule checks whether the transitions with the type 'Success With Condition' (XPath) have a proper label. This will improve code readability")
-@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
+@Rule(key = TransitionLabelCheck.RULE_KEY, name = "Transition Labels Check", priority = Priority.MINOR, description = "This rule checks whether the transitions with the type 'Success With Condition' (XPath) have a proper label. This will improve code readability")
+@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class TransitionLabelCheck extends AbstractProcessCheck {
 
     private static final Logger LOG = Loggers.get(TransitionLabelCheck.class);

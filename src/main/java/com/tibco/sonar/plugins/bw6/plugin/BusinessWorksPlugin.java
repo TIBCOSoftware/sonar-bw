@@ -7,7 +7,6 @@ import com.tibco.sonar.plugins.bw6.measurecomputer.resources.*;
 import com.tibco.sonar.plugins.bw6.metric.SharedResourceMetrics;
 import com.tibco.sonar.plugins.bw6.rulerepository.ProcessRuleDefinition;
 //import com.tibco.sonar.plugins.bw6.sensor.ProcessRuleSensor;
-import com.tibco.sonar.plugins.bw6.sensor.SharedResourcesSensor;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.sensor.ProcessRuleSensor;
 import com.tibco.sonar.plugins.bw6.settings.BW6LanguageFileSuffixProperty;
@@ -28,11 +27,10 @@ public class BusinessWorksPlugin implements Plugin {
 	   
 		// BW6 Language Claasses
 		context.addExtensions(
-       			BW6LanguageFileSuffixProperty.class,
+       			BW6LanguageFileSuffixProperty.getPropertyDefinition(),
 		    	BWProcessLanguage.class,
 	            ProcessRuleDefinition.class,
 				ProcessRuleSensor.class,
-				SharedResourcesSensor.class,
 				BWProcessQualityProfile.class);
 	
         // Resource File Metric Information

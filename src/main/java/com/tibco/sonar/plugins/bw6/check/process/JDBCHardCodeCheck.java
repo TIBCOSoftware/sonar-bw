@@ -9,12 +9,13 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = JDBCHardCodeCheck.RULE_KEY, name = "JDBC HardCoded Check", priority = Priority.MAJOR, description = "This rule checks JDBC activities for hardcoded values for fields Timeout and MaxRows. Use Process property or Module property.")
-@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
+@Rule(key = JDBCHardCodeCheck.RULE_KEY, name = "JDBC HardCoded Check", priority = Priority.MINOR, description = "This rule checks JDBC activities for hardcoded values for fields Timeout and MaxRows. Use Process property or Module property.")
+@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class JDBCHardCodeCheck extends AbstractProcessCheck {
 
     private static final Logger LOG = Loggers.get(JDBCHardCodeCheck.class);
@@ -29,10 +30,10 @@ public class JDBCHardCodeCheck extends AbstractProcessCheck {
                 LOG.debug("JDBC activity detected!");
                 
                 if (activity.hasProperty("maxRows")) {
-                    reportIssueOnFile("The max rows setting in the JDBC activity " + activity.getName() + " is assigned a hardcoded value. It should be defined as Process property or Module property.");
+                    reportIssueOnFile("The max rows setting in the JDBC activity " + activity.getName() + " is assigned a hardcoded value. It should be defined as Process property or Module property.",XmlHelper.getLineNumber(activity.getNode()));
                 }
                 if (activity.hasProperty("timeout")) {
-                    reportIssueOnFile("The timeout setting in the JDBC activity " + activity.getName() + " is assigned a harcoded value. It should be defined as Process property or Module property.");
+                    reportIssueOnFile("The timeout setting in the JDBC activity " + activity.getName() + " is assigned a harcoded value. It should be defined as Process property or Module property.",XmlHelper.getLineNumber(activity.getNode()));
                 }
             }
         }

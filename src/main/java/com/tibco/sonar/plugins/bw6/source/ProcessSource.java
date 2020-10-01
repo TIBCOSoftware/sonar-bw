@@ -1,6 +1,7 @@
 package com.tibco.sonar.plugins.bw6.source;
 
 
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Process;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -12,7 +13,7 @@ import org.sonarsource.analyzer.commons.xml.XmlFile;
  * Checks and analyzes report measurements, issues and other findings in
  * WebSourceCode.
  *
- * @author Kapil Shivarkar
+ * @author TIBCODX Toolkit
  */
 public class ProcessSource extends AbstractSource {
 
@@ -20,23 +21,25 @@ public class ProcessSource extends AbstractSource {
 
     private XmlFile file;
 
-    public ProcessSource(InputFile file) {
+    public ProcessSource(ProjectSource project, InputFile file) {
         try {
             this.file = XmlFile.create(file);
             this.process = new Process();
-            this.process.setProcessXmlDocument(this.file.getNamespaceUnawareDocument());
+            this.process.setProcessXmlDocument(XmlHelper.getDocument(file.inputStream()) );
             process.startParsing();
-        } catch (IOException ex) {
+            project.getProcess().add(this);
+        } catch (Exception ex) {
             Logger.getLogger(ProcessSource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
        public ProcessSource(String file) {
        
+           
             this.file = XmlFile.create(file);
-            this.process = new Process();
-            this.process.setProcessXmlDocument(this.file.getNamespaceUnawareDocument());
-            process.startParsing();
+             this.process = new Process();
+             this.process.setProcessXmlDocument(XmlHelper.getDocument(file));
+                process.startParsing();
        
     }
 
@@ -51,14 +54,14 @@ public class ProcessSource extends AbstractSource {
     /**
      * @return the file
      */
-    public XmlFile getFile() {
-        return file;
+    public InputFile getComponent() {
+        return file.getInputFile();
     }
 
     /**
      * @param file the file to set
      */
-    public void setFile(XmlFile file) {
+    public void setComponent(XmlFile file) {
         this.file = file;
     }
 

@@ -10,6 +10,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.doNothing;
@@ -26,7 +27,7 @@ public class CheckpointAfterHttpCheckTest {
     public CheckpointAfterHttpCheckTest() {
     }
     
-      
+    
     @BeforeClass
     public static void setUpClass() {
        
@@ -697,9 +698,9 @@ public class CheckpointAfterHttpCheckTest {
         System.out.println("testValidate");
         CheckpointAfterHttpCheck instance = new CheckpointAfterHttpCheck();
         CheckpointAfterHttpCheck spyInstance = Mockito.spy(instance);
-        doNothing().when(spyInstance).reportIssueOnFile(any());        
+        doNothing().when(spyInstance).reportIssueOnFile(any(),anyInt());        
         spyInstance.validate(source);        
-        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString());
+        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString(),anyInt());
         
     }
     

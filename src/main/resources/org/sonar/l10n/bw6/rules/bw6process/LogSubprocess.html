@@ -1,0 +1,15 @@
+
+
+<h3>Basic Description</h3>
+
+<p>This rule checks if the Log activity is not being used in component process and only used in subprocess </p>
+
+<h3>Why this is important?</h3>
+
+<p>
+   If there is logging or auditing required at multiple points in your project, its advised to write logging and auditing code in a sub process and invoke this process from any point where this functionality is required. This rule checks whether LOG activity is used in sub process
+</p>
+
+<h3>How to fix it?</h3>
+<p>Define a common subprocess to manage all aspects related to logging and auditing your process and call that process from any other point in your development that requires that logic</p>
+

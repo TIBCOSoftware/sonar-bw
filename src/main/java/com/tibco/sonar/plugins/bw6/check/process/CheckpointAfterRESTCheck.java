@@ -8,6 +8,7 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
 import com.tibco.utils.bw6.model.Transition;
@@ -37,13 +38,13 @@ public class CheckpointAfterRESTCheck extends AbstractProcessCheck {
     }
 
     private void checkPreviousActivities(Activity activity) {
-        List<Transition> incomingTransitions = activity.getIncomingTransitions();
+        List<Transition> incomingTransitions = activity.getInputTransitions();
 
         LOG.debug("Incoming transitions: " + incomingTransitions);
         incomingTransitions.forEach((t) -> {
             if (t.getFromActivity() != null && t.getFromActivity().getType().contains("bw.restjson.Rest")) {
                 if (onlyOneViolation) {
-                    reportIssueOnFile("The process " + activity.getProcess().getBasename() + " has a Checkpoint activity placed after a REST webservice call or in a parallel flow to a REST webservice call.");
+                    reportIssueOnFile("The process [" + activity.getProcess().getBasename() + "] has a Checkpoint activity ["+activity.getName()+"] placed after a REST webservice call or in a parallel flow to a REST webservice call.",XmlHelper.getLineNumber(activity.getNode()));
                     onlyOneViolation = false;
                 }
             } else {

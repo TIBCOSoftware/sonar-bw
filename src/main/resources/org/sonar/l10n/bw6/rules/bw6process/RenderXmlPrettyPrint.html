@@ -1,0 +1,15 @@
+
+
+<h3>Basic Description</h3>
+
+<p>This rule checks for inefficiencies on using tib:render-xml function specifying the pretty-print option to true</p>
+
+<h3>Why this is important?</h3>
+
+<p>
+   Pretty-print as part of the render-xml is inefficient as it requires more time to do the render process because it also need to indent it, and additional to that pretty print as it add new lines also breaks the Log Aggregation approach that most companies have today. So based on that this should be avoided
+</p>
+
+<h3>How to fix it?</h3>
+<p>Change your render-xml invocations to set to false the pretty print option</p>
+

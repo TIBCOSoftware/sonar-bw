@@ -11,6 +11,7 @@ import org.w3c.dom.NodeList;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Group;
 import com.tibco.utils.bw6.model.Process;
@@ -18,8 +19,8 @@ import com.tibco.utils.bw6.model.Transition;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = CheckpointInTransation.RULE_KEY, name = "Checkpoint inside Transaction Group Check", priority = Priority.CRITICAL, description = "This rule checks the placement of a Checkpoint activity within a process. Do not place checkpoint within or in parallel to a Transaction Group or a Critical Section Group. Checkpoint activities should be placed at points that are guaranteed to be reached before or after the transaction group is reached.")
-@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.CRITICAL)
+@Rule(key = CheckpointInTransation.RULE_KEY, name = "Checkpoint inside Transaction Group Check", priority = Priority.MAJOR, description = "This rule checks the placement of a Checkpoint activity within a process. Do not place checkpoint within or in parallel to a Transaction Group or a Critical Section Group. Checkpoint activities should be placed at points that are guaranteed to be reached before or after the transaction group is reached.")
+@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class CheckpointInTransation extends AbstractProcessCheck {
 
     private static final Logger LOG = Loggers.get(CheckpointInTransation.class);
@@ -83,9 +84,9 @@ public class CheckpointInTransation extends AbstractProcessCheck {
             if (process.getEventSourceByName(from) == null) {
                 if (process.getGroupByName(from) != null) {
                     if (process.getGroupByName(from).getType().equals("localTX")) {
-                        reportIssueOnFile("The Checkpoint activity in the process " + process.getBasename() + " is placed within a Transaction group. Checkpoint should not be placed within or in parallel flow to a transaction.");
+                        reportIssueOnFile("The Checkpoint activity in the process [" + process.getBasename() + "] is placed within a Transaction group. Checkpoint should not be placed within or in parallel flow to a transaction.",XmlHelper.getLineNumber(process.getGroupByName(from).getNode()));
                     } else if (process.getGroupByName(from).getType().equals("critical")) {
-                        reportIssueOnFile("The Checkpoint activity in the process " + process.getBasename() + " is placed within a Critical Section group. Checkpoint should not be placed within a Critical Section group.");
+                        reportIssueOnFile("The Checkpoint activity in the process [" + process.getBasename() + "] is placed within a Critical Section group. Checkpoint should not be placed within a Critical Section group.",XmlHelper.getLineNumber(process.getGroupByName(from).getNode()));
                     }
                 }
             }

@@ -9,6 +9,7 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
@@ -26,7 +27,7 @@ private static final Logger LOG = Loggers.get(JDBCWildCardCheck.class);
         for (Activity activity : list) {
             String sqlStatement = activity.getProperty("sqlStatement");
             if (sqlStatement != null && sqlStatement.contains("*")) {
-                reportIssueOnFile("WildCards should not be used in a JDBC Query. Use correct colomn names in JDBC query for activity " + activity.getName() + " from process " + processSource.getProcessModel().getName());
+                reportIssueOnFile("WildCards should not be used in a JDBC Query. Use correct colomn names in JDBC query for activity " + activity.getName() + " from process " + processSource.getProcessModel().getName(),XmlHelper.getLineNumber(activity.getNode()));
             }
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);

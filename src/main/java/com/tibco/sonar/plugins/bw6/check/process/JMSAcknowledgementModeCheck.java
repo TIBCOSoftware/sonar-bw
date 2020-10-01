@@ -9,6 +9,7 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.EventSource;
 import org.sonar.api.utils.log.Logger;
@@ -30,7 +31,7 @@ public class JMSAcknowledgementModeCheck extends AbstractProcessCheck {
             if (activity.getType() != null && activity.getType().contains("bw.jms.getmsg")) {
                 LOG.debug("JMS Get Message activity detected");
                 if(!activity.hasProperty("ackMode")){
-                    reportIssueOnFile("Auto Acknowledgement mode is set in the JMS activity " + activity.getName() + ".  Avoid using Auto Acknowledgement to minimize the risk of data loss.");
+                    reportIssueOnFile("Auto Acknowledgement mode is set in the JMS activity " + activity.getName() + ".  Avoid using Auto Acknowledgement to minimize the risk of data loss.",XmlHelper.getLineNumber(activity.getNode()));
                 }
             }
         });
@@ -39,7 +40,7 @@ public class JMSAcknowledgementModeCheck extends AbstractProcessCheck {
         eventSources.forEach((eventSource) -> {
             if (eventSource.getType() != null && (eventSource.getType().contains("bw.jms.signalin") || eventSource.getType().contains("bw.jms.receive"))) {
                 if(!eventSource.hasProperty("ackMode")){
-                    reportIssueOnFile("Auto Acknowledgement mode is set in the JMS activity " + eventSource.getName() + ".  Avoid using Auto Acknowledgement to minimize the risk of data loss.");
+                    reportIssueOnFile("Auto Acknowledgement mode is set in the JMS activity " + eventSource.getName() + ".  Avoid using Auto Acknowledgement to minimize the risk of data loss.",XmlHelper.getLineNumber(eventSource.getNode()));
                 }
             }
         });

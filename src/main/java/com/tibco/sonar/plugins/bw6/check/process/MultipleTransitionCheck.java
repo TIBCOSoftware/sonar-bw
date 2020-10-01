@@ -12,14 +12,15 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
+import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
 import com.tibco.utils.bw6.model.Transition;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = MultipleTransitionCheck.RULE_KEY, name = "Multiple Transitions Check", priority = Priority.MAJOR, description = "EMPTY activity should be used if you want to join multiple transition flows. For example, there are multiple transitions out of an activity and each transition takes a different path in the process. In this scenario you can create a transition from the activity at the end of each path to an Empty activity to resume a single flow of execution in the process. This rule checks whether multiple transitions from an activity in a parallel flow merge into EMPTY activity")
-@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
+@Rule(key = MultipleTransitionCheck.RULE_KEY, name = "Multiple Transitions Check", priority = Priority.INFO, description = "EMPTY activity should be used if you want to join multiple transition flows. For example, there are multiple transitions out of an activity and each transition takes a different path in the process. In this scenario you can create a transition from the activity at the end of each path to an Empty activity to resume a single flow of execution in the process. This rule checks whether multiple transitions from an activity in a parallel flow merge into EMPTY activity")
+@BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.INFO)
 public class MultipleTransitionCheck extends AbstractProcessCheck {
 
     private static final Logger LOG = Loggers.get(MultipleTransitionCheck.class);
@@ -40,7 +41,7 @@ public class MultipleTransitionCheck extends AbstractProcessCheck {
                     for (Activity activity : process.getActivities()) {
                         if (activity.getName().equals(pair.getValue().getTo())) {
                             if (activity.getType() != null) {
-                                reportIssueOnFile("There are multiple transitions converging into activity " + pair.getValue().getTo() + ". When there are multiple transitions in a parallel flow, they should converge preferably in a EMPTY activity. This ensures that following activities after the EMPTY activity will have all the outputs available from parallel paths.");
+                                reportIssueOnFile("There are multiple transitions converging into activity " + pair.getValue().getTo() + ". When there are multiple transitions in a parallel flow, they should converge preferably in a EMPTY activity. This ensures that following activities after the EMPTY activity will have all the outputs available from parallel paths.",XmlHelper.getLineNumber(activity.getNode()));
                                 activityFlag = true;
                             }
                         }

@@ -23,7 +23,6 @@ import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
@@ -46,21 +45,12 @@ public class NoDescriptionCheck extends AbstractProcessCheck {
     protected void validate(ProcessSource processSource) {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         Process process = processSource.getProcessModel();
-        Document document = process.getProcessXmlDocument();
-
-        Element description = XmlHelper.firstChildElement(
-                document.getDocumentElement(),
-                DESCRIPTION_ELEMENT_NAMESPACE, DESCRIPTION_ELEMENT_NAME);
-        if (description != null) {
-            LOG.debug("Process description for process [" + process.getBasename() + "]: " + description.getTextContent());
-            if (description.getTextContent() == null
-                    || description.getTextContent().isEmpty()) {
-                //TODO Add line here
-                reportIssueOnFile("Empty description for this process");
-            }
-        } else {
-
-            reportIssueOnFile("No description found in this process");
+        Document document = process.getProcessXmlDocument();       
+        LOG.debug("Process description for process [" + process.getBasename() + "]: " + process.getDescription());
+        if (process.getDescription() == null
+                || process.getDescription().isEmpty()) {
+            //TODO Add line here
+            reportIssueOnFile("Empty description for this process",XmlHelper.getLineNumber(process.getNode()));
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
     }

@@ -28,7 +28,7 @@ import javax.xml.parsers.SAXParserFactory;
 /**
  * Provides reusable code for Xml parsers.
  *
- * @author Kapil Shivarkar
+ * @author TIBCODX Toolkit
  */
 public abstract class AbstractParser {
 

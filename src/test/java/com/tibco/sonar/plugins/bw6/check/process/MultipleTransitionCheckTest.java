@@ -794,9 +794,9 @@ public class MultipleTransitionCheckTest {
         System.out.println("testValidate");
         MultipleTransitionCheck instance = new MultipleTransitionCheck();
         MultipleTransitionCheck spyInstance = Mockito.spy(instance);
-        doNothing().when(spyInstance).reportIssueOnFile(any());        
+        doNothing().when(spyInstance).reportIssueOnFile(any(),anyInt());        
         spyInstance.validate(source);        
-        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString());
+        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString(),anyInt());
         
     }
 }

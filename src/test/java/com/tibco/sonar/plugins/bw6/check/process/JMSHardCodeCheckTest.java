@@ -1314,9 +1314,9 @@ public class JMSHardCodeCheckTest {
         System.out.println("testValidate");
         JMSHardCodeCheck instance = new JMSHardCodeCheck();
         JMSHardCodeCheck spyInstance = Mockito.spy(instance);
-        doNothing().when(spyInstance).reportIssueOnFile(any());        
+        doNothing().when(spyInstance).reportIssueOnFile(any(),anyInt());        
         spyInstance.validate(source);        
-        Mockito.verify(spyInstance,Mockito.atLeastOnce()).reportIssueOnFile(anyString());
+        Mockito.verify(spyInstance,Mockito.atLeastOnce()).reportIssueOnFile(anyString(),anyInt());
         
     }
     

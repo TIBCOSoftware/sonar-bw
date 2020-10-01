@@ -772,9 +772,9 @@ public class CheckpointAfterJDBCÇheckTest {
         System.out.println("testValidate");
         CheckpointAfterJDBCÇheck instance = new CheckpointAfterJDBCÇheck();
         CheckpointAfterJDBCÇheck spyInstance = Mockito.spy(instance);
-        doNothing().when(spyInstance).reportIssueOnFile(any());        
+        doNothing().when(spyInstance).reportIssueOnFile(any(),anyInt());        
         spyInstance.validate(source);        
-        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString());
+        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString(),anyInt());
         
     }
     
