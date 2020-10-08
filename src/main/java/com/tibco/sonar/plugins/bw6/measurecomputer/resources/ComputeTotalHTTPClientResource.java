@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2016-2020. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
+ */
 package com.tibco.sonar.plugins.bw6.measurecomputer.resources;
 
 import static com.tibco.sonar.plugins.bw6.metric.SharedResourceMetrics.BWRESOURCES_HTTP_CLIENT;
