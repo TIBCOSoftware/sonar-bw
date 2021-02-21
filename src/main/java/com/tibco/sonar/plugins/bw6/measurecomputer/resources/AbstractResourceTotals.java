@@ -1,4 +1,6 @@
-
+/*
+ * Copyright (C) 2016-2020. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
+ */
 package com.tibco.sonar.plugins.bw6.measurecomputer.resources;
 
 import org.sonar.api.ce.measure.Measure;
