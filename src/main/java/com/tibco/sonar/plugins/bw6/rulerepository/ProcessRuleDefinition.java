@@ -87,7 +87,7 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         com.tibco.sonar.plugins.bw6.check.project.PomXmlVersionsHarcodedCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.ProjectStructureCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.SwaggerValidationCheck.class,
-        com.tibco.sonar.plugins.bw6.check.project.XSDValidationCheck.class,
+     //TODO Disabling it until dependencies are managed com.tibco.sonar.plugins.bw6.check.project.XSDValidationCheck.class, 
         com.tibco.sonar.plugins.bw6.check.project.BindingShouldHavePolicyAssociatedCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.BindingShouldNotHaveHTTPBasicPolicyAssociatedCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.JKSValidationCheck.class
@@ -153,7 +153,7 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         new com.tibco.sonar.plugins.bw6.check.project.PomXmlVersionsHarcodedCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.ProjectStructureCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.SwaggerValidationCheck(),
-        new com.tibco.sonar.plugins.bw6.check.project.XSDValidationCheck(),
+//TODO Disabling it until dependencies are managed         new com.tibco.sonar.plugins.bw6.check.project.XSDValidationCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.BindingShouldHavePolicyAssociatedCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.BindingShouldNotHaveHTTPBasicPolicyAssociatedCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.JKSValidationCheck()
