@@ -3,22 +3,15 @@
  */
 package com.tibco.sonar.plugins.bw6.check.process;
 
-import java.util.List;
-import java.util.Map;
 
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.w3c.dom.NodeList;
 
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
-import static com.tibco.sonar.plugins.bw6.check.process.CheckpointAfterHttpCheck.RULE_KEY;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import com.tibco.utils.bw6.model.Activity;
-import com.tibco.utils.bw6.model.Group;
 import com.tibco.utils.bw6.model.Process;
-import com.tibco.utils.bw6.model.Transition;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
@@ -33,7 +26,7 @@ public class ProcessWithoutTestCheck extends AbstractProcessCheck {
     protected void validate(ProcessSource processSource) {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         Process process = processSource.getProcessModel();
-        if(!process.isHasTest()){
+        if(!process.isHasTest() && process.isSubProcess()){
             reportIssueOnFile("Process has not a Test File detected",1);
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);

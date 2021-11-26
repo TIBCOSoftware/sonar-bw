@@ -36,6 +36,7 @@ import com.tibco.sonar.plugins.bw6.check.XPathCheck;
 import com.tibco.sonar.plugins.bw6.check.process.DeadLockCheck;
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
 import com.tibco.sonar.plugins.bw6.metric.SharedResourceMetrics;
+import com.tibco.sonar.plugins.bw6.plugin.BusinessWorksPlugin;
 import com.tibco.sonar.plugins.bw6.rulerepository.ProcessRuleDefinition;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.sonar.plugins.bw6.source.ProjectSource;
@@ -611,9 +612,10 @@ public class ProcessRuleSensor implements Sensor {
     }
 
     @Override
-    public void describe(SensorDescriptor arg0) {
-        // TODO Auto-generated method stub
-
+    public void describe(SensorDescriptor descriptor) {
+      descriptor
+        .onlyOnLanguage(BWProcessLanguage.KEY)
+        .name("ProcessRuleSensor");
     }
 
     private void parseModuleProperties(Project project, SensorContext context) {
