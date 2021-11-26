@@ -146,15 +146,13 @@ public class ProcessRuleSensor implements Sensor {
             NodeList propertyList = null;
             boolean flag = true;
             try {
-                dbFactory.setFeature(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
-                dbFactory.setFeature(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
                 dBuilder = dbFactory.newDocumentBuilder();
                 Document doc = dBuilder.parse(file);
                 doc.getDocumentElement().normalize();
                 propertyList = doc.getElementsByTagName("sca:component");
                 if (propertyList != null) {
                     for (int i = 0; i < propertyList.getLength(); i++) {
-                        if (process.getName().equals(propertyList.item(i).getChildNodes().item(1).getAttributes().getNamedItem("processName").getNodeValue())) {
+                        if (process.getName() != null && process.getName().equals(propertyList.item(i).getChildNodes().item(1).getAttributes().getNamedItem("processName").getNodeValue())) {
                             flag = false;
                             break;
                         }
