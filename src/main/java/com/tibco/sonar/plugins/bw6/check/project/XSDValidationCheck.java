@@ -6,7 +6,6 @@ package com.tibco.sonar.plugins.bw6.check.project;
 import com.tibco.sonar.plugins.bw6.check.AbstractProjectCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProjectSource;
-import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Project;
 import com.tibco.utils.bw6.model.XsdResource;
 import javax.xml.XMLConstants;
@@ -20,16 +19,12 @@ import org.sonar.api.utils.log.Loggers;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 @Rule(
         key = XSDValidationCheck.RULE_KEY,
         name = "XSD Validation Check",
         description = "Check in the XSD inside the project are valid or have some errors",
-        priority = Priority.MINOR)
+        priority = Priority.MINOR )
 
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class XSDValidationCheck extends AbstractProjectCheck {

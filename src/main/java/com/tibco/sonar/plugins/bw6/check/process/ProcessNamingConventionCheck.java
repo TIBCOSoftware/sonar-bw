@@ -21,7 +21,7 @@ public class ProcessNamingConventionCheck extends AbstractProcessCheck {
     private static final Logger LOG = Loggers.get(ProcessNamingConventionCheck.class);
     public static final String RULE_KEY = "ProcessNamingConvention";
 
-    @RuleProperty(key = "pattern", description = "Regular Expression Process Name should meet", defaultValue = "[A-Z][a-z]+\\.bwp", type = "TEXT")
+    @RuleProperty(key = "pattern", description = "Regular Expression Process Name should meet", defaultValue = "([A-z0-9])+\\.bwp", type = "TEXT")
     protected String regExpPattern;
 
     @Override
