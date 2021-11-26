@@ -43,7 +43,7 @@ public class MultipleTransitionCheck extends AbstractProcessCheck {
                 if (!set.add(pair.getValue().getTo())) {
                     for (Activity activity : process.getActivities()) {
                         if (activity.getName().equals(pair.getValue().getTo())) {
-                            if (activity.getType() != null) {
+                            if (activity.getType() != null && !"bpws:empty".equals(activity.getType())) {
                                 reportIssueOnFile("There are multiple transitions converging into activity " + pair.getValue().getTo() + ". When there are multiple transitions in a parallel flow, they should converge preferably in a EMPTY activity. This ensures that following activities after the EMPTY activity will have all the outputs available from parallel paths.",XmlHelper.getLineNumber(activity.getNode()));
                                 activityFlag = true;
                             }
