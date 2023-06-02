@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2020. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
+ * Copyright (C) 2016-2023. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
  */
 package com.tibco.sonar.plugins.bw6.source;
 
