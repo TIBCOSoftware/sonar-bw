@@ -19,11 +19,11 @@ import java.util.List;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = CheckpointAfterJDBCÇheck.RULE_KEY, name = "Checkpoint after JDBC Query Activity Check", priority = Priority.MAJOR, description = "This rule checks the placement of a Checkpoint activity within a process. Do not place checkpoint after or in a parallel flow of Query activities or idempotent activities. Database operations such as Update, Insert and Delete are considered non-idempotent operations. You should always place a checkpoint immediately after any database insert or update activity to persist the response. However, for queries, there is no need to place checkpoints")
+@Rule(key = CheckpointAfterJDBCCheck.RULE_KEY, name = "Checkpoint after JDBC Query Activity Check", priority = Priority.MAJOR, description = "This rule checks the placement of a Checkpoint activity within a process. Do not place checkpoint after or in a parallel flow of Query activities or idempotent activities. Database operations such as Update, Insert and Delete are considered non-idempotent operations. You should always place a checkpoint immediately after any database insert or update activity to persist the response. However, for queries, there is no need to place checkpoints")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
-public class CheckpointAfterJDBCÇheck extends AbstractProcessCheck {
+public class CheckpointAfterJDBCCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(CheckpointAfterJDBCÇheck.class);
+    private static final Logger LOG = Loggers.get(CheckpointAfterJDBCCheck.class);
     public static final String RULE_KEY = "CheckpointProcessJDBC";
     private boolean onlyOneViolation = true;
 

@@ -20,18 +20,18 @@ import org.sonar.api.utils.log.Logger;
  *
  * @author avazquez
  */
-public class CheckpointAfterJDBCÇheckTest {
+public class CheckpointAfterJDBCCheckTest {
     
     private static ProcessSource source;
     
-    public CheckpointAfterJDBCÇheckTest() {
+    public CheckpointAfterJDBCCheckTest() {
     }
     
       
     @BeforeClass
     public static void setUpClass() {
        
-        source = new ProcessSource("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        String part1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 "<bpws:process exitOnStandardFault=\"no\" name=\"t2.module.Process\"\n" +
 "    suppressJoinFailure=\"yes\"\n" +
 "    targetNamespace=\"http://xmlns.example.com/20190302225941\"\n" +
@@ -303,7 +303,9 @@ public class CheckpointAfterJDBCÇheckTest {
 "                        </sequence>\n" +
 "                    </extension>\n" +
 "                </complexContent>\n" +
-"            </complexType>\n" +
+"            </complexType>\n";
+        
+        String part2 = 
 "            <element name=\"JDBCConnectionNotFoundException\" type=\"tns2:JDBCConnectionNotFoundExceptionType\"/>\n" +
 "            <complexType name=\"JDBCConnectionNotFoundExceptionType\">\n" +
 "                <complexContent>\n" +
@@ -753,9 +755,10 @@ public class CheckpointAfterJDBCÇheckTest {
 "            </bpws:extensionActivity>\n" +
 "        </bpws:flow>\n" +
 "    </bpws:scope>\n" +
-"</bpws:process>");
+"</bpws:process>";
 
         
+		source = new ProcessSource(part1 + part2);
         
     }
     
@@ -768,8 +771,8 @@ public class CheckpointAfterJDBCÇheckTest {
     @Test
     public void testValidate() {
         System.out.println("testValidate");
-        CheckpointAfterJDBCÇheck instance = new CheckpointAfterJDBCÇheck();
-        CheckpointAfterJDBCÇheck spyInstance = Mockito.spy(instance);
+        CheckpointAfterJDBCCheck instance = new CheckpointAfterJDBCCheck();
+        CheckpointAfterJDBCCheck spyInstance = Mockito.spy(instance);
         doNothing().when(spyInstance).reportIssueOnFile(any(),anyInt());        
         spyInstance.validate(source);        
         Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString(),anyInt());
