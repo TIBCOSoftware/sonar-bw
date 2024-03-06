@@ -1,6 +1,6 @@
 build: 
 	mvn clean package 
-	cp target/sonar-bw-6-plugin-0.0.3-SNAPSHOT.jar /var/opt/tibco/software/sonarqube/plugins/
+	cp target/sonar-bw-6-plugin-1.3.9.jar /var/opt/tibco/software/sonarqube/plugins/
 
 copytovagrant:
 # TODO THIS DOES NOT WORK.
