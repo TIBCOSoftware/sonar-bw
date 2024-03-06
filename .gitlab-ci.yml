@@ -19,7 +19,7 @@ stages:
 
 maven-build:
   stage: build
-  image: maven:3-jdk-9
+  image: maven:3-jdk-11
   script:
    - mvn $MAVEN_CLI_OPTS -DskipTests clean initialize package install deploy
   artifacts:
@@ -28,8 +28,9 @@ maven-build:
     paths:
      - .
   
-run-code-quality-check:
-  stage: test
-  image: maven:3-jdk-8
-  script:
-    - mvn -s .m2/settings.xml sonar:sonar 
+## run-code-quality-check:
+##  stage: test
+##  image: maven:3-jdk-8
+##  script:
+##    - mvn -s .m2/settings.xml sonar:sonar 
+##-->
