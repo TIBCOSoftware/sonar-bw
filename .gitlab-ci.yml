@@ -21,7 +21,7 @@ maven-build:
   stage: build
   image: maven:3-jdk-11
   script:
-   - mvn $MAVEN_CLI_OPTS -DskipTests clean initialize package install deploy
+   - mvn $MAVEN_CLI_OPTS clean initialize package install
   artifacts:
     name: "sonar-businessworks6-plugin-$CI_BUILD_ID-$CI_BUILD_REF"
     expire_in: 1 day
