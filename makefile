@@ -1,16 +1,15 @@
 build: 
-	mvn clean package 
-	cp target/sonar-bw-6-plugin-1.3.9.jar /var/opt/tibco/software/sonarqube/plugins/
+	mvn clean package
+	rm docker/extensions/*
+	cp target/sonar-bw-6-plugin-*.jar docker/extensions
+	docker build --tag=sonarqube-custom docker/.
 
-copytovagrant:
-# TODO THIS DOES NOT WORK.
-	scp /var/opt/tibco/software/sonarqube/plugins/ vagrant@192.168.76.20:/path/to/file
+docker-run:
+	docker run -p 9000:9000 -ti sonarqube-custom:latest
 
-test1: 
-	sonar-scanner -X\
-	  -Dsonar.projectKey=BWCE-Test1 \
-	  -Dsonar.sources=./tests/bwce1/tibco.bwce.sample.binding.rest.BookStore \
-	  -Dsonar.host.url=http://192.168.76.20:9000 \
-	  -Dsonar.login=d738135f812a3985e4b3a02704e4a08262dce2be \
-	  -Dsonar.user.dir=./tests/bwce1/tibco.bwce.sample.binding.rest.BookStore
-#	  -Dsonar.java.binaries=./target
+check: 
+	mvn clean verify sonar:sonar \
+	  -Dsonar.projectKey=bw6-plugin \
+	  -Dsonar.projectName='bw6-plugin' \
+	  -Dsonar.host.url=http://localhost:9000 \
+	  -Dsonar.token=sqp_fe0e51fa5bcc4f208b7a3e2f1d67d095cf6cf842
