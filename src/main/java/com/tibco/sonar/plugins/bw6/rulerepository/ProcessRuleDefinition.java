@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2020. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
+ * Copyright (C) 2016-2023. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
  */
 package com.tibco.sonar.plugins.bw6.rulerepository;
 
@@ -43,7 +43,7 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         com.tibco.sonar.plugins.bw6.check.process.NumberofServicesCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.CheckpointAfterHttpCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.CheckpointAfterRESTCheck.class,
-        com.tibco.sonar.plugins.bw6.check.process.CheckpointAfterJDBCÇheck.class,
+        com.tibco.sonar.plugins.bw6.check.process.CheckpointAfterJDBCCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.CheckpointInTransation.class,
         com.tibco.sonar.plugins.bw6.check.process.JMSAcknowledgementModeCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.CriticalSectionCheck.class,
@@ -109,7 +109,7 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         new com.tibco.sonar.plugins.bw6.check.process.NumberofServicesCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.CheckpointAfterHttpCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.CheckpointAfterRESTCheck(),
-        new com.tibco.sonar.plugins.bw6.check.process.CheckpointAfterJDBCÇheck(),
+        new com.tibco.sonar.plugins.bw6.check.process.CheckpointAfterJDBCCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.CheckpointInTransation(),
         new com.tibco.sonar.plugins.bw6.check.process.JMSAcknowledgementModeCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.CriticalSectionCheck(),

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:ns="http://www.tibco.com/32aa26625f0d43458f3c4825d3c53b8e/SOAPServiceBinding" xmlns:ns0="http://zip.example.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ZipPort" targetNamespace="http://www.tibco.com/32aa26625f0d43458f3c4825d3c53b8e/SOAPServiceBinding">
+  <wsdl:import namespace="http://zip.example.com"/>
+  <wsdl:binding name="SOAPServiceBinding" type="ns0:ZipPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getCityInfo">
+      <soap:operation soapAction="getCityInfo" style="document"/>
+      <wsdl:input>
+        <soap:body parts="zip" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body parts="zipCode" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCityDistance">
+      <soap:operation soapAction="getCityDistance" style="document"/>
+      <wsdl:input>
+        <soap:body parts="zips" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body parts="part1" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ZipPort">
+    <wsdl:port binding="ns:SOAPServiceBinding" name="ZipPortSOAP">
+      <soap:address location="https://zipservice.dev.iotservices.uk/SOAPServiceBinding/zipPort/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2020. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
+ * Copyright (C) 2016-2023. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
  */
 package com.tibco.sonar.plugins.bw6.check.process;
 
@@ -7,14 +7,14 @@ import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.contains;
+
 import org.mockito.Mockito;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
-import org.sonar.api.utils.log.Logger;
 
 /**
  *
@@ -792,9 +792,11 @@ public class MultipleTransitionCheckTest {
         System.out.println("testValidate");
         MultipleTransitionCheck instance = new MultipleTransitionCheck();
         MultipleTransitionCheck spyInstance = Mockito.spy(instance);
-        doNothing().when(spyInstance).reportIssueOnFile(any(),anyInt());        
+        doNothing().when(spyInstance).reportIssueOnFile(any(), anyInt());        
         spyInstance.validate(source);        
-        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString(),anyInt());
+
+        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString(), anyInt());
+        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(contains("activity Checkpoint."), anyInt());
         
     }
 }

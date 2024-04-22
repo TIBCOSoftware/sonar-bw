@@ -1,0 +1,82 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0",
+    "title" : "cityData/",
+    "description" : "Summary about the new REST service."
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/",
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/citydata/city/{zip}" : {
+      "get" : {
+        "summary" : "",
+        "description" : "",
+        "operationId" : "get-citydata-city",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "zip",
+          "in" : "path",
+          "description" : "",
+          "type" : "string",
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "a cityInfo to be returned",
+            "schema" : {
+              "$ref" : "#/definitions/cityInfo"
+            },
+            "headers" : { }
+          },
+          "201" : {
+            "description" : "Created",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "202" : {
+            "description" : "Accepted",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "301" : {
+            "description" : "Moved Permanently",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "cityInfo" : {
+      "type" : "object",
+      "required" : [ "zip", "city", "latitude", "location", "state", "longitude" ],
+      "properties" : {
+        "city" : {
+          "type" : "string"
+        },
+        "state" : {
+          "type" : "string"
+        },
+        "location" : {
+          "type" : "string"
+        },
+        "latitude" : {
+          "type" : "integer"
+        },
+        "longitude" : {
+          "type" : "integer"
+        },
+        "zip" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}

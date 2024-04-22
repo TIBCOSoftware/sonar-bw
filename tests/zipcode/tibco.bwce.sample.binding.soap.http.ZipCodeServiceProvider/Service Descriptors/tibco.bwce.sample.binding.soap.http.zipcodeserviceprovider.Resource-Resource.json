@@ -1,0 +1,114 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0",
+    "title" : "Summary about the new REST service.",
+    "description" : "Summary about the new REST service."
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/",
+  "schemes" : [ "http" ],
+  "consumes" : [ "application/json" ],
+  "produces" : [ "application/json" ],
+  "paths" : {
+    "/cityData" : {
+      "post" : {
+        "description" : "",
+        "operationId" : "post-cityData",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "description" : "",
+          "type" : "string",
+          "required" : true,
+          "allowMultiple" : false
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "a cityDistances to be returned",
+            "schema" : {
+              "$ref" : "#/definitions/cityDistances"
+            }
+          }
+        }
+      },
+      "get" : {
+        "description" : "",
+        "operationId" : "get-cityData",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "a cityInfo to be returned",
+            "schema" : {
+              "$ref" : "#/definitions/cityInfo"
+            }
+          }
+        }
+      }
+    }
+  },
+  "authorizations" : { },
+  "definitions" : {
+    "cityDistances" : {
+      "type" : "object",
+      "required" : [ "distance", "toCity", "fromCity" ],
+      "properties" : {
+        "fromCity" : {
+          "$ref" : "#/definitions/fromCity"
+        },
+        "toCity" : {
+          "$ref" : "#/definitions/toCity"
+        },
+        "distance" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "toCity" : {
+      "type" : "object",
+      "required" : [ "cityInfo" ],
+      "properties" : {
+        "cityInfo" : {
+          "$ref" : "#/definitions/cityInfo"
+        }
+      }
+    },
+    "cityInfo" : {
+      "type" : "object",
+      "required" : [ "zip", "city", "latitude", "location", "state", "longitude" ],
+      "properties" : {
+        "city" : {
+          "type" : "string"
+        },
+        "state" : {
+          "type" : "string"
+        },
+        "location" : {
+          "type" : "string"
+        },
+        "latitude" : {
+          "type" : "integer"
+        },
+        "longitude" : {
+          "type" : "integer"
+        },
+        "zip" : {
+          "type" : "string"
+        }
+      }
+    },
+    "fromCity" : {
+      "type" : "object",
+      "required" : [ "cityInfo" ],
+      "properties" : {
+        "cityInfo" : {
+          "$ref" : "#/definitions/cityInfo"
+        }
+      }
+    }
+  }
+}

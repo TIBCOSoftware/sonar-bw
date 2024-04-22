@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2020. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
+ * Copyright (C) 2016-2023. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
  */
 package com.tibco.sonar.plugins.bw6.check.process;
 
@@ -10,6 +10,7 @@ import org.junit.Test;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.contains;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -611,7 +612,7 @@ public class ForEachMappingCheckTest {
 "            </bpws:links>\n" +
 "            <bpws:extensionActivity>\n" +
 "                <tibex:extActivity\n" +
-"                    expression=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.tibco.com/psg/CommonSchemas&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;OperationIn&quot;/>&lt;xsl:template name=&quot;FWK-input&quot; match=&quot;/&quot;>&lt;tns:SOAInput>&lt;tns:SOAHeader>&lt;xsl:if test=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:SOAId&quot;>&lt;tns:SOAId>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:SOAId&quot;/>&lt;/tns:SOAId>&lt;/xsl:if>&lt;tns:ExternalId>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:ExternalId&quot;/>&lt;/tns:ExternalId>&lt;tns:SourceApplication>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:SourceApplication&quot;/>&lt;/tns:SourceApplication>&lt;tns:ServiceName>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:ServiceName&quot;/>&lt;/tns:ServiceName>&lt;tns:ServiceVersion>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:ServiceVersion&quot;/>&lt;/tns:ServiceVersion>&lt;tns:OperationName>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:OperationName&quot;/>&lt;/tns:OperationName>&lt;xsl:if test=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:User&quot;>&lt;tns:User>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:User&quot;/>&lt;/tns:User>&lt;/xsl:if>&lt;tns:FrameworkVersion>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:FrameworkVersion&quot;/>&lt;/tns:FrameworkVersion>&lt;tns:FunctionalGroup>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:FunctionalGroup&quot;/>&lt;/tns:FunctionalGroup>&lt;/tns:SOAHeader>&lt;xsl:copy-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAFunctionalInfo&quot;/>&lt;/tns:SOAInput>&lt;/xsl:template>&lt;/xsl:stylesheet>\"\n" +
+"                    expression=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.tibco.com/psg/CommonSchemas&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;OperationIn&quot;/>&lt;xsl:template name=&quot;FWK-input&quot; match=&quot;/&quot;>&lt;tns:SOAInput>&lt;tns:SOAHeader>&lt;xsl:if test=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:SOAId&quot;>&lt;tns:SOAId>&lt;xsl:for-each select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:SOAId&quot;/>&lt;/tns:SOAId>&lt;/xsl:if>&lt;tns:ExternalId>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:ExternalId&quot;/>&lt;/tns:ExternalId>&lt;tns:SourceApplication>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:SourceApplication&quot;/>&lt;/tns:SourceApplication>&lt;tns:ServiceName>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:ServiceName&quot;/>&lt;/tns:ServiceName>&lt;tns:ServiceVersion>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:ServiceVersion&quot;/>&lt;/tns:ServiceVersion>&lt;tns:OperationName>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:OperationName&quot;/>&lt;/tns:OperationName>&lt;xsl:if test=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:User&quot;>&lt;tns:User>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:User&quot;/>&lt;/tns:User>&lt;/xsl:if>&lt;tns:FrameworkVersion>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:FrameworkVersion&quot;/>&lt;/tns:FrameworkVersion>&lt;tns:FunctionalGroup>&lt;xsl:value-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAHeader/tns:FunctionalGroup&quot;/>&lt;/tns:FunctionalGroup>&lt;/tns:SOAHeader>&lt;xsl:copy-of select=&quot;$OperationIn/request/tns:MainRequest/tns:SOAFunctionalInfo&quot;/>&lt;/tns:SOAInput>&lt;/xsl:template>&lt;/xsl:stylesheet>\"\n" +
 "                    expressionLanguage=\"urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0\"\n" +
 "                    inputVariable=\"FWK-input\" name=\"FWK\"\n" +
 "                    outputVariable=\"FWK\"\n" +
@@ -659,7 +660,6 @@ public class ForEachMappingCheckTest {
 "</bpws:process>");
 
         
-        
     }
     
     @AfterClass
@@ -671,12 +671,12 @@ public class ForEachMappingCheckTest {
     @Test
     public void testValidate() {
         System.out.println("testValidate");
-        TransitionLabelCheck instance = new TransitionLabelCheck();
-        TransitionLabelCheck spyInstance = Mockito.spy(instance);
+        ForEachMappingCheck instance = new ForEachMappingCheck();
+        ForEachMappingCheck spyInstance = Mockito.spy(instance);
         doNothing().when(spyInstance).reportIssueOnFile(any(), anyInt());        
         spyInstance.validate(source);        
-        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString(),anyInt());
-        
+
+        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(anyString(), anyInt());
+        Mockito.verify(spyInstance,times(1)).reportIssueOnFile(contains("For-Each is used in the Input mapping of activity FWK."), anyInt());
     }
-    
 }
