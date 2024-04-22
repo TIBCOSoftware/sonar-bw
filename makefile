@@ -12,4 +12,11 @@ check:
 	  -Dsonar.projectKey=bw6-plugin \
 	  -Dsonar.projectName='bw6-plugin' \
 	  -Dsonar.host.url=http://localhost:9000 \
-	  -Dsonar.token=sqp_fe0e51fa5bcc4f208b7a3e2f1d67d095cf6cf842
+	  -Dsonar.token=sqp_f9b00fec0e4ea0aac87cd1682bae48b8a082d250
+
+test-zipcode: 
+	mvn --file tests/zipcode/tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider sonar:sonar \
+	  -Dsonar.projectKey=tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider \
+  	  -Dsonar.projectName='tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider' \
+  	  -Dsonar.host.url=http://localhost:9000 \
+  	  -Dsonar.token=sqp_2855333a5a9044d82a7358bacc6c48ae0185a2a7

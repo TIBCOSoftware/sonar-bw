@@ -1,0 +1,29 @@
+{
+    "records": [{
+        "name": "Cloud",
+        "items": [],
+        "url": "http://192.168.59.103:8888"
+    }],
+    "resources": [
+        {
+            "location": "Service Descriptors/tibco.bwce.sample.binding.soap.http.zipcodeserviceprovider.CityData-Resource.json",
+            "type": "generated"
+        },
+        {
+            "location": "Service Descriptors/tibco.bwce.sample.binding.soap.http.zipcodeserviceprovider.CityDataREST-Resource.json",
+            "type": "generated"
+        },
+        {
+            "location": "Service Descriptors/tibco.bwce.sample.binding.soap.http.zipcodeserviceprovider.Resource-Resource.json",
+            "type": "generated"
+        },
+        {
+            "location": "Service Descriptors/tibco.bwce.sample.binding.soap.http.zipcodeserviceprovider.ZipCodeREST-ZipCodeREST.json",
+            "type": "generated"
+        },
+        {
+            "location": "Service Descriptors/tibco.bwce.sample.binding.soap.http.zipcodeserviceprovider.ZipCodeServiceREST-cityData.json",
+            "type": "generated"
+        }
+    ]
+}

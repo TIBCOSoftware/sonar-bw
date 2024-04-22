@@ -1,0 +1,47 @@
+{"records": [
+    {
+        "jsonSchemaLocation": "/tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider/Service Descriptors/tibco.bwce.sample.binding.soap.http.zipcodeserviceprovider.CityData-Resource.json",
+        "conversionType": "linked",
+        "xsdSchemaTargetNamespace": "http://tns.tibco.com/bw/REST"
+    },
+    {
+        "jsonSchemaLocation": "/tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider/Service Descriptors/tibco.bwce.sample.binding.soap.http.zipcodeserviceprovider.CityData-Resource.json",
+        "conversionType": "linked",
+        "xsdSchemaTargetNamespace": "http://xmlns.example.com/unique/default/namespace/1134438639123"
+    },
+    {
+        "jsonSchemaLocation": "/tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider/Service Descriptors/tibco.bwce.sample.binding.soap.http.zipcodeserviceprovider.Resource-Resource.json",
+        "conversionType": "linked",
+        "xsdSchemaTargetNamespace": "http://tns.tibco.com/bw/REST"
+    },
+    {
+        "jsonSchemaLocation": "/tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider/Service Descriptors/tibco.bwce.sample.binding.soap.http.zipcodeserviceprovider.Resource-Resource.json",
+        "conversionType": "linked",
+        "xsdSchemaTargetNamespace": "http://xmlns.example.com/unique/default/namespace/1134438639123"
+    },
+    {
+        "jsonSchemaLocation": "/tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider/Service Descriptors/tibco.bwce.sample.binding.soap.http.zipcodeserviceprovider.ZipCodeREST-ZipCodeREST.json",
+        "conversionType": "linked",
+        "xsdSchemaTargetNamespace": "http://tns.tibco.com/bw/REST"
+    },
+    {
+        "jsonSchemaLocation": "/tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider/Service Descriptors/tibco.bwce.sample.binding.soap.http.zipcodeserviceprovider.ZipCodeREST-ZipCodeREST.json",
+        "conversionType": "linked",
+        "xsdSchemaTargetNamespace": "http://xmlns.example.com/unique/default/namespace/1134438639123"
+    },
+    {
+        "jsonSchemaLocation": "/tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider/Service Descriptors/tibco.bwce.sample.binding.soap.http.zipcodeserviceprovider.ZipCodeServiceREST-cityData.json",
+        "conversionType": "linked",
+        "xsdSchemaTargetNamespace": "http://xmlns.example.com/unique/default/namespace/1134438639123"
+    },
+    {
+        "jsonSchemaLocation": "/tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider/Service Descriptors/tibco.bwce.sample.binding.soap.http.zipcodeserviceprovider.ZipCodeServiceREST-cityData.json",
+        "conversionType": "linked",
+        "xsdSchemaTargetNamespace": "http://xmlns.example.com/20160514202349PLT/ConceptSchema"
+    },
+    {
+        "jsonSchemaLocation": "/tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider/Service Descriptors/tibco.bwce.sample.binding.soap.http.zipcodeserviceprovider.ZipCodeServiceREST-cityData.json",
+        "conversionType": "linked",
+        "xsdSchemaTargetNamespace": "http://tns.tibco.com/bw/REST"
+    }
+]}
