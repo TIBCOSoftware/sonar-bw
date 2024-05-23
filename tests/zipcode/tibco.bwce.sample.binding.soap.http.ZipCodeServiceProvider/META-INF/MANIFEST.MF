@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tibco Bw Sample Binding Soap Http ZipCodeServiceProvider Module
+Bundle-SymbolicName: tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: .
+Bundle-Vendor: TIBCO Software Inc.
+Require-Capability: com.tibco.bw.model; filter:="(name=bwext)",
+ com.tibco.bw.sharedresource.model; filter:="(name=bw.httpconnector)",
+ com.tibco.bw.binding.model; filter:="(name=bw.soap)",
+ com.tibco.bw.binding.model; filter:="(name=bw.rest)"
+TIBCO-BW-Version: 1.2.0 V19 2014-10-01
+TIBCO-BW-Edition: bwcf
+TIBCO-BW-ApplicationModule: META-INF/module.bwm
+TIBCO-BWCE-Edition-Target: cf
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+TIBCO-BW-ConfigProfile: META-INF/default.substvar
+TIBCO-BW-ModuleSharedVariables: META-INF/module.msv
+TIBCO-BW-JobSharedVariables: META-INF/module.jsv

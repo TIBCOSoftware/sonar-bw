@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://zip.example.com" xmlns:intf="http://webservices.imacination.com/distance/Distance.jws" xmlns:ns="http://xmlns.example.com/unique/default/namespace/1134438639123" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://zip.example.com">
+    <import location="../Schemas/CitySchema.xsd" namespace="http://xmlns.example.com/unique/default/namespace/1134438639123"/>
+    <message name="cityInfoResponse">
+        <part element="ns:cityInfo" name="zipCode"/>
+    </message>
+    <message name="cityInfoRequest">
+        <part name="zip" type="xsd:string"/>
+    </message>
+    <message name="cityDistanceRequest">
+        <part element="ns:fromToZips" name="zips"/>
+    </message>
+    <message name="cityDistanceResponse">
+        <part element="ns:cityDistances" name="part1"/>
+    </message>
+    <portType name="ZipPort">
+        <operation name="getCityInfo">
+            <input message="impl:cityInfoRequest" name="zip"/>
+            <output message="impl:cityInfoResponse" name="cityInfo"/>
+        </operation>
+        <operation name="getCityDistance">
+            <input message="impl:cityDistanceRequest"/>
+            <output message="impl:cityDistanceResponse"/>
+        </operation>
+    </portType>
+</definitions>

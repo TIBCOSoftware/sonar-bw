@@ -1,0 +1,81 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0",
+    "title" : "Summary about the new REST service.",
+    "description" : "Summary about the new REST service."
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/",
+  "schemes" : [ "http" ],
+  "consumes" : [ "application/json" ],
+  "produces" : [ "application/json" ],
+  "paths" : {
+    "/city" : {
+      "post" : {
+        "description" : "",
+        "operationId" : "post-city",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "description" : "",
+          "type" : "string",
+          "required" : true,
+          "allowMultiple" : false
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "a cityInfo to be returned",
+            "schema" : {
+              "$ref" : "#/definitions/cityInfo"
+            }
+          }
+        }
+      },
+      "get" : {
+        "description" : "",
+        "operationId" : "get-city",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "a cityInfo to be returned",
+            "schema" : {
+              "$ref" : "#/definitions/cityInfo"
+            }
+          }
+        }
+      }
+    }
+  },
+  "authorizations" : { },
+  "definitions" : {
+    "cityInfo" : {
+      "type" : "object",
+      "required" : [ "zip", "city", "latitude", "location", "state", "longitude" ],
+      "properties" : {
+        "city" : {
+          "type" : "string"
+        },
+        "state" : {
+          "type" : "string"
+        },
+        "location" : {
+          "type" : "string"
+        },
+        "latitude" : {
+          "type" : "integer"
+        },
+        "longitude" : {
+          "type" : "integer"
+        },
+        "zip" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}

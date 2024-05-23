@@ -1,36 +1,35 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
+# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 image: docker:latest
 services:
-  - docker:dind
-
+- docker:dind
 variables:
   MAVEN_CLI_OPTS: "-s ci_settings.xml"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-
 cache:
   paths:
-    - .m2/repository/
-    - target/
-
+  - ".m2/repository/"
+  - target/
 stages:
-  - build
-  - package
-  - test
- # - deploy
-
+- build
+- package
+- test
 maven-build:
   stage: build
   image: maven:3-jdk-11
   script:
-   - mvn $MAVEN_CLI_OPTS clean initialize package install deploy
+  - mvn $MAVEN_CLI_OPTS clean initialize package install deploy
   artifacts:
-    name: "sonar-businessworks6-plugin-$CI_BUILD_ID-$CI_BUILD_REF"
+    name: sonar-businessworks6-plugin-$CI_BUILD_ID-$CI_BUILD_REF
     expire_in: 1 day
     paths:
-     - .
-  
-## run-code-quality-check:
-##  stage: test
-##  image: maven:3-jdk-8
-##  script:
-##    - mvn -s .m2/settings.xml sonar:sonar 
-##-->
+    - "."
+sast:
+  stage: test
+include:
+- template: Security/SAST.gitlab-ci.yml
