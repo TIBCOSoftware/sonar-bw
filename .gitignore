@@ -11,3 +11,5 @@ tests/zipcode/tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider/target/
 tests/.DS_Store
 
 docker/extensions/
+
+.DS_Store
