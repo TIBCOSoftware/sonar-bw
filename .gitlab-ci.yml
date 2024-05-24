@@ -28,7 +28,7 @@ maven-build:
     name: sonar-businessworks6-plugin-$CI_BUILD_ID-$CI_BUILD_REF
     expire_in: 1 day
     paths:
-    - "."
+    - "./target"
 sast:
   stage: test
 include:
