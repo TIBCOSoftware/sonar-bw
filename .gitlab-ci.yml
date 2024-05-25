@@ -15,6 +15,9 @@ cache:
   paths:
   - ".m2/repository/"
   - target/
+
+
+
 stages:
 - build
 - package
@@ -34,11 +37,13 @@ maven-build:
 
 sast:
   stage: test
-  include:
-  - template: Security/SAST.gitlab-ci.yml
   variables:
       SAST_EXCLUDED_PATHS: spec,test,tests,tmp,target/jacoco-ut/
       SECURE_LOG_LEVEL: "debug"
+include:
+  - template: Security/SAST.gitlab-ci.yml
+
+
 
 test-jdk11:
   stage: test
