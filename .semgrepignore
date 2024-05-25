@@ -22,5 +22,4 @@ tests/
 .semgrep_logs/
 
 # Project specific ignores
-/target/*
-*.prettify.js
+/target/site/jacoco/*
