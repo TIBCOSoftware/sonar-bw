@@ -38,7 +38,7 @@ maven-build:
 sast:
   stage: test
   variables:
-      SAST_EXCLUDED_PATHS: spec,test,tests,tmp,target/site/jacoco/jacoco-resources/prettify.js"
+      SAST_EXCLUDED_PATHS: spec,test,tests,tmp,*target/site/jacoco/jacoco-resources/prettify.js*"
       SECURE_LOG_LEVEL: "debug"
 include:
   - template: Security/SAST.gitlab-ci.yml
