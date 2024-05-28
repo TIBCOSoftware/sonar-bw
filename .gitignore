@@ -4,12 +4,16 @@
 /nbproject/
 .idea
 
-tests/zipcode/tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider/target/sonar/report-task.txt
-
-tests/zipcode/tibco.bwce.sample.binding.soap.http.ZipCodeServiceProvider/target/sonar/.sonar_lock
-
 tests/.DS_Store
 
-docker/extensions/
+src/test/.DS_Store
+
+src/.DS_Store
+
+src/test/java/.DS_Store
+
+src/test/java/com/.DS_Store
+
+src/test/java/com/tibco/.DS_Store
 
 .DS_Store
