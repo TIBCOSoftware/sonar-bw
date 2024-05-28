@@ -7,10 +7,9 @@ import org.sonar.api.web.*;
 
 @UserRole(UserRole.USER)
 @WidgetCategory({"BusinessWorks"})
-@WidgetScope("GLOBAL")
 @Description("BusinessWorks 6 Project Statistics")
 @WidgetProperties({
-	  @WidgetProperty(key = "max", type = WidgetPropertyType.INTEGER, defaultValue = "80")
+		@WidgetProperty(key = "max", type = WidgetPropertyType.INTEGER, defaultValue = "80")
 	})
 public class BusinessWorksMetricsWidget extends AbstractRubyTemplate implements
 		RubyRailsWidget {

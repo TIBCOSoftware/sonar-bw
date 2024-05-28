@@ -3,19 +3,20 @@
     <groupId>com.tibco.sonar</groupId>
     <artifactId>sonar-bw-6-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
-    <version>1.3.10</version>
+    <version>1.3.11</version>
     <name>Sonarqube BW6 Plugin</name>
     <description>SonarQube Plugin for Businessworks6, BWCE and TCI</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sonar.apiVersion>7.4</sonar.apiVersion>
-        <jdk.min.version>1.8</jdk.min.version>
-        <sonar.version>7.4</sonar.version>        
+        <sonar.apiVersion>9.8.0.203</sonar.apiVersion>
+        <jdk.min.version>11</jdk.min.version>
+        <sonar.version>9.0</sonar.version>        
         <sonar.sources>src/main/java</sonar.sources>
         <sonar.language>java</sonar.language>
-        <sonar.analyzerCommons.version>1.10.2.456</sonar.analyzerCommons.version>
-        <jacoco.version>0.8.3</jacoco.version>
+        <sonar.analyzerCommons.version>2.9.0.2753</sonar.analyzerCommons.version>
+        <sonar.testingHarnessVersion>9.9.5.90363</sonar.testingHarnessVersion>
+        <jacoco.version>0.8.12</jacoco.version>
     </properties>
 
     <repositories>
@@ -38,11 +39,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.sonarsource.sonarqube</groupId>
+            <groupId>org.sonarsource.api.plugin</groupId>
             <artifactId>sonar-plugin-api</artifactId>
             <!-- minimal version of SonarQube to support. Note that the groupId was "org.codehaus.sonar" before version 5.2 -->
-            <version>7.4</version>
-            <scope>provided</scope>
+            <version>${sonar.apiVersion}</version>
+            <scope>provided</scope> 
             <!-- mandatory scope -->
             <exclusions>
                 <exclusion>
@@ -60,7 +61,7 @@
         <dependency>
             <groupId>org.sonarsource.analyzer-commons</groupId>
             <artifactId>sonar-xml-parsing</artifactId>
-            <version>${sonar.analyzerCommons.version}</version>
+            <version>2.11.0.2861</version>
         </dependency>
         <dependency>
             <!-- packaged with the plugin -->
@@ -93,7 +94,7 @@
         <dependency>
             <groupId>org.sonarsource.sonarqube</groupId>
             <artifactId>sonar-testing-harness</artifactId>
-            <version>${sonar.apiVersion}</version>
+            <version>${sonar.testingHarnessVersion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -105,8 +106,8 @@
         <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
+            <artifactId>mockito-core</artifactId>
+            <version>2.23.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -160,7 +161,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.8.5</version>
+            <version>2.10.1</version>
             <type>jar</type>
         </dependency>
     </dependencies>
@@ -212,7 +213,7 @@
             <plugin>
                 <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
                 <artifactId>sonar-packaging-maven-plugin</artifactId>
-                <version>1.18.0.372</version>
+                <version>1.23.0.740</version>
                 <extensions>true</extensions>
                 <configuration>
                     <skipDependenciesPackaging>true</skipDependenciesPackaging>
@@ -245,8 +246,9 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>3.5.3</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -302,7 +304,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.21.0</version>
+                    <version>3.2.5</version>
                 </plugin>
             </plugins>
         </pluginManagement>
