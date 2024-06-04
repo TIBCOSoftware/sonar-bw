@@ -8,8 +8,8 @@ import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProjectSource;
 import com.tibco.utils.bw6.model.JSONResource;
 import com.tibco.utils.bw6.model.Project;
-import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
+import io.swagger.models.Swagger;
 import org.sonar.api.batch.fs.InputFile;
 
 import org.sonar.api.utils.log.Logger;
@@ -31,6 +31,8 @@ public class SwaggerValidationCheck extends AbstractProjectCheck {
 
     private static final Logger LOG = Loggers.get(SwaggerValidationCheck.class);
 
+    private SwaggerParser parser = new SwaggerParser();
+
     @Override
     public void validate(ProjectSource resourceXml) {
         LOG.debug("Started rule: " + this.getClass());
@@ -51,13 +53,14 @@ public class SwaggerValidationCheck extends AbstractProjectCheck {
 
     }
 
-    public static String loadSchema(InputFile file) {
-        String response = null;        
-        try{
-        Swagger swagger = new SwaggerParser().read(file.absolutePath());
-        }catch(Exception ex){
-            response = ex.getMessage();
-        }        
+    public String loadSchema(InputFile file) {
+        String response = null;
+
+        try {
+            Swagger result = parser.read(file.absolutePath(), null, null);
+        } catch (Exception ex) {
+            response = ex.getMessage() + "\n";
+        }
         return response;
     }
 

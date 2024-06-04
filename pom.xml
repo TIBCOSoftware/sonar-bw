@@ -3,12 +3,13 @@
     <groupId>com.tibco.sonar</groupId>
     <artifactId>sonar-bw-6-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
-    <version>1.3.11${project.versionSuffix}</version>
+    <version>1.3.12${project.versionSuffix}</version>
     <name>Sonarqube BW6 Plugin</name>
     <description>SonarQube Plugin for Businessworks6, BWCE and TCI</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.versionSuffix>-SNAPSHOT</project.versionSuffix>
         <sonar.apiVersion>9.8.0.203</sonar.apiVersion>
         <jdk.min.version>11</jdk.min.version>
         <sonar.version>9.0</sonar.version>        
@@ -17,12 +18,19 @@
         <sonar.analyzerCommons.version>2.9.0.2753</sonar.analyzerCommons.version>
         <sonar.testingHarnessVersion>9.9.5.90363</sonar.testingHarnessVersion>
         <jacoco.version>0.8.12</jacoco.version>
+        <bw6.utils.version>1.3.10${project.versionSuffix}</bw6.utils.version>
     </properties>
 
     <repositories>
         <repository>
             <id>github-utils</id>
             <url>https://maven.pkg.github.com/tibcofield/bw6-utils</url>
+            <releases>
+                <enabled>true</enabled>
+              </releases>
+              <snapshots>
+                <enabled>true</enabled>
+              </snapshots>
         </repository>
     </repositories>
 
@@ -44,37 +52,21 @@
             <!-- minimal version of SonarQube to support. Note that the groupId was "org.codehaus.sonar" before version 5.2 -->
             <version>${sonar.apiVersion}</version>
             <scope>provided</scope> 
-            <!-- mandatory scope -->
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
             <type>jar</type>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.sonarsource.analyzer-commons</groupId>
             <artifactId>sonar-analyzer-commons</artifactId>
             <version>${sonar.analyzerCommons.version}</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.sonarsource.analyzer-commons</groupId>
             <artifactId>sonar-xml-parsing</artifactId>
             <version>2.11.0.2861</version>
         </dependency>
-        <dependency>
-            <!-- packaged with the plugin -->
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-        </dependency>
-        <dependency>
-            <groupId>xalan</groupId>
-            <artifactId>xalan</artifactId>
-            <version>2.7.3</version>
-        </dependency>
-        <dependency>
+
+
+        <!--dependency>
             <groupId>org.codehaus.sonar-plugins.xml</groupId>
             <artifactId>xml-squid</artifactId>
             <version>1.2</version>
@@ -88,15 +80,15 @@
                     <artifactId>commons-lang</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency-->
 
         <!-- Test dependencies -->
-        <dependency>
+        <!--dependency>
             <groupId>org.sonarsource.sonarqube</groupId>
             <artifactId>sonar-testing-harness</artifactId>
             <version>${sonar.testingHarnessVersion}</version>
             <scope>test</scope>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -110,7 +102,7 @@
             <version>2.23.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.sonarsource.sslr-squid-bridge</groupId>
             <artifactId>sslr-squid-bridge</artifactId>
             <version>2.6.1</version>
@@ -136,22 +128,13 @@
                     <artifactId>slf4j-api</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>com.tibco.utils.bw</groupId>
             <artifactId>bw6-utils</artifactId>
-            <version>1.3.9</version>
+            <version>${bw6.utils.version}</version>
         </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-parser</artifactId>
-            <version>1.0.45</version>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-compat-spec-parser</artifactId>
-            <version>1.0.45</version>
-        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-models -->
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
@@ -163,6 +146,11 @@
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.parser.v3</groupId>
+            <artifactId>swagger-parser</artifactId>
+            <version>2.0.32</version>
         </dependency>
     </dependencies>
 
@@ -297,6 +285,62 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<id>process-plugin-docs</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+                                        <includeProjectDependencies>true</includeProjectDependencies>
+                                        <includePluginDependencies>true</includePluginDependencies>
+                                        <classpathScope>compile</classpathScope>
+					<mainClass>com.tibco.sonar.plugins.bw6.standalone.DocumentationUtil</mainClass>
+				</configuration>
+			</plugin>
+                        			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<id>process-plugin-docs</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+                                        <classpathScope>compile</classpathScope>
+					<mainClass>com.tibco.sonar.plugins.bw6.standalone.DocumentationUtil</mainClass>
+				</configuration>
+			</plugin>
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>license-maven-plugin</artifactId>
+                            <version>2.4.0</version>
+                            <executions>
+                                <execution>
+                                    <id>aggregate-third-party-report</id>
+                                    <phase>prepare-package</phase>
+                                    <goals>
+                                        <goal>third-party-report</goal>
+                                    </goals>
+                                    <configuration>
+                                        <outputDirectory>${project.basedir}/docs/third-party-licenses</outputDirectory>
+                                        <includedScopes>compile</includedScopes>
+                                    </configuration>
+                                </execution>
+                            </executions>
+        </plugin>
 
         </plugins>
         <pluginManagement>

@@ -3,7 +3,6 @@
  */
 package com.tibco.sonar.plugins.bw6.check.process;
 
-import com.thoughtworks.xstream.persistence.XmlArrayList;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -14,12 +13,9 @@ import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.bw6.constants.BwpModelConstants;
 import com.tibco.utils.bw6.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
-import com.tibco.utils.bw6.model.Group;
 import com.tibco.utils.bw6.model.Process;
-import java.util.List;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
-import org.w3c.dom.Element;
 
 @Rule(key = UnneededEmptyActivityCheck.RULE_KEY, name = "Unneeded Empty Activity", priority = Priority.MINOR, description = "This rule checks for empty activities that only have one input transition and output tranistion so they are not providing any value")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)

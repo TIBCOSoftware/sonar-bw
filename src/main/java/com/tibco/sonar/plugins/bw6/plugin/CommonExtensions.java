@@ -5,7 +5,6 @@ package com.tibco.sonar.plugins.bw6.plugin;
 
 //import com.tibco.sonar.plugins.bw.colorizers.BusinessWorksProcessColorizerFormat;
 import com.tibco.sonar.plugins.bw6.metric.BusinessWorksMetrics;
-import com.tibco.sonar.plugins.bw6.widget.BusinessWorksMetricsWidget;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -19,7 +18,6 @@ public final class CommonExtensions {
 	public static List getExtensions() {
 		List builder = new ArrayList();
 		builder.add(BusinessWorksMetrics.class);
-		builder.add(BusinessWorksMetricsWidget.class);
 		//builder.add(BusinessWorksProcessColorizerFormat.class);
 		return builder;
 	}

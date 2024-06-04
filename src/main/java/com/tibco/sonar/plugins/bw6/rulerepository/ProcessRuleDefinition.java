@@ -3,7 +3,6 @@
  */
 package com.tibco.sonar.plugins.bw6.rulerepository;
 
-import com.google.common.io.Resources;
 import com.tibco.sonar.plugins.bw6.check.AbstractCheck;
 import java.util.Arrays;
 import java.util.List;
@@ -11,10 +10,9 @@ import java.util.List;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinitionAnnotationLoader;
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
-import java.io.File;
-import java.io.IOException;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import org.apache.commons.io.FileUtils;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public final class ProcessRuleDefinition implements RulesDefinition {
 
@@ -170,8 +168,7 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         String htmlPath = "/org/sonar/l10n/bw6/rules/bw6process/" + rule.key() + ".html";
         String description = "<p></p>";
         try {
-
-            description = Resources.toString(this.getClass().getResource(htmlPath),UTF_8);            
+            description = Files.readString(Paths.get(this.getClass().getResource(htmlPath).toURI()),UTF_8);      
         } catch (Exception e) {
             description= "<p>Description not available</p>";
         }

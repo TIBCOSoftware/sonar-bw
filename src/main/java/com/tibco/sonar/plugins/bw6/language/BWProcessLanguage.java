@@ -3,7 +3,6 @@
  */
 package com.tibco.sonar.plugins.bw6.language;
 
-import org.apache.commons.lang.StringUtils;
 import org.sonar.api.resources.AbstractLanguage;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class BWProcessLanguage extends AbstractLanguage {
 	public String[] getFileSuffixes() {
 	  String[] suffixes = filterEmptyStrings(config.getStringArray(BW6LanguageFileSuffixProperty.FILE_SUFFIXES_KEY));
 	  if (suffixes.length == 0) {
-		suffixes = StringUtils.split(BW6LanguageFileSuffixProperty.FILE_SUFFIXES_DEFAULT_VALUE, ",");
+		suffixes = BW6LanguageFileSuffixProperty.FILE_SUFFIXES_DEFAULT_VALUE.split(",");
 	  }
 	  return suffixes;
 	}
@@ -40,7 +39,7 @@ public class BWProcessLanguage extends AbstractLanguage {
 	private String[] filterEmptyStrings(String[] stringArray) {
 		List<String> nonEmptyStrings = new ArrayList<>();
 		for (String string : stringArray) {
-		  if (StringUtils.isNotBlank(string.trim())) {
+		  if (!string.trim().isBlank()) {
 			nonEmptyStrings.add(string.trim());
 		  }
 		}

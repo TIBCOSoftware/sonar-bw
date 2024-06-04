@@ -18,7 +18,7 @@ import org.sonar.api.utils.log.Loggers;
 public class ExceptionHandlingCheck extends AbstractProcessCheck {
 
     private static final Logger LOG = Loggers.get(ExceptionHandlingCheck.class);
-    public final static String RULE_KEY = "Exception handling check";
+    public final static String RULE_KEY = "ExceptionHandlingCheck";
 
     @Override
     protected void validate(ProcessSource processSource) {
