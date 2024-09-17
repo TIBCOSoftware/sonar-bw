@@ -3,9 +3,10 @@
  */
 package com.tibco.sonar.plugins.bw6.check;
 
-import com.tibco.sonar.plugins.bw6.source.Source;
-import com.tibco.sonar.plugins.bw6.source.XmlSource;
-import com.tibco.utils.bw6.helper.XmlHelper;
+import com.tibco.sonar.plugins.bw.check.AbstractCheck;
+import com.tibco.sonar.plugins.bw.source.Source;
+import com.tibco.sonar.plugins.bw.source.XmlSource;
+import com.tibco.utils.common.helper.XmlHelper;
 import java.util.Collections;
 import org.sonar.api.utils.WildcardPattern;
 import org.sonar.api.utils.log.Logger;
@@ -69,7 +70,7 @@ public class XPathCheck extends AbstractCheck {
         LOG.debug("Evaluating against expression ["+expression+"]");
         boolean xPathRequiresNamespaces = expression.contains(":");
         Document document = xPathRequiresNamespaces ? file.getNamespaceAwareDocument() : file.getNamespaceUnawareDocument();
-        NodeList nodes = (NodeList) XmlHelper.evaluateXPath(document.getDocumentElement(), expression);
+        NodeList nodes = XmlHelper.evaluateXPath(document.getDocumentElement(), expression);
 
         if (nodes != null) {
             LOG.debug("Nodes returned against expression ["+expression+"]: "+nodes.getLength());

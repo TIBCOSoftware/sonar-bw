@@ -18,3 +18,5 @@ src/test/java/com/tibco/.DS_Store
 
 .DS_Store
 *.jar
+/.settings/
+/.vscode/

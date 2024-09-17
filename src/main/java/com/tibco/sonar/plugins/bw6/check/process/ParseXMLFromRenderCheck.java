@@ -10,14 +10,11 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import com.tibco.utils.bw6.helper.XmlHelper;
+import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
-import com.tibco.utils.bw6.model.Group;
 import com.tibco.utils.bw6.model.Process;
-import java.util.List;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
-import org.w3c.dom.Element;
 
 @Rule(key = ParseXMLFromRenderCheck.RULE_KEY, name = "Parse XML Activity using tib:render-xml input", priority = Priority.MINOR, description = "This rule checks for inefficiencies on using ParseXML activities using tib:render-xml as input when it should rely on Coertion to do same job")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)

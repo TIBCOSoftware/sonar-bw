@@ -4,6 +4,7 @@
 package com.tibco.sonar.plugins.bw6.source;
 
 
+import com.tibco.sonar.plugins.bw.source.AbstractSource;
 import com.tibco.utils.bw6.model.Project;
 import java.util.ArrayList;
 import java.util.List;

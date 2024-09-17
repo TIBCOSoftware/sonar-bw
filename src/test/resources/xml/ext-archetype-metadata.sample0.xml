@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:extarchetype-descriptor
+	xmlns:ns2="http://www.tibco.com/xmlns/extarchetype/validation"
+	xmlns:ns3="http://www.tibco.com/xmlns/extarchetype/metadata">
+	<requiredProperties>
+		<requiredProperty key="param1">
+			<ns2:validationRule>validationRule1</ns2:validationRule>
+			<source>deduction</source>
+		</requiredProperty>
+		<requiredProperty key="param2">
+			<ns2:validationRule>validationRule2</ns2:validationRule>
+			<source>global</source>
+		</requiredProperty>
+		<requiredProperty key="param3">
+			<ns2:validationRule>validationRule3</ns2:validationRule>
+			<source>input</source>
+		</requiredProperty>
+	</requiredProperties>
+</ns3:extarchetype-descriptor>

@@ -1439,8 +1439,8 @@ public class MultipleTransitionCheckTest2 {
         		"        </bpws:flow>\n" +
         		"    </bpws:scope>\n" +
         		"</bpws:process>";
-        		
-    	source = new ProcessSource(new String(part1) + new String(part2));
+
+		source = new ProcessSource(new String(part1) + new String(part2));
         
     }
     

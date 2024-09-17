@@ -28,7 +28,7 @@ import org.sonar.api.utils.log.Loggers;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import com.tibco.sonar.plugins.bw6.check.AbstractCheck;
+import com.tibco.sonar.plugins.bw.check.AbstractCheck;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.check.AbstractProjectCheck;
 import com.tibco.sonar.plugins.bw6.check.AbstractResourceCheck;
@@ -36,13 +36,12 @@ import com.tibco.sonar.plugins.bw6.check.XPathCheck;
 import com.tibco.sonar.plugins.bw6.check.process.DeadLockCheck;
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
 import com.tibco.sonar.plugins.bw6.metric.SharedResourceMetrics;
-import com.tibco.sonar.plugins.bw6.plugin.BusinessWorksPlugin;
 import com.tibco.sonar.plugins.bw6.rulerepository.ProcessRuleDefinition;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.sonar.plugins.bw6.source.ProjectSource;
 import com.tibco.sonar.plugins.bw6.source.SharedResourceSource;
-import com.tibco.sonar.plugins.bw6.source.XmlSource;
-import com.tibco.utils.bw6.helper.XmlHelper;
+import com.tibco.sonar.plugins.bw.source.XmlSource;
+import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.GenericResource;
 import com.tibco.utils.bw6.model.JSONResource;
 import com.tibco.utils.bw6.model.JobSharedVariables;
@@ -57,7 +56,7 @@ import com.tibco.utils.bw6.model.WsdlResource;
 import com.tibco.utils.bw6.model.XsdResource;
 import java.util.Arrays;
 import java.util.jar.Manifest;
-import javax.xml.stream.XMLInputFactory;
+
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.measure.Metric;
 import org.sonar.api.batch.rule.Checks;
@@ -76,7 +75,7 @@ import org.w3c.dom.Element;
 public class ProcessRuleSensor implements Sensor {
 
     private static final Logger LOG = Loggers.get(ProcessRuleSensor.class);
-    private Map<String, Process> servicetoprocess = new HashMap<>();
+    private final Map<String, Process> servicetoprocess = new HashMap<>();
     private String processname = null;
     protected FileSystem fileSystem;
     protected String languageKey;
@@ -92,7 +91,7 @@ public class ProcessRuleSensor implements Sensor {
         LOG.debug("ProcessRuleSensor - START");
 
         this.fileSystem = fileSystem;
-        checkReturned = checkFactory.create(ProcessRuleDefinition.REPOSITORY_KEY).addAnnotatedChecks((Iterable<Class>) ProcessRuleDefinition.getChecks());
+        checkReturned = checkFactory.create(ProcessRuleDefinition.REPOSITORY_KEY).addAnnotatedChecks(ProcessRuleDefinition.getChecks());
 
         this.mainFilesPredicate = fileSystem.predicates().and(
                 fileSystem.predicates().hasLanguage(BWProcessLanguage.KEY));
@@ -236,7 +235,7 @@ public class ProcessRuleSensor implements Sensor {
                     String proc2 = process.getName();
                     LOG.debug("Process Name: " + proc2);
 
-                    if (referencedServiceNameSpace.equals(serviceNamespace) && referenceProcessName != null && proc2.equals(referenceProcessName)) {
+                    if (referencedServiceNameSpace.equals(serviceNamespace) && proc2.equals(referenceProcessName)) {
 
                         LOG.debug("Reference Process Name is equal to Process Name");
                         for (Object checkObject : checkReturned.all()) {
@@ -443,7 +442,7 @@ public class ProcessRuleSensor implements Sensor {
                 process.setProject(bwProject);
                 bwProject.addProcess(process);
             }else{
-                LOG.warn("Process couldn't be parsed from file: "+inputFiles.toString());
+                LOG.warn("Process couldn't be parsed from file: "+ inputFiles);
             }
         });
         LOG.info("Searching for BW Process files... DONE!");

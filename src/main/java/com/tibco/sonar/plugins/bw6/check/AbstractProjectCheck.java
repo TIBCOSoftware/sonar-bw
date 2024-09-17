@@ -17,15 +17,16 @@
  */
 package com.tibco.sonar.plugins.bw6.check;
 
+import com.tibco.sonar.plugins.bw.check.AbstractCheck;
 import com.tibco.sonar.plugins.bw6.source.ProjectSource;
-import com.tibco.sonar.plugins.bw6.source.Source;
+import com.tibco.sonar.plugins.bw.source.Source;
 
 /**
  * Abtract superclass for checks.
  *
  * @author Kapil Shivarkar
  */
-public abstract class AbstractProjectCheck extends AbstractCheck{
+public abstract class AbstractProjectCheck extends AbstractCheck {
 	
 	protected abstract void validate(ProjectSource processSource);
 

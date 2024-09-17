@@ -18,15 +18,13 @@
 package com.tibco.sonar.plugins.bw6.check;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
+import com.tibco.sonar.plugins.bw.check.AbstractCheck;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import com.tibco.sonar.plugins.bw6.source.Source;
+import com.tibco.sonar.plugins.bw.source.Source;
 import com.tibco.utils.bw6.model.Activity;
 
 /**
@@ -34,7 +32,7 @@ import com.tibco.utils.bw6.model.Activity;
  *
  * @author Kapil Shivarkar
  */
-public abstract class AbstractProcessCheck extends AbstractCheck{
+public abstract class AbstractProcessCheck extends AbstractCheck {
 	
 	private final String SQIGNORE_TAG = "SQIGNORE:";
 	

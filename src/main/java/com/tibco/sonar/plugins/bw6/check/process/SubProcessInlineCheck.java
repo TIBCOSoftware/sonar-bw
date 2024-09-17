@@ -33,7 +33,7 @@ public class SubProcessInlineCheck
         if (referenceServices != null) {
             for (String referenceService : referenceServices.keySet()) {
                 if (referenceServices.get(referenceService) != null && "true".equals(referenceServices.get(referenceService).getInline())) {
-                    Service service = (Service) referenceServices.get(referenceService);
+                    Service service = referenceServices.get(referenceService);
                     if (service != null) {
                         String proc = service.getImplementationProcess();
                         if (proc != null && proc.lastIndexOf(".") > 0) {

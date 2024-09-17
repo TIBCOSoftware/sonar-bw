@@ -3,7 +3,7 @@
  */
 package com.tibco.sonar.plugins.bw6.rulerepository;
 
-import com.tibco.sonar.plugins.bw6.check.AbstractCheck;
+import com.tibco.sonar.plugins.bw.check.AbstractCheck;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,16 +16,16 @@ import java.nio.file.Paths;
 
 public final class ProcessRuleDefinition implements RulesDefinition {
 
-    protected static final String KEY = "process";
-    protected static final String NAME = "process";
 
-    public static final String REPOSITORY_KEY = BWProcessLanguage.KEY + KEY;
-    protected static final String REPOSITORY_NAME = BWProcessLanguage.KEY + "-" + NAME;
-    protected static final List<String> LANGUAGE_KEYS = Arrays.asList(new String[]{BWProcessLanguage.KEY});
+
+
+    public static final String REPOSITORY_KEY = BWProcessLanguage.KEY;
+    private static final String REPOSITORY_NAME = "SonarQube";
+    private static final List<String> LANGUAGE_KEYS = Arrays.asList(BWProcessLanguage.KEY);
 
     private static List<Class> checkRules;
 
-    private static Class check[] = {
+    private static final Class[] check = {
         com.tibco.sonar.plugins.bw6.check.process.NoDescriptionCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.NumberofActivitiesCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.TransitionLabelCheck.class,
@@ -91,7 +91,7 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         com.tibco.sonar.plugins.bw6.check.project.JKSValidationCheck.class
     };
 
-    private static AbstractCheck checkList[] = {
+    private static final AbstractCheck[] checkList = {
         new com.tibco.sonar.plugins.bw6.check.process.NoDescriptionCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.NumberofActivitiesCheck(),
         new com.tibco.sonar.plugins.bw6.check.process.TransitionLabelCheck(),
@@ -157,7 +157,7 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         new com.tibco.sonar.plugins.bw6.check.project.JKSValidationCheck()
     };
 
-    protected String rulesDefinitionFilePath() {
+    private String rulesDefinitionFilePath() {
         return "/rules.xml";
     }
 
@@ -165,10 +165,10 @@ public final class ProcessRuleDefinition implements RulesDefinition {
     }
 
     private void setDescriptionFromHtml(NewRule rule) {
-        String htmlPath = "/org/sonar/l10n/bw6/rules/bw6process/" + rule.key() + ".html";
+        String htmlPath = "/org/sonar/l10n/bw6/rules/" + rule.key() + ".html";
         String description = "<p></p>";
         try {
-            description = Files.readString(Paths.get(this.getClass().getResource(htmlPath).toURI()),UTF_8);      
+            description = Files.readString(Paths.get(this.getClass().getResource(htmlPath).toExternalForm()),UTF_8);
         } catch (Exception e) {
             description= "<p>Description not available</p>";
         }

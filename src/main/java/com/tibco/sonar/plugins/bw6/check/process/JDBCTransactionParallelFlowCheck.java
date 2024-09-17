@@ -10,7 +10,7 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import com.tibco.utils.bw6.helper.XmlHelper;
+import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Group;
 import com.tibco.utils.bw6.model.Process;

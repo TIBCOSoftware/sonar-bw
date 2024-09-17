@@ -3,7 +3,7 @@
  */
 package com.tibco.sonar.plugins.bw6.profile;
 
-import com.tibco.sonar.plugins.bw6.check.AbstractCheck;
+import com.tibco.sonar.plugins.bw.check.AbstractCheck;
 import com.tibco.sonar.plugins.bw6.check.XPathCheck;
 import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;

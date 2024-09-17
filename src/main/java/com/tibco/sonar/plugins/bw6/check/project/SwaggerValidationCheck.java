@@ -31,7 +31,7 @@ public class SwaggerValidationCheck extends AbstractProjectCheck {
 
     private static final Logger LOG = Loggers.get(SwaggerValidationCheck.class);
 
-    private SwaggerParser parser = new SwaggerParser();
+    private final SwaggerParser parser = new SwaggerParser();
 
     @Override
     public void validate(ProjectSource resourceXml) {

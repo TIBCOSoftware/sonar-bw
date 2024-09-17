@@ -6,7 +6,7 @@ package com.tibco.sonar.plugins.bw6.check.project;
 import com.tibco.sonar.plugins.bw6.check.AbstractProjectCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProjectSource;
-import com.tibco.utils.bw6.helper.XmlHelper;
+import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Project;
 
 import org.sonar.api.utils.log.Logger;

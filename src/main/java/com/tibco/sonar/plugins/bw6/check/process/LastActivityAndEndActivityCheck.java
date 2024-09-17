@@ -14,7 +14,7 @@ import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSEXIT;
 import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSREPLY;
 import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSRETHROW;
 import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSTHROW;
-import com.tibco.utils.bw6.helper.XmlHelper;
+import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
 import org.sonar.api.utils.log.Logger;

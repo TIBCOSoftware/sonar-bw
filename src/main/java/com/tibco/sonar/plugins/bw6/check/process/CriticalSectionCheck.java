@@ -6,7 +6,7 @@ package com.tibco.sonar.plugins.bw6.check.process;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import com.tibco.utils.bw6.helper.XmlHelper;
+import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Group;
 import com.tibco.utils.bw6.model.Process;
@@ -26,13 +26,13 @@ public class CriticalSectionCheck
 
     private static final Logger LOG = Loggers.get(CriticalSectionCheck.class);
     public static final String RULE_KEY = "CriticalSection";
-    protected static final List<String> CONSTANTS = Arrays.asList(new String[]{"bw.http.waitForHTTPRequest", "bw.file.wait", "bw.generalactivities.sleep", "bw.jms.signalin", "bw.rv.waitforRVMessage", "bw.tcp.waitfortcp", "bw.http.sendHTTPRequest", "bw.ftl.requestreply", "bw.jms.requestreply", "bw.rv.sendRVRequest","bw.generalactivities.sleep"});
+    protected static final List<String> CONSTANTS = Arrays.asList("bw.http.waitForHTTPRequest", "bw.file.wait", "bw.generalactivities.sleep", "bw.jms.signalin", "bw.rv.waitforRVMessage", "bw.tcp.waitfortcp", "bw.http.sendHTTPRequest", "bw.ftl.requestreply", "bw.jms.requestreply", "bw.rv.sendRVRequest","bw.generalactivities.sleep");
 
     @Override
     protected void validate(ProcessSource processSource) {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         final Process process = processSource.getProcessModel();
-        final List<Group> groups = (List<Group>) process.getGroups();
+        final List<Group> groups = process.getGroups();
         for (final Group group : groups) {
             
             if (group.getType().equals("critical")) {

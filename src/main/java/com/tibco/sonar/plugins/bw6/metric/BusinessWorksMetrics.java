@@ -20,6 +20,6 @@ public class BusinessWorksMetrics implements Metrics {
             .setDomain(CoreMetrics.DOMAIN_GENERAL).create();
 
     public List<Metric> getMetrics() {
-        return asList(BWLANGUAGEFLAG);
+        return List.of(BWLANGUAGEFLAG);
     }
 }

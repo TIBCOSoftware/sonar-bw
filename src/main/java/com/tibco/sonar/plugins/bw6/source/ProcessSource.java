@@ -4,9 +4,10 @@
 package com.tibco.sonar.plugins.bw6.source;
 
 
-import com.tibco.utils.bw6.helper.XmlHelper;
+import com.tibco.sonar.plugins.bw.source.AbstractSource;
+import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Process;
-import java.io.IOException;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.sonar.api.batch.fs.InputFile;

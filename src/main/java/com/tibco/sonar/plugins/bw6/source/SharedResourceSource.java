@@ -4,6 +4,7 @@
 package com.tibco.sonar.plugins.bw6.source;
 
 
+import com.tibco.sonar.plugins.bw.source.AbstractSource;
 import com.tibco.utils.bw6.model.SharedResource;
 import java.io.IOException;
 import org.sonar.api.batch.fs.FileSystem;
