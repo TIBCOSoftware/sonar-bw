@@ -1,6 +1,9 @@
 /*
- * Copyright (C) 2016-2023. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- */
+* Copyright © 2023 - 2024. Cloud Software Group, Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
 package com.tibco.sonar.plugins.bw.plugin;
 
 import com.tibco.sonar.plugins.bw5.settings.BW5LanguageFileSuffixProperty;
@@ -15,7 +18,6 @@ import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
 import com.tibco.sonar.plugins.bw6.measurecomputer.resources.*;
 import com.tibco.sonar.plugins.bw6.metric.SharedResourceMetrics;
 import com.tibco.sonar.plugins.bw6.rulerepository.ProcessRuleDefinition;
-//import com.tibco.sonar.plugins.bw6.sensor.ProcessRuleSensor;
 import com.tibco.sonar.plugins.bw6.sensor.ProcessRuleSensor;
 import com.tibco.sonar.plugins.bw6.settings.BW6LanguageFileSuffixProperty;
 
