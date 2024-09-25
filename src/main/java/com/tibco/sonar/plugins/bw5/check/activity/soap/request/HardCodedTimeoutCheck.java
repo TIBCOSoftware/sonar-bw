@@ -20,7 +20,7 @@ import org.sonar.api.utils.log.Loggers;
 @Rule(key = HardCodedTimeoutCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_SOAPREQUESTTIMEOUTHARDCODED_NAME, description = CheckConstants.RULE_PROCESS_SOAPREQUESTTIMEOUTHARDCODED_DESCRIPTION, priority = Priority.MAJOR, cardinality = Cardinality.SINGLE)
 public class HardCodedTimeoutCheck extends AbstractProcessHardCodedCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = Loggers.get(HardCodedTimeoutCheck.class);
 	public static final String RULE_KEY = "SOAPRequestTimeoutHardCoded";
 	
 	protected static final String CONFIG_XPATH_DEFAULT = "//timeout";

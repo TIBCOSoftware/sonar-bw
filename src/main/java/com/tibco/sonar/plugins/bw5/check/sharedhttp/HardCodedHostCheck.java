@@ -25,7 +25,7 @@ import org.sonar.api.utils.log.Loggers;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class HardCodedHostCheck extends AbstractXmlCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = Loggers.get(HardCodedHostCheck.class);
     public static final String RULE_KEY = "SharedHttpHardCodedHost";
     public static final String CONFIG_ELEMENT_NAME = "config";
     public static final String HOST_ELEMENT_NAME = "Host";

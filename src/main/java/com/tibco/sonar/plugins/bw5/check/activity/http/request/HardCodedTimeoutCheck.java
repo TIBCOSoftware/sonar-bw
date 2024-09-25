@@ -21,7 +21,7 @@ import org.sonar.api.utils.log.Loggers;
 @Rule(key = HardCodedTimeoutCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_HTTPREQUESTTIMEOUTHARDCODED_NAME, description = CheckConstants.RULE_PROCESS_HTTPREQUESTTIMEOUTHARDCODED_DESCRIPTION, priority = Priority.MAJOR,tags={"bug"}, cardinality = Cardinality.SINGLE)
 public class HardCodedTimeoutCheck extends AbstractProcessHardCodedCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = Loggers.get(HardCodedTimeoutCheck.class);
 	public static final String RULE_KEY = "HTTPRequestTimeoutHardCoded";
 	
 	protected static final String CONFIG_XPATH_DEFAULT = "";

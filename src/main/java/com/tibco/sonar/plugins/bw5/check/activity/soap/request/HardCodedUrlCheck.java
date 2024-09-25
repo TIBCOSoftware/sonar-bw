@@ -20,7 +20,7 @@ import org.sonar.api.utils.log.Loggers;
 @Rule(key = HardCodedUrlCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_SOAPREQUESTURLHARDCODED_NAME ,  description =  CheckConstants.RULE_PROCESS_SOAPREQUESTURLHARDCODED_DESCRIPTION, priority = Priority.MAJOR, cardinality = Cardinality.SINGLE)
 public class HardCodedUrlCheck extends AbstractProcessHardCodedCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = Loggers.get(HardCodedUrlCheck.class);
 	public static final String RULE_KEY = "SOAPRequestUrlHardCoded";
 	
 	protected static final String CONFIG_XPATH_DEFAULT = "//endpointURL";

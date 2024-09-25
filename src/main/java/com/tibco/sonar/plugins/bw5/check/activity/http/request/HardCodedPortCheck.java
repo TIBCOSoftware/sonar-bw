@@ -23,7 +23,7 @@ import org.sonar.api.utils.log.Loggers;
 
 public class HardCodedPortCheck extends AbstractProcessHardCodedCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = Loggers.get(HardCodedPortCheck.class);
 	public static final String RULE_KEY = "HTTPRequestPortHardCoded";
 	
 	protected static final String CONFIG_XPATH_DEFAULT = "//serverport";

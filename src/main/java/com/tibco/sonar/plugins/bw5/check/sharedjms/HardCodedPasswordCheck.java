@@ -25,7 +25,7 @@ import org.sonar.api.utils.log.Loggers;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class HardCodedPasswordCheck extends AbstractXmlCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = Loggers.get(HardCodedPasswordCheck.class);
     public static final String RULE_KEY = "SharedJmsHardCodedPassword";
     public static final String CONFIG_ELEMENT_NAME = "config";
 

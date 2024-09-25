@@ -24,7 +24,7 @@ import org.sonar.api.utils.log.Loggers;
 
 public class HardCodedHostCheck extends AbstractProcessHardCodedCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = Loggers.get(HardCodedHostCheck.class);
 	public static final String RULE_KEY = "HTTPRequestHostHardCoded";
 	
 	protected static final String CONFIG_XPATH_DEFAULT = "//serverhost";

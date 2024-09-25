@@ -25,7 +25,7 @@ import org.sonar.api.utils.log.Loggers;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.CRITICAL)
 public class AdbFileSinkFileCountHardcodingCheck extends AbstractXmlCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = Loggers.get(AdbFileSinkFileCountHardcodingCheck.class);
 	public static final String RULE_KEY = "AdbFileSinkFileCountHardcodingCheck";
 	public static final String FILESINK_ELEMENT_NAME = "fileSink";
 	public static final String FILESINK_ELEMENT_NAMESPACE = "http://www.tibco.com/xmlns/aemeta/adapter/2002";

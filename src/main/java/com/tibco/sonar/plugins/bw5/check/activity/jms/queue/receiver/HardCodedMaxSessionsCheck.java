@@ -20,7 +20,7 @@ import org.sonar.api.utils.log.Loggers;
 @Rule(key = HardCodedMaxSessionsCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_JMSQUEUERECEIVERMAXSESSIONSHARDCODED_NAME, description = CheckConstants.RULE_PROCESS_JMSQUEUERECEIVERMAXSESSIONSHARDCODED_DESCRIPTION, priority = Priority.MAJOR,tags={"bug"}, cardinality = Cardinality.SINGLE)
 public class HardCodedMaxSessionsCheck extends AbstractProcessHardCodedCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = Loggers.get(HardCodedMaxSessionsCheck.class);
 	public static final String RULE_KEY = "JMSQueueReceiverMaxSessionsHardCoded";
 	
 	protected static final String CONFIG_XPATH_DEFAULT = "//SessionAttributes/maxSessions[contains('2_4_5',../acknowledgeMode)]";

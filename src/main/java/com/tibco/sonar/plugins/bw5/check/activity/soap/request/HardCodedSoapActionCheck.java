@@ -20,7 +20,7 @@ import org.sonar.api.utils.log.Loggers;
 @Rule(key = HardCodedSoapActionCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_SOAPREQUESTSOAPACTIONHARDCODED_NAME, description = CheckConstants.RULE_PROCESS_SOAPREQUESTSOAPACTIONHARDCODED_DESCRIPTION, priority = Priority.MAJOR, cardinality = Cardinality.SINGLE)
 public class HardCodedSoapActionCheck extends AbstractProcessHardCodedCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = Loggers.get(HardCodedSoapActionCheck.class);
 	public static final String RULE_KEY = "SOAPRequestSoapActionHardCoded";
 	
 	protected static final String CONFIG_XPATH_DEFAULT = "//soapAction";
