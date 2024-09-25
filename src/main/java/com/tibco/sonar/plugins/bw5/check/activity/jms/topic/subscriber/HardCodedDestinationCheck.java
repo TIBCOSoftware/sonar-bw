@@ -1,3 +1,8 @@
+/*
+* Copyright © 2023 - 2024. Cloud Software Group, Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
 package com.tibco.sonar.plugins.bw5.check.activity.jms.topic.subscriber;
 
 import org.sonar.check.Cardinality;

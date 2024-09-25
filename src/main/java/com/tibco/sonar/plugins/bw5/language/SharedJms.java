@@ -1,12 +1,9 @@
 /*
- * SonarQube BusinessWorks Plugin
- * Copyright (C) 2014 TIBCO Software
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * 
- */
+* Copyright © 2023 - 2024. Cloud Software Group, Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
 package com.tibco.sonar.plugins.bw5.language;
 
 /**

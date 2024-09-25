@@ -1,3 +1,9 @@
+/*
+* Copyright © 2023 - 2024. Cloud Software Group, Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
 package com.tibco.sonar.plugins.bw5.sensor;
 
 import com.tibco.sonar.plugins.bw5.language.BusinessWorks5Language;
@@ -17,7 +23,6 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.measures.Metric;
-//import org.sonar.api.resources.Project;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 

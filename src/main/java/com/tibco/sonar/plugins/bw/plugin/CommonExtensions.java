@@ -1,9 +1,10 @@
 /*
- * Copyright (C) 2016-2023. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- */
+* Copyright © 2023 - 2024. Cloud Software Group, Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
 package com.tibco.sonar.plugins.bw.plugin;
 
-//import com.tibco.sonar.plugins.bw.colorizers.BusinessWorksProcessColorizerFormat;
 import com.tibco.sonar.plugins.bw6.metric.BusinessWorksMetrics;
 import java.util.ArrayList;
 

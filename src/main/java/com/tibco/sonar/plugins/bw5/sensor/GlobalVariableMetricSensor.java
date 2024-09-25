@@ -1,6 +1,11 @@
+/*
+* Copyright © 2023 - 2024. Cloud Software Group, Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
 package com.tibco.sonar.plugins.bw5.sensor;
 
-//import com.tibco.sonar.plugins.bw5.language.BusinessWorks5Language;
 import com.tibco.sonar.plugins.bw5.settings.BW5LanguageFileSuffixProperty;
 import com.tibco.sonar.plugins.bw5.metric.BusinessWorksMetrics;
 import com.tibco.utils.common.SaxParser;
