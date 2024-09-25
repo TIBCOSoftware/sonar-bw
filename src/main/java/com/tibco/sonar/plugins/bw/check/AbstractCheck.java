@@ -17,6 +17,7 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.utils.log.Logger;
+import com.tibco.sonar.common.SonarMsgConstants;
 
 /**
  * Abtract superclass for checks.
@@ -62,7 +63,7 @@ public abstract class AbstractCheck {
     public abstract <S extends Source> void validate(S source);
 
     public void reportIssueOnFile(String message, List<Integer> secondaryLocationLines) {
-        getLogger().warn("Issue reported: [" + message + "] on component: [" + inputComponent.key() + "]");
+        getLogger().warn(SonarMsgConstants.ISSUE_REPORTED_MSG + message + SonarMsgConstants.ON_COMMENT + inputComponent.key() + SonarMsgConstants.CLOSE_MSG);
         NewIssue issue = context.newIssue();
 
         NewIssueLocation location = issue.newLocation()
@@ -72,19 +73,17 @@ public abstract class AbstractCheck {
         if (inputComponent.isFile()) {
             secondaryLocationLines.stream().map((line) -> issue.newLocation()
                     .on(inputComponent)
-                    .at(((InputFile) inputComponent).selectLine(line))).forEachOrdered((secondary) -> {
-                issue.addLocation(secondary);
-            });
+                    .at(((InputFile) inputComponent).selectLine(line))).forEachOrdered((secondary) ->
+               issue.addLocation(secondary));
         }
 
-        issue
-                .at(location)
-                .forRule(ruleKey)
-                .save();
+        issue.at(location)
+              .forRule(ruleKey)
+              .save();
     }
 
     public void reportIssueOnFile(String message, InputComponent file, int line) {
-        getLogger().warn("Issue reported: [" + message + "] on component: [" + file.key() + "]");
+        getLogger().warn(SonarMsgConstants.ISSUE_REPORTED_MSG + message + SonarMsgConstants.ON_COMMENT + file.key() + SonarMsgConstants.CLOSE_MSG);
         NewIssue issue = context.newIssue();
 
         NewIssueLocation location = issue.newLocation()
@@ -110,7 +109,7 @@ public abstract class AbstractCheck {
             finalLine = line;
         }
 
-        getLogger().warn("Issue reported: [" + message + "] on component: [" + inputComponent.key() + "]");
+        getLogger().warn(SonarMsgConstants.ISSUE_REPORTED_MSG + message + SonarMsgConstants.ON_COMMENT + inputComponent.key() +SonarMsgConstants.CLOSE_MSG);
         NewIssue issue = context.newIssue();
 
         if (inputComponent.isFile()) {
@@ -136,7 +135,7 @@ public abstract class AbstractCheck {
     }
 
     public void reportIssueOnFile(String message) {
-        getLogger().warn("Issue reported: [" + message + "] on component: [" + inputComponent.key() + "]");
+        getLogger().warn( SonarMsgConstants.ISSUE_REPORTED_MSG + message + SonarMsgConstants.ON_COMMENT + inputComponent.key() + SonarMsgConstants.CLOSE_MSG);
         NewIssue issue = context.newIssue();
 
         NewIssueLocation location = issue.newLocation()
