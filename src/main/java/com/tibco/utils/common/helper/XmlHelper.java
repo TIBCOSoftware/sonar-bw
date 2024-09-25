@@ -1,6 +1,8 @@
 /*
- * Copyright (C) 2016-2020. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- */
+* Copyright © 2023 - 2024. Cloud Software Group, Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
 package com.tibco.utils.common.helper;
 
 import com.tibco.utils.common.logger.Logger;
