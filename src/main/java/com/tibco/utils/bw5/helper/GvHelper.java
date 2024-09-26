@@ -31,7 +31,7 @@ public class GvHelper {
 	public static final String SUBSTVAR_GV_NODE_NAME = "globalVariable";
 	private static final String GV_BASE_FOLDER_NAME = "defaultVars";
 	private static final String GV_FILE_NAME = "defaultVars.substvar";
-	private static final QName GV_FILE_QNAME = new QName("http://www.tibco.com/xmlns/repo/types/2002", "repository");
+	private static final QName GV_FILE_QNAME = new QName("http://www.tibco.com/xmlns/repo/types/2002", SUBSTVAR_ROOT_NODE_NAME);
 
 	public static boolean isGVReference(String value) {
 		return (value.startsWith("%%")) && (value.endsWith("%%"));
@@ -39,11 +39,11 @@ public class GvHelper {
 
 	public static int countGV(Document substvarDoc) {
 		int result = 0;
-		Element globalVariables = XmlHelper.firstChildElement(substvarDoc.getDocumentElement(), "globalVariables");
+		Element globalVariables = XmlHelper.firstChildElement(substvarDoc.getDocumentElement(), SUBSTVAR_GV_LIST_NODE_NAME);
 		if (globalVariables.hasChildNodes()) {
 			for (int i = 0; i < globalVariables.getChildNodes().getLength(); i++) {
 				Node node = globalVariables.getChildNodes().item(i);
-				if (node.getNodeName().equals("globalVariable")) {
+				if (node.getNodeName().equals(SUBSTVAR_GV_NODE_NAME )) {
 					result++;
 				}
 			}
@@ -55,7 +55,7 @@ public class GvHelper {
 			throws JAXBException, ParserConfigurationException, SAXException, IOException {
 		if (!file.exists())
 			throw new IOException("Unable to find file " + file.getAbsolutePath());
-		if (!file.getName().equals("defaultVars.substvar")) {
+		if (!file.getName().equals(GV_FILE_NAME)) {
 			throw new IOException("File " + file.getAbsolutePath() + " is not a TIBCO Designer global variable file");
 		}
 		return JaxbHelper.xmlFileToObject(RepositoryType.class, file, false);
@@ -95,7 +95,7 @@ public class GvHelper {
 		if (inputStructure == null) {
 			throw new Exception("The input global variable structure is null");
 		}
-		if ((GVFile.exists()) && (!GVFile.getName().equals("defaultVars.substvar"))) {
+		if ((GVFile.exists()) && (!GVFile.getName().equals(GV_FILE_NAME))) {
 			throw new IOException("File " + GVFile.getAbsolutePath() + " is not a TIBCO Designer global variable file");
 		}
 
@@ -145,8 +145,8 @@ public class GvHelper {
 			gvRelativePath = gvFullName.substring(0, lastIndexSeparator);
 			gvName = gvFullName.substring(lastIndexSeparator + 1);
 		}
-		File gvFile = new File(bwProjectBaseDir + File.separator + "defaultVars" + File.separator + gvRelativePath
-				+ File.separator + "defaultVars.substvar");
+		File gvFile = new File(bwProjectBaseDir + File.separator + GV_BASE_FOLDER_NAME + File.separator + gvRelativePath
+				+ File.separator + GV_FILE_NAME);
 		updateGVInFile(gvFile, gvName, newGvValue);
 	}
 
