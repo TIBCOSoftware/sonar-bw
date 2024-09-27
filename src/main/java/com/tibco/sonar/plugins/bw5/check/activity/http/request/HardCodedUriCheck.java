@@ -6,7 +6,7 @@
 
 package com.tibco.sonar.plugins.bw5.check.activity.http.request;
 
-import org.sonar.check.Cardinality;
+
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
@@ -16,7 +16,7 @@ import com.tibco.sonar.plugins.bw5.check.CheckConstants;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = HardCodedUriCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_HTTPREQUESTURIHARDCODED_NAME, description = CheckConstants.RULE_PROCESS_HTTPREQUESTURIHARDCODED_DESCRIPTION, priority = Priority.MAJOR, cardinality = Cardinality.SINGLE)
+@Rule(key = HardCodedUriCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_HTTPREQUESTURIHARDCODED_NAME, description = CheckConstants.RULE_PROCESS_HTTPREQUESTURIHARDCODED_DESCRIPTION, priority = Priority.MAJOR)
 public class HardCodedUriCheck extends AbstractProcessHardCodedCheck {
 
     private static final Logger LOG = Loggers.get(HardCodedUriCheck.class);

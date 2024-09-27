@@ -40,8 +40,8 @@ public class XmlBw5Source extends XmlSource {
 	 * 
 	 * This is some description that we must adhere to. 
 	 * 
-     * @param context TODO: Add description
-	 * @param xmlFile TODO: Add description
+     * @param context 
+	 * @param xmlFile 
 	*/
 	public XmlBw5Source(SensorContext context, XmlFile xmlFile) {
 		super(xmlFile.getInputFile());
@@ -57,8 +57,8 @@ public class XmlBw5Source extends XmlSource {
 	 *  
 	 * This needs some description 
 	 * 
-	 * @param node TODO: Add description
-	 * @return TODO: Add description
+	 * @param node 
+	 * @return 
 	 */
 	public int getLineForNode(Node node) {
 		return SaxParser.getLineNumber(node);
@@ -71,9 +71,9 @@ public class XmlBw5Source extends XmlSource {
 	 * 
 	 * This needs some description 
      *
-	 * @param rule TODO: Add description
-	 * @param node TODO: Add description
-	 * @param message TODO: Add description
+	 * @param rule 
+	 * @param node 
+	 * @param message 
      *
 	 */
 	public void getViolationsHardCodedNode(RuleKey rule, Node node, String message){
@@ -91,9 +91,9 @@ public class XmlBw5Source extends XmlSource {
 	 * 
 	 * This needs some description 
 	 *
-	 * @param rule TODO: Add description
-	 * @param node TODO: Add description
-	 * @param elementDescription TODO: Add description
+	 * @param rule 
+	 * @param node 
+	 * @param elementDescription 
 	 */
 	public void findAndValidateHardCodedNode(RuleKey rule, Node node, String elementDescription){
 		getViolationsHardCodedNode(rule, node, elementDescription);			

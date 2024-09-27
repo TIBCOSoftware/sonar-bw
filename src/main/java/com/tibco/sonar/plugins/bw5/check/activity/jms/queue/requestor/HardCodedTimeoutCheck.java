@@ -6,7 +6,7 @@
 
 package com.tibco.sonar.plugins.bw5.check.activity.jms.queue.requestor;
 
-import org.sonar.check.Cardinality;
+
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
@@ -16,7 +16,7 @@ import com.tibco.sonar.plugins.bw5.check.CheckConstants;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-@Rule(key = HardCodedTimeoutCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_JMSQUEUEREQUESTORTIMEOUTHARDCODED_NAME, description = CheckConstants.RULE_PROCESS_JMSQUEUEREQUESTORTIMEOUTHARDCODED_DESCRIPTION, priority = Priority.MAJOR,tags={"bug"}, cardinality = Cardinality.SINGLE)
+@Rule(key = HardCodedTimeoutCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_JMSQUEUEREQUESTORTIMEOUTHARDCODED_NAME, description = CheckConstants.RULE_PROCESS_JMSQUEUEREQUESTORTIMEOUTHARDCODED_DESCRIPTION, priority = Priority.MAJOR,tags={"bug"})
 public class HardCodedTimeoutCheck extends AbstractProcessHardCodedCheck {
 
     private static final Logger LOG = Loggers.get(HardCodedTimeoutCheck.class);

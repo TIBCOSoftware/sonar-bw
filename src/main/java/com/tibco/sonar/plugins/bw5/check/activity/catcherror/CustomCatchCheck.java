@@ -6,7 +6,7 @@
 
 package com.tibco.sonar.plugins.bw5.check.activity.catcherror;
 
-import org.sonar.check.Cardinality;
+
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
