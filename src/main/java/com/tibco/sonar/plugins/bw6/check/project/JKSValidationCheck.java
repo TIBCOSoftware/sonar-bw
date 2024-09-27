@@ -8,10 +8,8 @@ package com.tibco.sonar.plugins.bw6.check.project;
 import com.tibco.sonar.plugins.bw6.check.AbstractProjectCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProjectSource;
-import com.tibco.utils.bw6.model.Binding;
-import com.tibco.utils.bw6.model.Component;
 import com.tibco.utils.bw6.model.Project;
-import com.tibco.utils.bw6.model.Service;
+
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.Certificate;
@@ -56,7 +54,7 @@ public class JKSValidationCheck extends AbstractProjectCheck {
                         String alias = aliases.nextElement();
                         LOG.debug("Checking certificate alias: "+alias);
                         Certificate cert = keystore.getCertificate(alias);
-                        if(cert != null && cert instanceof X509Certificate){
+                        if(cert instanceof X509Certificate){
                             X509Certificate x509cert = (X509Certificate)cert;
                             try {
                                 x509cert.checkValidity();

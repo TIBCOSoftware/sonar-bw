@@ -52,15 +52,12 @@ public class UnneededGroupCheck extends AbstractProcessCheck {
     }
 
     private void checkGroupInside(Group group) {
-        if(group != null){
-            //Start, End and another Group
-            if(group.getActivities().size() == 1){
-                for(Activity activity : group.getActivities()){
-                    if(activity instanceof Group){
-                        Group gTmp = (Group)activity;
-                        if(group.getType() != null && group.getType().equals(gTmp.getType())){
-                            reportIssueOnFile("Uneeded group has been detected ["+gTmp.getName()+"] ",XmlHelper.getLineNumber(gTmp.getNode()));
-                        }
+        if(group != null && group.getActivities().size() == 1){
+            for(Activity activity : group.getActivities()){
+                if(activity instanceof Group){
+                    Group gTmp = (Group)activity;
+                    if(group.getType() != null && group.getType().equals(gTmp.getType())){
+                        reportIssueOnFile("Uneeded group has been detected ["+gTmp.getName()+"] ",XmlHelper.getLineNumber(gTmp.getNode()));
                     }
                 }
             }

@@ -29,16 +29,18 @@ public class CheckpointAfterRESTCheck extends AbstractProcessCheck {
     public static final String RULE_KEY = "CheckpointProcessREST";
     private boolean onlyOneViolation = true;
 
+    private static boolean test(Activity activity) {
+        return (activity.getType() != null && activity.getType().equals("bw.internal.checkpoint"));
+    }
+
     @Override
     protected void validate(ProcessSource processSource) {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         Process process = processSource.getProcessModel();
-        process.getActivities().stream().filter((activity) -> (activity.getType() != null && activity.getType().equals("bw.internal.checkpoint"))).map((activity) -> {
+        process.getActivities().stream().filter(CheckpointAfterRESTCheck::test).map(activity -> {
             LOG.debug("Checkpoint activity detected");
             return activity;
-        }).forEachOrdered((activity) -> {
-            checkPreviousActivities(activity);
-        });
+        }).forEachOrdered(this::checkPreviousActivities);
         LOG.debug("Validation ended for rule: " + RULE_KEY);
     }
 
@@ -46,7 +48,7 @@ public class CheckpointAfterRESTCheck extends AbstractProcessCheck {
         List<Transition> incomingTransitions = activity.getInputTransitions();
 
         LOG.debug("Incoming transitions: " + incomingTransitions);
-        incomingTransitions.forEach((t) -> {
+        incomingTransitions.forEach(t -> {
             if (t.getFromActivity() != null && t.getFromActivity().getType().contains("bw.restjson.Rest")) {
                 if (onlyOneViolation) {
                     reportIssueOnFile("The process [" + activity.getProcess().getBasename() + "] has a Checkpoint activity ["+activity.getName()+"] placed after a REST webservice call or in a parallel flow to a REST webservice call.",XmlHelper.getLineNumber(activity.getNode()));

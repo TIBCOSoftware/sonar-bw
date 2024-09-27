@@ -50,34 +50,30 @@ public class XMLResourceSameTargetNamespaceCheck extends AbstractProjectCheck {
         List<XmlResource> resourceList = new ArrayList<>();
         List<XsdResource> schemaList = project.getSchemas();
         if(schemaList != null){
-            schemaList.forEach((schema) -> {
-                resourceList.add(schema);
-            });
+            schemaList.forEach(resourceList::add);
         }
         
         List<WsdlResource> descriptorList = project.getServiceDescriptor();
         if(descriptorList != null){
-            descriptorList.forEach((schema) -> {
-                resourceList.add(schema);
-            });
+            descriptorList.forEach(resourceList::add);
         }
         
-        if(resourceList != null){
-            Map<String, List<InputFile>> targetNamespaceMap = new HashMap<>();
-            resourceList.forEach((schema) -> {
-                String targetNamespace = schema.getTargetNamespace();
-                LOG.debug("Checking target namespace ["+targetNamespace+"]");
-                List<InputFile> schemas = targetNamespaceMap.get(targetNamespace);
-                if(schemas == null){
-                    schemas = new ArrayList<>();
-                }
-                schemas.add(map.getFile(schema));
-                targetNamespaceMap.put(targetNamespace, schemas);
-                if (schemas.size() > 1) {
-                    reportIssueOnFile("Target namespace ["+targetNamespace+"] is replicated among xsd resources project has", map.getFile(schema) , 1);
-                }
-            });
-        }
+
+        Map<String, List<InputFile>> targetNamespaceMap = new HashMap<>();
+        resourceList.forEach(schema -> {
+            String targetNamespace = schema.getTargetNamespace();
+            LOG.debug("Checking target namespace ["+targetNamespace+"]");
+            List<InputFile> schemas = targetNamespaceMap.get(targetNamespace);
+            if(schemas == null){
+                schemas = new ArrayList<>();
+            }
+            schemas.add(map.getFile(schema));
+            targetNamespaceMap.put(targetNamespace, schemas);
+            if (schemas.size() > 1) {
+                reportIssueOnFile("Target namespace ["+targetNamespace+"] is replicated among xsd resources project has", map.getFile(schema) , 1);
+            }
+        });
+
         }
         
     }

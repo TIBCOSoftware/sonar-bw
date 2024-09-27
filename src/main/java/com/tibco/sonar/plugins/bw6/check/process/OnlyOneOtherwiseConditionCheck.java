@@ -31,14 +31,14 @@ public class OnlyOneOtherwiseConditionCheck extends AbstractProcessCheck {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         Process process = processSource.getProcessModel();
         
-        process.getActivities().forEach((activity) -> {            
+        process.getActivities().forEach(activity -> {
             int numberOfOtherwiseChecks = 0;
             List<Transition> outcomingTransitionList = activity.getOutputTransitions();
             if(outcomingTransitionList != null){
-                numberOfOtherwiseChecks = outcomingTransitionList.stream().map((tr) -> {
+                numberOfOtherwiseChecks = outcomingTransitionList.stream().map(tr -> {
                     LOG.debug("Checking transition ["+tr.getFrom()+"] --- "+  tr.getConditionType() + "  ----> ["+tr.getTo()+"]");                    
                     return tr;
-                }).filter((tr) -> ("SUCCESSWITHNOCONDITION".equals(tr.getConditionType()))).map((_item) -> 1).reduce(numberOfOtherwiseChecks, Integer::sum);
+                }).filter(tr -> ("SUCCESSWITHNOCONDITION".equals(tr.getConditionType()))).map(item -> 1).reduce(numberOfOtherwiseChecks, Integer::sum);
             }
             LOG.debug("Number of otherwise for activity ["+activity.getName()+"]: "+numberOfOtherwiseChecks);
             if (numberOfOtherwiseChecks > 1) {

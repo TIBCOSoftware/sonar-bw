@@ -41,14 +41,13 @@ public class DeadProcessCheckForDynamicSubProcess extends AbstractXmlCheck {
 			"Dead Code: This sub process is not used any where in the code."
 			+ "But Dynamic Call exists so please check whether this sub process"
 			+ " is called dynamically or not. If not this is a Dead Code";
-	public static List<String> dynamicProcesses=null;
+	List<String> dynamicProcesses=null;
 	
 	@Override
 	protected void validate(XmlBw5Source xmlSource) {
 		Document document = xmlSource.getDocument(true);
 		try {
-			Boolean isDynamicExist = checkDynamicCode();
-			//System.out.println("Is Dynamic Check: "+isDynamicExist);
+			boolean isDynamicExist = checkDynamicCode();
 			if (isDynamicExist) {
 				
 				NodeList nodeList = document.getDocumentElement().getElementsByTagNameNS(STARTER_ELEMENT_NAMESPACE,
@@ -57,30 +56,25 @@ public class DeadProcessCheckForDynamicSubProcess extends AbstractXmlCheck {
 				Node nameNode = document.getDocumentElement().getElementsByTagNameNS(STARTER_ELEMENT_NAMESPACE, "name")
 						.item(0);
 				String name = nameNode.getTextContent();
-				// System.out.println("Name of process" + name);
+
 
 				if (nodeList.getLength() < 1) {
-					Boolean isPresent = false;
+					boolean isPresent = false;
 					// Subprocess Logic
 					String[] processExtensions = new String[] { "process", "serviceagent" };
 					List<File> processFiles = (List<File>) FileUtils.listFiles(sourceDir, processExtensions, true);
-					// System.out.println("Number of .process files are " +
-					// processFiles.size());
 					for (File processFile : processFiles) {
-						if (name.contains(processFile.getName())) {
-							// System.out.println("Process Name:
-							// "+processFile.getName()+" \n");
-							continue;
-						} else {
-							BufferedReader reader = new BufferedReader(new FileReader(processFile));
-							String sCurrLine = "";
-							while ((sCurrLine = reader.readLine()) != null) {
-								if (sCurrLine.contains(name)) {
-									isPresent = true;
-								}
-							}
-							reader.close();
-						}
+						if (!name.contains(processFile.getName())) {
+                            try (BufferedReader reader = new BufferedReader(new FileReader(processFile))) {
+                                String sCurrLine = "";
+                                while ((sCurrLine = reader.readLine()) != null) {
+                                    if (sCurrLine.contains(name)) {
+                                        isPresent = true;
+                                    }
+                                }
+
+                            }
+                        }
 					}
 
 					if (!isPresent) {
@@ -104,30 +98,30 @@ public class DeadProcessCheckForDynamicSubProcess extends AbstractXmlCheck {
 	}
 
 
-	public static Boolean checkDynamicCode() throws IOException {
-		Boolean isDynamicFound = false;
+	public Boolean checkDynamicCode() throws IOException {
+		boolean isDynamicFound = false;
 		
 		File sourceDir = new File("SourceCode\\");
-		//File sourceDir = new File("C:\\workspace\\BW\\CustomerOrderManagement\\SourceCode");
 		String[] processExtensions = new String[] { "process" };
 		List<File> processFiles = (List<File>) FileUtils.listFiles(sourceDir, processExtensions, true);
-		dynamicProcesses=new LinkedList<String>();
+		dynamicProcesses=new LinkedList<>();
 		for (File processFile : processFiles) {
-			BufferedReader reader = new BufferedReader(new FileReader(processFile));
-			String sCurrLine = "";
-			while ((sCurrLine = reader.readLine()) != null) {
-				if (sCurrLine.contains("<processNameXPath>") && sCurrLine.contains("</processNameXPath>")) {
-					isDynamicFound = true;
-					dynamicProcesses.add(processFile.getName());
-					break;
-				}
-			}
-			if (isDynamicFound) {
-				break;
-			}
-			reader.close();
+            try (BufferedReader reader = new BufferedReader(new FileReader(processFile))) {
+                String sCurrLine = "";
+                while ((sCurrLine = reader.readLine()) != null) {
+                    if (sCurrLine.contains("<processNameXPath>") && sCurrLine.contains("</processNameXPath>")) {
+                        isDynamicFound = true;
+                        dynamicProcesses.add(processFile.getName());
+                        break;
+                    }
+                }
+                if (isDynamicFound) {
+                    break;
+                }
 
-		}
+            }
+
+        }
 		return isDynamicFound;
 	}
         

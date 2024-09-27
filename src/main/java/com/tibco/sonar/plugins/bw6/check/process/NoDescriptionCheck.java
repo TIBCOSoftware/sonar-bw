@@ -31,11 +31,9 @@ public class NoDescriptionCheck extends AbstractProcessCheck {
     protected void validate(ProcessSource processSource) {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         Process process = processSource.getProcessModel();
-        Document document = process.getProcessXmlDocument();       
         LOG.debug("Process description for process [" + process.getBasename() + "]: " + process.getDescription());
         if (process.getDescription() == null
                 || process.getDescription().isEmpty()) {
-            //TODO Add line here
             reportIssueOnFile("Empty description for this process",XmlHelper.getLineNumber(process.getNode()));
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);

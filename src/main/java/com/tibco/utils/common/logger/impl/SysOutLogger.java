@@ -13,7 +13,7 @@ import com.tibco.utils.common.logger.Logger;
  */
 public class SysOutLogger implements Logger {
 
-    public SysOutLogger(Class className) {
+    public SysOutLogger(Class<?> className) {
 
     }
 

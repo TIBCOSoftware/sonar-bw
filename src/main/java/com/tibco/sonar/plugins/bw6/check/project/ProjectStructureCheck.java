@@ -95,13 +95,13 @@ public class ProjectStructureCheck extends AbstractProjectCheck {
                 if (structure != null) {
                     String namePattern = structure.get("namePattern").getAsString();
                     String type = structure.get("type").getAsString();
-                    if (type != null && (("file".equals(type) && childItem.isFile()) || ("folder".equals(type) && childItem.isDirectory()))) {
-                        if (child.getName().matches(namePattern)) {
-                            valid = true;
-                            if (childItem.isDirectory()) {
-                                check(childItem, structure);
-                            }
+                    if (child.getName().matches(namePattern) && type != null && (("file".equals(type) && childItem.isFile()) || ("folder".equals(type) && childItem.isDirectory()))) {
+
+                        valid = true;
+                        if (childItem.isDirectory()) {
+                            check(childItem, structure);
                         }
+
                     }
                 }
             }

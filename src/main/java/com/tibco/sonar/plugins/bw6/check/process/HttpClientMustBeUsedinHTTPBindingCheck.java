@@ -40,10 +40,8 @@ public class HttpClientMustBeUsedinHTTPBindingCheck extends AbstractProcessCheck
                     Binding binding = reference.getBinding();
                     if(binding != null){
                         LOG.debug("Binding detected type: "+binding.getTransportBindingType());
-                        if("HTTP".equals(binding.getTransportBindingType())){
-                            if(!(binding.getProperty("httpClient")  != null && !"".equals(binding.getProperty("httpClient")) )){
-                                reportIssueOnFile("HTTP Binding ["+reference.getName()+"] has no HTTP Client Resource configured");
-                            }
+                        if("HTTP".equals(binding.getTransportBindingType()) && !(binding.getProperty("httpClient")  != null && !"".equals(binding.getProperty("httpClient")) )){
+                            reportIssueOnFile("HTTP Binding ["+reference.getName()+"] has no HTTP Client Resource configured");
                         }
                     }
                 }

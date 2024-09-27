@@ -22,7 +22,7 @@ import com.tibco.utils.bw6.model.Activity;
  */
 public abstract class AbstractProcessCheck extends AbstractCheck {
 	
-	private final String SQIGNORE_TAG = "SQIGNORE:";
+	private static final String SQIGNORE_TAG = "SQIGNORE:";
 	
 	protected abstract void validate(ProcessSource processSource);
 
@@ -67,18 +67,16 @@ public abstract class AbstractProcessCheck extends AbstractCheck {
 	private final boolean isRuleDisabled(String config) {
 		final String configLine = Arrays.asList(config.split("\n"))
 										  .stream()
-										  .map(str -> str.trim())
+										  .map(String::trim)
 										  .filter(str -> str.startsWith(SQIGNORE_TAG))
 										  .findFirst()
 										  .orElse("");
 		
 		final String ruleName = getRuleKeyName();
-		final boolean found = Arrays.asList(configLine.substring(SQIGNORE_TAG.length()).split(","))
+		return Arrays.asList(configLine.substring(SQIGNORE_TAG.length()).split(","))
 									.stream()
 									.map(str -> str.replace("\r", ""))
-									.map(str -> str.trim())
+									.map(String::trim)
 									.anyMatch(str -> str.equalsIgnoreCase(ruleName));
-
-		return found;
 	}
 }

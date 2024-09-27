@@ -13,7 +13,9 @@ package com.tibco.sonar.plugins.bw5.language;
  */
 public class SharedHttp {
 	
+	private SharedHttp(){
 
+	}
 
 	/** The process language key. */
 	public static final String KEY = "sharedhttp";

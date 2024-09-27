@@ -70,11 +70,9 @@ public abstract class AbstractCheck {
                 .message(message);
 
         if (inputComponent.isFile()) {
-            secondaryLocationLines.stream().map((line) -> issue.newLocation()
+            secondaryLocationLines.stream().map(line -> issue.newLocation()
                     .on(inputComponent)
-                    .at(((InputFile) inputComponent).selectLine(line))).forEachOrdered((secondary) -> {
-                issue.addLocation(secondary);
-            });
+                    .at(((InputFile) inputComponent).selectLine(line))).forEachOrdered(issue::addLocation);
         }
 
         issue

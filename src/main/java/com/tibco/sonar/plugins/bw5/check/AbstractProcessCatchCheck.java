@@ -47,7 +47,7 @@ public abstract class AbstractProcessCatchCheck extends AbstractProcessCheck {
 		List<Activity> activitiesCatch = process
 				.getActivitiesByType(getCatchActivityType());
 		// If no catch activity found raise a violation
-		if (activitiesCatch.size() < 1) {			
+		if (activitiesCatch.isEmpty()) {
                         reportIssueOnFile(getNoCatchMessage());
 		// Else parse catch activities
 		} else {
@@ -71,8 +71,7 @@ public abstract class AbstractProcessCatchCheck extends AbstractProcessCheck {
 				// if catch all found
 				if(catchAllFound){
 					// and no specifi fault element defined
-					if(getCatchFaultElementValue() == null || getCatchFaultElementValue().isEmpty()){				
-						// Then we found requiere catch (eg. catchAll)
+					if(getCatchFaultElementValue() == null || getCatchFaultElementValue().isEmpty()){
 						catchFound = catchAllFound;
 						break;
 					}

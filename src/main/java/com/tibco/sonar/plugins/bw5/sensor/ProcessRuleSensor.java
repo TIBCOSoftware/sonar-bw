@@ -28,8 +28,6 @@ import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import com.tibco.utils.bw5.model.Process;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-
-//import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
@@ -41,10 +39,8 @@ import org.sonar.api.utils.log.Loggers;
  */
 public class ProcessRuleSensor implements Sensor {
 
-    private final static Logger LOG = Loggers.get(ProcessRuleSensor.class);
-    private final Map<String, Process> servicetoprocess = new HashMap<>();
+    private static final Logger LOG = Loggers.get(ProcessRuleSensor.class);
     protected List<Process> processList = new ArrayList<>();
-    private final String processname = null;
     protected FileSystem fileSystem;
     protected String languageKey;
     protected InputModule project;
@@ -136,9 +132,6 @@ public class ProcessRuleSensor implements Sensor {
         LOG.debug("execute - END");
     }
 
-    /*public boolean shouldExecuteOnProject(Project prjct) {
-        return fileSystem.inputFiles(fileSystem.predicates().hasLanguage(languageKey)).iterator().hasNext();
-    }*/
 
     @Override
     public void describe(SensorDescriptor descriptor) {

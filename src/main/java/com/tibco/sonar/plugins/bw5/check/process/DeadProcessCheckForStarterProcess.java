@@ -48,28 +48,27 @@ public class DeadProcessCheckForStarterProcess extends AbstractXmlCheck {
 			Node nameNode = document.getDocumentElement().getElementsByTagNameNS(STARTER_ELEMENT_NAMESPACE, "name")
 					.item(0);
 			String name = nameNode.getTextContent();
-			// System.out.println("Name of process" + name);
+
 
 			if (nodeList.getLength() < 1) {
 				// for sub process
 			} else {
-				//System.out.println("Stater process : "+name);
-				Boolean isPresent = false;
+
+				boolean isPresent = false;
 				// Stater(or Main) process logic
 				String[] extensions = new String[] { "archive" };
 				List<File> archiveFiles = (List<File>) FileUtils.listFiles(sourceDir, extensions, true);
-				// System.out.println("Number of archive files are " +
-				// archiveFiles.size());
 				for (File archiveFile : archiveFiles) {
-					BufferedReader reader = new BufferedReader(new FileReader(archiveFile));
-					String sCurrLine = "";
-					while ((sCurrLine = reader.readLine()) != null) {
-						if (sCurrLine.contains(name)) {
-							isPresent = true;
-						}
-					}
-					reader.close();
-				}
+                    try (BufferedReader reader = new BufferedReader(new FileReader(archiveFile))) {
+                        String sCurrLine = "";
+                        while ((sCurrLine = reader.readLine()) != null) {
+                            if (sCurrLine.contains(name)) {
+                                isPresent = true;
+                            }
+                        }
+
+                    }
+                }
 
 				if (!isPresent) {					
                                         reportIssueOnFile("The " + DEAD_CODE_DESCRIPTION);

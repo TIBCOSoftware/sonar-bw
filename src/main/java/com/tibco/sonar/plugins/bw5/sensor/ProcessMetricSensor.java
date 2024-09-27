@@ -26,15 +26,14 @@ import org.sonar.api.utils.log.Loggers;
 
 public class ProcessMetricSensor implements Sensor {
 
-    private final static Logger LOG = Loggers.get(ProcessRuleSensor.class);
+    private static final Logger LOG = Loggers.get(ProcessMetricSensor.class);
 
     protected FileSystem fileSystem;
     private final FilePredicate mainFilesPredicate;
     private SensorContext sensorContext;
     private InputFile processFileResource;
 
-    public ProcessMetricSensor(FileSystem fileSystem,
-            CheckFactory checkFactory) {
+    public ProcessMetricSensor(FileSystem fileSystem) {
         LOG.debug("ProcessRuleSensor - START");
 
         this.fileSystem = fileSystem;

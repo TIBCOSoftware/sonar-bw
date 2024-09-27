@@ -14,7 +14,6 @@ import org.w3c.dom.Element;
 
 import com.tibco.sonar.plugins.bw5.check.AbstractXmlCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
-import com.tibco.sonar.plugins.bw5.check.activity.catcherror.CatchAllCheck;
 import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw5.source.XmlBw5Source;
 import org.sonar.api.utils.log.Logger;
@@ -24,7 +23,7 @@ import org.sonar.api.utils.log.Loggers;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class HardCodedJndiUserCheck extends AbstractXmlCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = Loggers.get(HardCodedJndiUserCheck.class);
     public static final String RULE_KEY = "SharedJmsHardCodedJndiUser";
     public static final String CONFIG_ELEMENT_NAME = "config";
 

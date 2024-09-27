@@ -36,12 +36,11 @@ public class ForEachMappingCheck extends AbstractProcessCheck {
             
             boolean foundOld = node.getAttributes().getNamedItem("expression") != null && node.getAttributes().getNamedItem("expression").getTextContent().contains("xsl:for-each");
             boolean foundNew = activity.getExpression() != null && activity.getExpression().contains("xsl:for-each");
-            
-            if (foundOld || foundNew) {
-            	if (!isRuleDisabled(activity)) {
-            		reportIssueOnFile("For-Each is used in the Input mapping of activity " + activity.getName() + ". For performance reasons it is recommended to use Copy-Of instead of For-Each in the Input mapping whenever possible. ",XmlHelper.getLineNumber(activity.getNode()));
-            	}
+
+            if ((foundOld || foundNew) && !isRuleDisabled(activity)) {
+                reportIssueOnFile("For-Each is used in the Input mapping of activity " + activity.getName() + ". For performance reasons it is recommended to use Copy-Of instead of For-Each in the Input mapping whenever possible. ",XmlHelper.getLineNumber(activity.getNode()));
             }
+
         }
 
         LOG.debug("Validation ended for rule: " + RULE_KEY);

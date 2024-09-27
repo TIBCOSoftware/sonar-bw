@@ -16,32 +16,36 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class Loggers {
 
+    private Loggers(){
+
+    }
+
     private static String loggerImplementationClass = "com.tibco.utils.bw6.logger.impl.SysOutLogger";
 
     public static void setLoggerImplementation(String className){
         loggerImplementationClass =  className;
     }
 
-    public static Logger get(Class className) {
+    public static Logger get(Class<?> className) {
 
-        Class c = null;
+        Class<?> c = null;
         Logger logger;
         try {
             c = Class.forName(loggerImplementationClass);
         } catch (ClassNotFoundException e) {
-
+            return new SysOutLogger(className);
         }
 
-        if (c != null) {
 
-            try {
-                logger = (Logger) c.getConstructor(Class.class).newInstance(className);
-                return logger;
-            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
-                System.err.println("Error generating the logger component: " + e.getMessage());
-            }
 
+        try {
+            logger = (Logger) c.getConstructor(Class.class).newInstance(className);
+            return logger;
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
+            System.err.println("Error generating the logger component: " + e.getMessage());
         }
+
+
 
         return new SysOutLogger(className);
 

@@ -72,17 +72,9 @@ public class ProcessRuleDefinition implements RulesDefinition {
         rule.setHtmlDescription(description);
     }
 
-    public static String getRepositoryKeyForLanguage(String languageKey) {
-        return REPOSITORY_KEY;
-    }
-
-    public static String getRepositoryNameForLanguage(String languageName) {
-        return REPOSITORY_NAME;
-    }
-
     @Override
     public void define(Context context) {
-        LANGUAGE_KEYS.forEach((languageKey) -> {
+        LANGUAGE_KEYS.forEach(languageKey -> {
             defineRulesForLanguage(context, ProcessRuleDefinition.REPOSITORY_KEY, ProcessRuleDefinition.REPOSITORY_NAME,
                     languageKey);
         });

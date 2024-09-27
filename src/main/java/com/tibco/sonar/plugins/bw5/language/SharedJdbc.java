@@ -12,6 +12,10 @@ package com.tibco.sonar.plugins.bw5.language;
  */
 public class SharedJdbc {
 
+    private SharedJdbc(){
+        
+    }
+
     /**
      * The process language key.
      */

@@ -13,10 +13,6 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSEXIT;
-import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSREPLY;
-import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSRETHROW;
-import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSTHROW;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
@@ -57,11 +53,11 @@ public class ListFileActivityToCheckFileExistenceCheck extends AbstractProcessCh
                         fileTest = act.getProperty("fileName"); 
                    }
                     
-                    if(fileTest != null){
-                        if(FilenameUtils.getExtension(fileTest) != null && !"".equals(FilenameUtils.getExtension(fileTest))){
-                            reportIssueOnFile("ListFiles Activity with name ["+act.getName()+"] is being used for check for a single file existence. This should be replaced for a ReadFile activity with no check content",XmlHelper.getLineNumber(act.getNode()));
-                        }
+
+                    if(fileTest != null && FilenameUtils.getExtension(fileTest) != null && !"".equals(FilenameUtils.getExtension(fileTest))){
+                        reportIssueOnFile("ListFiles Activity with name ["+act.getName()+"] is being used for check for a single file existence. This should be replaced for a ReadFile activity with no check content",XmlHelper.getLineNumber(act.getNode()));
                     }
+
                 }
             }
         }
@@ -78,7 +74,5 @@ public class ListFileActivityToCheckFileExistenceCheck extends AbstractProcessCh
         return LOG;
     }
 
-    private boolean isActivityEnd(String type) {
-        return type != null && (type.equals(BPWSRETHROW) || type.equals(BPWSREPLY) || type.equals(BPWSEXIT) || type.equals(BPWSTHROW));
-    }
+
 }

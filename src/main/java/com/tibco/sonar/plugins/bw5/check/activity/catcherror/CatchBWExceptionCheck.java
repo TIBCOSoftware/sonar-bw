@@ -22,7 +22,7 @@ import org.sonar.api.utils.log.Loggers;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class CatchBWExceptionCheck extends AbstractProcessCatchCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = Loggers.get(CatchBWExceptionCheck.class);
 	public static final String RULE_KEY = "ProcessCatchBWException";
 	public static final String CATCH_ACTIVITY_TYPE = Constants.ACTIVITY_TYPES.CORE_CATCH.getName();
 	public static final String CATCH_ALL_CONFIG_ELEMENT = "catchAll";

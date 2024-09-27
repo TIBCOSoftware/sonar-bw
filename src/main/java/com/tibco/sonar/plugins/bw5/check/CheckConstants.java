@@ -12,7 +12,9 @@ package com.tibco.sonar.plugins.bw5.check;
  */
 public class CheckConstants {
 
-    
+    private CheckConstants(){
+
+    }
 
 public static final String RULE_PROCESS_PROCESSCATCHALL_NAME="Process Catch All";
 public static final String RULE_PROCESS_PROCESSCATCHALL_DESCRIPTION="Check if a catch all activity is present in process file";

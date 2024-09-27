@@ -20,7 +20,7 @@ import org.sonar.api.utils.log.Loggers;
 @Rule(key = CustomCatchCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_CUSTOMPROCESSCATCH_NAME , description = CheckConstants.RULE_PROCESS_CUSTOMPROCESSCATCH_DESCRIPTION, priority = Priority.MAJOR)
 public class CustomCatchCheck extends AbstractProcessCatchCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = Loggers.get(CustomCatchCheck.class);
 	public static final String RULE_KEY = "CustomProcessCatch";
 	
 	public static final String CATCH_ALL_CONFIG_ELEMENT = "catchAll";

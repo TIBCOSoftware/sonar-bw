@@ -30,7 +30,6 @@ public class DefaultTargetNamespaceCheck extends AbstractProcessCheck {
         Process process = processSource.getProcessModel();            
         LOG.debug("Target namespace for process [" + process.getBasename() + "]: " + process.getNamespace());
         if (process.getNamespace() != null && process.getNamespace().startsWith("http://xmlns.example.com/")) {
-            //TODO Add line here
             reportIssueOnFile("Default target namespace is used for this process",XmlHelper.getLineNumber(process.getNode()));
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);

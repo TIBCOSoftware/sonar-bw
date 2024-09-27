@@ -71,7 +71,7 @@ public class MultipleTransitionCheck extends AbstractProcessCheck {
     }
 
     private Map<String, Integer> recordUsages(Process process) {
-    	final HashMap<String, Integer>usages = new HashMap<String, Integer>();
+    	final HashMap<String, Integer>usages = new HashMap<>();
         final Integer defaultCount = Integer.valueOf(0);
 
         for (Map.Entry<String, Transition>entry : process.getTransitions().entrySet()) {

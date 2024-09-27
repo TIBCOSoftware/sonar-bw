@@ -37,11 +37,11 @@ public class LastActivityAndEndActivityCheck extends AbstractProcessCheck {
   
             
             for(Activity activity : process.getActivities()){
-                if(activity.getOutputTransitions().isEmpty() && !process.belongActivityToGroup(activity)){
-                    if(activity.getType() == null || !isActivityEnd(activity.getType())){
-                        reportIssueOnFile("End activity ["+activity.getName()+"] shouldn't be the last activity of the flow, as this should end with an End activity",XmlHelper.getLineNumber(activity.getNode()));                      
-                    }
+
+                if((activity.getOutputTransitions().isEmpty() && !process.belongActivityToGroup(activity)) && (activity.getType() == null || !isActivityEnd(activity.getType()))){
+                    reportIssueOnFile("End activity ["+activity.getName()+"] shouldn't be the last activity of the flow, as this should end with an End activity",XmlHelper.getLineNumber(activity.getNode()));
                 }
+
             }
            
         }

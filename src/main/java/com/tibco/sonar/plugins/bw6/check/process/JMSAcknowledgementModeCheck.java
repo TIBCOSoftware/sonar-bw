@@ -32,7 +32,7 @@ public class JMSAcknowledgementModeCheck extends AbstractProcessCheck {
     protected void validate(ProcessSource processSource) {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         List<Activity> activities = processSource.getProcessModel().getActivities();
-        activities.forEach((activity) -> {
+        activities.forEach(activity -> {
             if (activity.getType() != null && activity.getType().contains("bw.jms.getmsg")) {
                 LOG.debug("JMS Get Message activity detected");
                 if(!activity.hasProperty("ackMode")){
@@ -42,11 +42,9 @@ public class JMSAcknowledgementModeCheck extends AbstractProcessCheck {
         });
         
         List<EventSource> eventSources = processSource.getProcessModel().getEventSources();
-        eventSources.forEach((eventSource) -> {
-            if (eventSource.getType() != null && (eventSource.getType().contains("bw.jms.signalin") || eventSource.getType().contains("bw.jms.receive"))) {
-                if(!eventSource.hasProperty("ackMode")){
-                    reportIssueOnFile("Auto Acknowledgement mode is set in the JMS activity " + eventSource.getName() + ".  Avoid using Auto Acknowledgement to minimize the risk of data loss.",XmlHelper.getLineNumber(eventSource.getNode()));
-                }
+        eventSources.forEach(eventSource -> {
+            if (eventSource.getType() != null && (eventSource.getType().contains("bw.jms.signalin") || eventSource.getType().contains("bw.jms.receive")) && !eventSource.hasProperty("ackMode")) {
+                reportIssueOnFile("Auto Acknowledgement mode is set in the JMS activity " + eventSource.getName() + ".  Avoid using Auto Acknowledgement to minimize the risk of data loss.",XmlHelper.getLineNumber(eventSource.getNode()));
             }
         });
         LOG.debug("Validation ended for rule: " + RULE_KEY);

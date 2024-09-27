@@ -33,7 +33,7 @@ public class JaxbHelper {
 	/**
 	 * 
 	 */
-	public final static String UTF8_ENCODING = "UTF-8";
+	public static final String UTF8_ENCODING = "UTF-8";
 
 	/**
 	 * @param obj

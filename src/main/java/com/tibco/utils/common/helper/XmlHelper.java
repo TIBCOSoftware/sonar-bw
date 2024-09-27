@@ -78,8 +78,8 @@ public class XmlHelper {
 
     }
 
-    final static String LINE_NUMBER_KEY_NAME = "lineNumber";
-    final static String exceptionMsg = "Can't create SAX parser / DOM builder.";
+    static final String LINE_NUMBER_KEY_NAME = "lineNumber";
+    static final String EXCEPTION_MSG = "Can't create SAX parser / DOM builder.";
 
 
     public static Document getDocument(File file) {
@@ -103,7 +103,7 @@ public class XmlHelper {
         			Thread.currentThread().setContextClassLoader(ocl);
         		}
             } catch (final ParserConfigurationException e) {
-                throw new RuntimeException(exceptionMsg, e);
+                throw new RuntimeException(EXCEPTION_MSG, e);
             }
 
             final Stack<Element> elementStack = new Stack<Element>();
@@ -189,10 +189,10 @@ public class XmlHelper {
         			Thread.currentThread().setContextClassLoader(ocl);
         		}
             } catch (final ParserConfigurationException e) {
-                throw new RuntimeException(exceptionMsg, e);
+                throw new RuntimeException(EXCEPTION_MSG, e);
             }
 
-            final Stack<Element> elementStack = new Stack<Element>();
+            final Stack<Element> elementStack = new Stack<>();
             final StringBuilder textBuffer = new StringBuilder();
 
             final DefaultHandler handler = new DefaultHandler() {
@@ -244,9 +244,8 @@ public class XmlHelper {
             };
             parser.parse(file, handler);
             return doc;
-        } catch (SAXException ex) {
+        } catch (SAXException | IOException ex) {
             //TODO LoggerFactory.getLogger(XmlHelper.class.getName()).error(null, ex);
-        } catch(IOException ex){
         }
         return null;
     }
@@ -272,7 +271,7 @@ public class XmlHelper {
         			Thread.currentThread().setContextClassLoader(ocl);
         		}
             } catch (final ParserConfigurationException e) {
-                throw new RuntimeException(exceptionMsg, e);
+                throw new RuntimeException(EXCEPTION_MSG, e);
             }
 
             final Stack<Element> elementStack = new Stack<Element>();

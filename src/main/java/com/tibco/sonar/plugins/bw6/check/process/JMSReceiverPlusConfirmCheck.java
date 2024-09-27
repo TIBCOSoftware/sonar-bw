@@ -34,7 +34,7 @@ public class JMSReceiverPlusConfirmCheck extends AbstractProcessCheck {
         
         
         
-        activities.forEach((activity) -> {
+        activities.forEach(activity -> {
             
             
             if (activity.getType() != null && activity.getType().contains("bw.jms.receive")) {

@@ -6,48 +6,40 @@
 
 package com.tibco.utils.standalone;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import com.tibco.sonar.plugins.bw.check.AbstractCheck;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 
 public class RulesInfo {
 
-    final static Pattern p1 = Pattern.compile(".*<h3>.*</h3>.+?<p>(.+)</p>.*<h3>.*</h3>.*<h3>.*</h3>.*",
+    static final Pattern p1 = Pattern.compile(".*<h3>.*</h3>.+?<p>(.+)</p>.*<h3>.*</h3>.*<h3>.*</h3>.*",
             Pattern.MULTILINE | Pattern.DOTALL);
-    final static Pattern p2 = Pattern.compile(".*<h3>.*</h3>.*<h3>.*</h3>.+?<p>(.+)</p>.*<h3>.*</h3>.*",
+    static final Pattern p2 = Pattern.compile(".*<h3>.*</h3>.*<h3>.*</h3>.+?<p>(.+)</p>.*<h3>.*</h3>.*",
             Pattern.MULTILINE | Pattern.DOTALL);
-    final static Pattern p3 = Pattern.compile(".*<h3>.*</h3>.*<h3>.*</h3>.*<h3>.*</h3>.+?<p>(.+)</p>.*",
+    static final Pattern p3 = Pattern.compile(".*<h3>.*</h3>.*<h3>.*</h3>.*<h3>.*</h3>.+?<p>(.+)</p>.*",
             Pattern.MULTILINE | Pattern.DOTALL);
-    final static Pattern[] fields = {p1, p2, p3};
+    static final Pattern[] fields = {p1, p2, p3};
 
-    public final static String PRIORITY_PARAM = "priority";
-    public final static String PRIORITY_INFO = "INFO";
-    public final static String PRIORITY_MINOR = "MINOR";
-    public final static String PRIORITY_MAJOR = "MAJOR";
-    public final static String PRIORITY_CRITICAL = "CRITICAL";
-    public final static String PRIORITY_BLOCKER = "BLOCKER";
-    private final static String[] PRIORITY_ALL = {PRIORITY_INFO, PRIORITY_MINOR, PRIORITY_MAJOR, PRIORITY_CRITICAL,
-        PRIORITY_BLOCKER};
+    public static final String PRIORITY_PARAM = "priority";
+    public static final String PRIORITY_INFO = "INFO";
+    public static final String PRIORITY_MINOR = "MINOR";
+    public static final String PRIORITY_MAJOR = "MAJOR";
+    public static final String PRIORITY_CRITICAL = "CRITICAL";
+    public static final String PRIORITY_BLOCKER = "BLOCKER";
 
-    public final static String TYPE_PARAM = "type";
-    public final static String TYPE_SMELL = "CODE_SMELL";
-    public final static String TYPE_BUG = "BUG";
-    public final static String TYPE_SECURITY_HOTSPOT = "SECURITY_HOTSPOT";
-    public final static String TYPE_VULNARABILITY = "VULNERABILITY";
-    private final static String[] TYPE_ALL = {TYPE_SMELL, TYPE_BUG, TYPE_SECURITY_HOTSPOT, TYPE_VULNARABILITY};
+    public static final String TYPE_PARAM = "type";
+    public static final String TYPE_SMELL = "CODE_SMELL";
+    public static final String TYPE_BUG = "BUG";
+    public static final String TYPE_SECURITY_HOTSPOT = "SECURITY_HOTSPOT";
+    public static final String TYPE_VULNARABILITY = "VULNERABILITY";
 
-    public class DocumentationException extends Exception {
+    public static class DocumentationException extends Exception {
 
         private static final long serialVersionUID = 1219818459361699505L;
 
@@ -67,7 +59,7 @@ public class RulesInfo {
     }
 
     public List<RuleProperty> getRuleParamsFromRuleClass(AbstractCheck check) {
-        List<RuleProperty> out = new ArrayList();
+        List<RuleProperty> out = new ArrayList<>();
         RuleProperty[] annotationArray = check.getClass().getAnnotationsByType(org.sonar.check.RuleProperty.class);
         if(annotationArray != null){
             out.addAll(Arrays.asList(annotationArray));
@@ -79,8 +71,8 @@ public class RulesInfo {
     public String getHTMLDocForRule(String folder,String rule) throws DocumentationException {
         try {
             String htmlPath = "/org/sonar/l10n/"+folder+"/rules/" + rule + ".html";
-            String info = new String(RulesInfo.class.getResourceAsStream(htmlPath).readAllBytes());
-            return info;
+            return new String(RulesInfo.class.getResourceAsStream(htmlPath).readAllBytes());
+
         } catch (IOException e) {
             e.printStackTrace();
             throw new DocumentationException("Cannot read HTML documentation for rule - " + rule);

@@ -42,25 +42,24 @@ public class PomXmlVersionsHarcodedCheck extends AbstractProjectCheck {
         Project project = resourceXml.getProject();
         LOG.debug("Checking project files");
         
-        if(project != null) {           
-            if(project.getPomFile() != null){
-                Document pom = project.getPomFile();
-                NodeList dependency = XmlHelper.evaluateXPath(pom.getDocumentElement(), "//dependency");
-                if(dependency != null){
-                    for(int i=0;i<dependency.getLength();i++){
-                        Node dep = dependency.item(i);
-                        Element artifactIdEl = XmlHelper.firstChildElement(dep, "artifactId");
-                        String artifactId = artifactIdEl == null ? "" : artifactIdEl.getNodeValue();
-                                                
-                        Element versionEl = XmlHelper.firstChildElement(dep, "version");
-                        String version = versionEl == null ? "" : versionEl.getNodeValue();
-                        
-                        if(!version.startsWith("${")){
-                            reportIssueOnFile("pom.xml version from artifactId ["+artifactId+"] is harcoded: ["+version+"]");
-                        }
+        if(project != null && project.getPomFile() != null) {
+            Document pom = project.getPomFile();
+            NodeList dependency = XmlHelper.evaluateXPath(pom.getDocumentElement(), "//dependency");
+            if(dependency != null){
+                for(int i=0;i<dependency.getLength();i++){
+                    Node dep = dependency.item(i);
+                    Element artifactIdEl = XmlHelper.firstChildElement(dep, "artifactId");
+                    String artifactId = artifactIdEl == null ? "" : artifactIdEl.getNodeValue();
+
+                    Element versionEl = XmlHelper.firstChildElement(dep, "version");
+                    String version = versionEl == null ? "" : versionEl.getNodeValue();
+
+                    if(!version.startsWith("${")){
+                        reportIssueOnFile("pom.xml version from artifactId ["+artifactId+"] is harcoded: ["+version+"]");
                     }
                 }
             }
+
         }
         
     }

@@ -5,8 +5,6 @@
 */
 package com.tibco.sonar.plugins.bw6.check.process;
 
-import java.util.Iterator;
-import java.util.Map;
 
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;

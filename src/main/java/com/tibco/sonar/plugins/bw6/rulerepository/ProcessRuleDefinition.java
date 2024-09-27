@@ -159,9 +159,7 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         new com.tibco.sonar.plugins.bw6.check.project.JKSValidationCheck()
     };
 
-    private String rulesDefinitionFilePath() {
-        return "/rules.xml";
-    }
+
 
     public ProcessRuleDefinition() {
     }
@@ -195,13 +193,6 @@ public final class ProcessRuleDefinition implements RulesDefinition {
 
     }
 
-    public static String getRepositoryKeyForLanguage(String languageKey) {
-        return REPOSITORY_KEY;
-    }
-
-    public static String getRepositoryNameForLanguage(String languageName) {
-        return REPOSITORY_NAME;
-    }
 
     @Override
     public void define(Context context) {

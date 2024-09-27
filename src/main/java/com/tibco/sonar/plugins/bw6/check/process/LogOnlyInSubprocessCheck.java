@@ -31,7 +31,7 @@ public class LogOnlyInSubprocessCheck extends AbstractProcessCheck {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         if (!processSource.getProcessModel().isSubProcess()) {
             List<Activity> list = processSource.getProcessModel().getActivities();
-            list.stream().filter((activity) -> (activity.getType() != null && activity.getType().equals("bw.generalactivities.log"))).forEachOrdered((activity) -> {
+            list.stream().filter(activity -> (activity.getType() != null && activity.getType().equals("bw.generalactivities.log"))).forEachOrdered(activity -> {
                 reportIssueOnFile("The Log activity [" + activity.getName() + "] should be preferrably used in a sub process.  " + processSource.getProcessModel().getBasename() + " is not a subprocess.",XmlHelper.getLineNumber(activity.getNode()));
             });
         }

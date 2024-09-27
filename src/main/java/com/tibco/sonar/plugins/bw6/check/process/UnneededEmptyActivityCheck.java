@@ -33,11 +33,8 @@ public class UnneededEmptyActivityCheck extends AbstractProcessCheck {
         if(process != null){
             for(Activity activity : process.getActivitiesByType(BwpModelConstants.BPWSEMPTY)){
                 LOG.debug("Activty type ["+activity.getType() + "] - ["+activity.getName()+"]");
-                
-                if(activity.getInputTransitions().size() == 1 && activity.getOutputTransitions().size() == 1){
-                    if(!"ERROR".equals(activity.getInputTransitions().get(0).getConditionType())){
-                        reportIssueOnFile("Empty activity ["+activity.getName()+"] should be avoided as it is not helping to make understandable the flow",XmlHelper.getLineNumber(activity.getNode()));
-                    }
+                if(activity.getInputTransitions().size() == 1 && activity.getOutputTransitions().size() == 1 && !"ERROR".equals(activity.getInputTransitions().get(0).getConditionType())){
+                    reportIssueOnFile("Empty activity ["+activity.getName()+"] should be avoided as it is not helping to make understandable the flow",XmlHelper.getLineNumber(activity.getNode()));
                 }
             }
         }

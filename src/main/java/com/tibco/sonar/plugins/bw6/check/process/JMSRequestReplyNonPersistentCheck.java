@@ -31,7 +31,7 @@ public class JMSRequestReplyNonPersistentCheck extends AbstractProcessCheck {
     protected void validate(ProcessSource processSource) {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         List<Activity> activities = processSource.getProcessModel().getActivitiesByType("bw.jms.requestreply");
-        activities.forEach((activity) -> {
+        activities.forEach(activity -> {
                 if(!activity.hasProperty("deliveryMode")){
                     reportIssueOnFile("PERSISTENT Delivery Mode is set in the JMS activity [" + activity.getName() + "].  Avoid using PERSISTENT message with Request/Reply communication to increase performance.",XmlHelper.getLineNumber(activity.getNode()));
                 }

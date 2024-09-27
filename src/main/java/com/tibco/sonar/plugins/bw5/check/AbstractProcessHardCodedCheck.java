@@ -60,7 +60,7 @@ public abstract class AbstractProcessHardCodedCheck extends
         // For each activity found
         for (Activity activity : activities) {
             // By default prepare to check activity configuration
-            Boolean checkConfig = true;
+            boolean checkConfig = true;
             // If input binding xpath is defined in order
             // to retrieve a configuration node to check	
             if (getInputBindingXPath() != null && !getInputBindingXPath().isEmpty()) {

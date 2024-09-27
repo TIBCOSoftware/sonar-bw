@@ -33,13 +33,12 @@ public class ChoiceOtherwiseCheck extends AbstractProcessCheck {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         Process process = processSource.getProcessModel();
         List<Activity> activities = process.getActivities();
-        activities.forEach((activity) -> {
+        activities.forEach(activity -> {
             String expr = activity.getExpression();
-            if (expr != null) {
-                if (expr.contains("xsl:choose") && !expr.contains("xsl:otherwise")) {
-                    reportIssueOnFile("The choice statement in activity input of " + activity.getName() + " does not include the option otherwise",XmlHelper.getLineNumber(activity.getNode()));
-                }
+            if (expr != null && expr.contains("xsl:choose") && !expr.contains("xsl:otherwise")) {
+                reportIssueOnFile("The choice statement in activity input of " + activity.getName() + " does not include the option otherwise",XmlHelper.getLineNumber(activity.getNode()));
             }
+
         });
         LOG.debug("Validation ended for rule: " + RULE_KEY);
     }

@@ -44,16 +44,16 @@ public class CheckpointInTransation extends AbstractProcessCheck {
             }
         }
 
-        if (groups.size() > 0 && runvalidationflag) {
+        if (!groups.isEmpty() && runvalidationflag) {
             for (Activity activity : process.getActivities()) {
                 if (activity.getType() != null && activity.getType().equals("bw.internal.checkpoint")) {
                     NodeList nodes = activity.getNode().getChildNodes();
                     for (int i = 0; i < nodes.getLength(); i++) {
                         if (nodes.item(i).getNodeName().equals("bpws:targets")) {
-                            NodeList transitions_To = nodes.item(i).getChildNodes();
-                            for (int j = 0; j < transitions_To.getLength(); j++) {
-                                if (transitions_To.item(j).getNodeName().equals("bpws:target")) {
-                                    String transitionName = transitions_To.item(j).getAttributes().getNamedItem("linkName").getTextContent();
+                            NodeList transitionsTo = nodes.item(i).getChildNodes();
+                            for (int j = 0; j < transitionsTo.getLength(); j++) {
+                                if (transitionsTo.item(j).getNodeName().equals("bpws:target")) {
+                                    String transitionName = transitionsTo.item(j).getAttributes().getNamedItem("linkName").getTextContent();
                                     if (process.getTransitions().get(transitionName) == null) {
                                         Map<String, String> groupMapping = process.getSynonymsGroupMapping();
                                         transitionName = groupMapping.get(transitionName);
@@ -77,7 +77,7 @@ public class CheckpointInTransation extends AbstractProcessCheck {
             String activityType = activity.getType();
             if (activityType != null) {
                 Map<String, Transition> transition123 = process.getTransitions();
-                transition123.keySet().forEach((key) -> {
+                transition123.keySet().forEach(key -> {
                     int index = key.indexOf("To");
                     String toActivity = key.substring(index + 2);
                     if (toActivity.equals(activity.getName())) {
@@ -87,15 +87,14 @@ public class CheckpointInTransation extends AbstractProcessCheck {
                 });
             }
         } else {
-            if (process.getEventSourceByName(from) == null) {
-                if (process.getGroupByName(from) != null) {
+            if (process.getEventSourceByName(from) == null && process.getGroupByName(from) != null) {
                     if (process.getGroupByName(from).getType().equals("localTX")) {
                         reportIssueOnFile("The Checkpoint activity in the process [" + process.getBasename() + "] is placed within a Transaction group. Checkpoint should not be placed within or in parallel flow to a transaction.",XmlHelper.getLineNumber(process.getGroupByName(from).getNode()));
                     } else if (process.getGroupByName(from).getType().equals("critical")) {
                         reportIssueOnFile("The Checkpoint activity in the process [" + process.getBasename() + "] is placed within a Critical Section group. Checkpoint should not be placed within a Critical Section group.",XmlHelper.getLineNumber(process.getGroupByName(from).getNode()));
                     }
                 }
-            }
+
         }
     }
 

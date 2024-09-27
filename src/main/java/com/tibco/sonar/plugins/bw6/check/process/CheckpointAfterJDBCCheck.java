@@ -34,12 +34,10 @@ public class CheckpointAfterJDBCCheck extends AbstractProcessCheck {
         protected void validate(ProcessSource processSource) {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         Process process = processSource.getProcessModel();
-        process.getActivities().stream().filter((activity) -> (activity.getType() != null && activity.getType().equals("bw.internal.checkpoint"))).map((activity) -> {
+        process.getActivities().stream().filter(activity -> (activity.getType() != null && activity.getType().equals("bw.internal.checkpoint"))).map((activity) -> {
             LOG.debug("Checkpoint activity detected");
             return activity;
-        }).forEachOrdered((activity) -> {
-            checkPreviousActivities(activity);
-        });
+        }).forEachOrdered(this::checkPreviousActivities);
         LOG.debug("Validation ended for rule: " + RULE_KEY);
     }
 
@@ -47,7 +45,7 @@ public class CheckpointAfterJDBCCheck extends AbstractProcessCheck {
         List<Transition> incomingTransitions = activity.getInputTransitions();
 
         LOG.debug("Incoming transitions: " + incomingTransitions);
-        incomingTransitions.forEach((t) -> {
+        incomingTransitions.forEach(t -> {
             if (t.getFromActivity() != null && t.getFromActivity().getType().contains("bw.jdbc.JDBCQuery")) {
                 if (onlyOneViolation) {
                     reportIssueOnFile("The process [" + activity.getProcess().getBasename() +"]  has a Checkpoint activity  ["+t.getFromActivity().getName()+"] placed after a JDBC Query activity.",XmlHelper.getLineNumber(t.getFromActivity().getNode()));

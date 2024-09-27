@@ -52,9 +52,6 @@ public class BWResourceMetricSensor implements Sensor {
         LOG.debug("ProcessRuleSensor - END");
     }
 
-    /*public boolean shouldExecuteOnProject(Project project) {
-        return fileSystem.inputFiles(mainFilesPredicate).iterator().hasNext();
-    }*/
 
     @Override
     public void describe(SensorDescriptor descriptor) {

@@ -56,11 +56,11 @@ public class XSDValidationCheck extends AbstractProjectCheck {
     }
 
     public static String loadSchema(InputFile file) {
-        Schema schema = null;
+
         try {
             String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
             SchemaFactory factory = SchemaFactory.newInstance(language);
-            schema = factory.newSchema(new StreamSource(file.inputStream()));
+            factory.newSchema(new StreamSource(file.inputStream()));
         } catch (Exception e) {
             return e.toString();
         }

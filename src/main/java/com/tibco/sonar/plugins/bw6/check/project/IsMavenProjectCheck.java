@@ -37,10 +37,8 @@ public class IsMavenProjectCheck extends AbstractProjectCheck {
         Project project = resourceXml.getProject();
         LOG.debug("Checking project files");
         
-        if(project != null) {           
-            if(project.getPomFile() == null){
+        if(project != null && project.getPomFile() == null){
                 reportIssueOnFile("BusinessWorks module is not a Maven Project Module");
-            }
         }
         
     }

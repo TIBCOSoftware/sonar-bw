@@ -16,32 +16,32 @@ import com.tibco.utils.standalone.RulesInfo;
 import com.tibco.utils.standalone.RulesInfo.DocumentationException;
 import org.sonar.check.RuleProperty;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 
 public class DocumentationUtil {
 
-	private final static String CODE_START = "**`";
-	private final static String CODE_END = "`**";
+	private static final String CODE_START = "**`";
+	private static final String CODE_END = "`**";
 
-	private final static String EMPH_START = "***";
-	private final static String EMPH_END = "***";
+	private static final String EMPH_START = "***";
+	private static final String EMPH_END = "***";
 
 	private static RulesInfo info;
 
-	private final static int getRulesCount() {
+	private DocumentationUtil() {
+
+	}
+
+	private static int getRulesCount() {
 		return ProcessRuleDefinition.getCheckList().size();
 	}
 
-	private final static int getMeasuresCount() {
-		String measuresSrcDir = "./src/main/java/" + AbstractResourceTotals.class.getPackageName().replaceAll("\\.", "/");
-		int x = new File(measuresSrcDir).listFiles(file -> file.isFile() && file.getName().endsWith("Measure.java")).length;
-		return x;
+	private static int getMeasuresCount() {
+		String measuresSrcDir = "./src/main/java/" + AbstractResourceTotals.class.getPackageName().replace("\\.", "/");
+		return new File(measuresSrcDir).listFiles(file -> file.isFile() && file.getName().endsWith("Measure.java")).length;
 	}
 
-	public static void generate() throws Exception {
+	public static void generate() throws DocumentationException, FileNotFoundException {
 		System.out.println("***** GENERATING BW6 DOCS *****");
 
 		info = new RulesInfo();
@@ -63,53 +63,54 @@ public class DocumentationUtil {
 		System.err.print(false);
 	}
 
-	private final static void writeRulesFile() throws Exception {
+	private static void writeRulesFile() throws FileNotFoundException {
 		FileOutputStream fos = new FileOutputStream("docs/rules/bw6/RULES.md");
-		PrintStream ps = new PrintStream(fos);
+        try (PrintStream ps = new PrintStream(fos)) {
 
-		ps.println("# Available Quality Rules");
-		ps.println();
+            ps.println("# Available Quality Rules");
+            ps.println();
 
-		ps.println(
-		    "This version of the plugin provides " + EMPH_START + getRulesCount() + " quality rules" + EMPH_END
-		        + " and [" + EMPH_START + getMeasuresCount() + " metrics" + EMPH_END + "](../METRICS.md). Note that not"
-		        + " all of the rules will be available by default. Some rules are disabled - as they may not be applicable to"
-		        + " all installations - and some are templates. These must be instantiated as required and configuration parameters provided.");
-		ps.println();
+            ps.println(
+                    "This version of the plugin provides " + EMPH_START + getRulesCount() + " quality rules" + EMPH_END
+                            + " and [" + EMPH_START + getMeasuresCount() + " metrics" + EMPH_END + "](../METRICS.md). Note that not"
+                            + " all of the rules will be available by default. Some rules are disabled - as they may not be applicable to"
+                            + " all installations - and some are templates. These must be instantiated as required and configuration parameters provided.");
+            ps.println();
 
-		ps.println("| Name | Type | Has Parameters | Initial  State | Description |");
-		ps.println("| ---- | ---- | -------------- | -------------- | ----------- |");
+            ps.println("| Name | Type | Has Parameters | Initial  State | Description |");
+            ps.println("| ---- | ---- | -------------- | -------------- | ----------- |");
 
-		ProcessRuleDefinition.getCheckList().stream().sorted((o1, o2) -> o1.getRuleKeyName().compareTo(o2.getRuleKeyName()))
-		    .forEach(rule -> {
-			    try {
-				    String name = rule.getRuleKeyName();
-				    String htmldocs = info.getHTMLDocForRule("bw6",name);
-				    String describe = info.getFieldFromHTMLDoc(htmldocs, 1, true);
-				    String type = getType(rule);
-				    //TODO Revisar el role
-                                    String state = rule instanceof XPathCheck ? "Disabled" : "Enabled";
-				    ps.println("| [`" + name + "`](" + name + ".md) | " + type + " | " + (info.getRuleParamsFromRuleClass(rule).size() > 0 ? "Yes"
-				        : "No") + " | " + state + " | " + describe + " |");
-			    } catch (DocumentationException ex) {
-				    System.err.println(ex.getMessage());
-				    //TODO System.exit(1);
-			    }
-		    });
+            ProcessRuleDefinition.getCheckList().stream().sorted((o1, o2) -> o1.getRuleKeyName().compareTo(o2.getRuleKeyName()))
+                    .forEach(rule -> {
+                        try {
+                            String name = rule.getRuleKeyName();
+                            String htmldocs = info.getHTMLDocForRule("bw6", name);
+                            String describe = info.getFieldFromHTMLDoc(htmldocs, 1, true);
+                            String type = getType(rule);
+//TODO Revisar el role
+                            String state = rule instanceof XPathCheck ? "Disabled" : "Enabled";
+                            ps.println("| [`" + name + "`](" + name + ".md) | " + type + " | " + (info.getRuleParamsFromRuleClass(rule).size() > 0 ? "Yes"
+                                    : "No") + " | " + state + " | " + describe + " |");
+                        } catch (DocumentationException ex) {
+                            System.err.println(ex.getMessage());
+//TODO System.exit(1);
+                        }
+                    });
 
-		ps.println();
-		ps.println("---");
-		ps.println(
-		    "[< Return to STANDALONE operation](../STANDALONE.md) | [<< Return to main README file](../../README.md)");
+            ps.println();
+            ps.println("---");
+            ps.println(
+                    "[< Return to STANDALONE operation](../STANDALONE.md) | [<< Return to main README file](../../README.md)");
 
-		ps.close();
-	}
+
+        }
+    }
 
 	private final static String TYPE_PROCESS = "Process";
 	private final static String TYPE_PROJECT = "Project";
 	private final static String TYPE_RESOURCE = "Resource";
 
-	private final static String getType(AbstractCheck check) {
+	private static String getType(AbstractCheck check) {
 		if (check instanceof AbstractProcessCheck)
 			return TYPE_PROCESS;
 		if (check instanceof AbstractProjectCheck)
@@ -120,72 +121,71 @@ public class DocumentationUtil {
 		return TYPE_PROJECT;
 	}
 
-	private final static void writeRulesFile(AbstractCheck check) throws DocumentationException, IOException {
+	private static void writeRulesFile(AbstractCheck check) throws DocumentationException, IOException {
 
 		System.out.println("Generating documentation file " + check.getRuleKeyName() + ".md");
 
-		FileOutputStream fos = new FileOutputStream("docs/rules/bw6/" + check.getRuleKeyName() + ".md");
-		PrintStream ps = new PrintStream(fos);
+        try (FileOutputStream fos = new FileOutputStream("docs/rules/bw6/" + check.getRuleKeyName() + ".md")) {
+            PrintStream ps = new PrintStream(fos);
 
 
-		String htmldocs = info.getHTMLDocForRule("bw6",check.getRuleKeyName());
-		String shortInfo = info.getFieldFromHTMLDoc(htmldocs, 1, false);
-		String longInfo = info.getFieldFromHTMLDoc(htmldocs, 2, false);
-		String fix = info.getFieldFromHTMLDoc(htmldocs, 3, false);
-		String type = getType(check);
+            String htmldocs = info.getHTMLDocForRule("bw6", check.getRuleKeyName());
+            String shortInfo = info.getFieldFromHTMLDoc(htmldocs, 1, false);
+            String longInfo = info.getFieldFromHTMLDoc(htmldocs, 2, false);
+            String fix = info.getFieldFromHTMLDoc(htmldocs, 3, false);
+            String type = getType(check);
 
-		ps.println("# " + check.getRuleKeyName());
-		ps.println();
+            ps.println("# " + check.getRuleKeyName());
+            ps.println();
 
-		ps.println("## What condition does this detect?");
-		ps.println();
-		ps.println(shortInfo);
-		ps.println();
+            ps.println("## What condition does this detect?");
+            ps.println();
+            ps.println(shortInfo);
+            ps.println();
 
-		switch (type) {
-			case TYPE_PROCESS:
-				ps.println("This is a " + EMPH_START + "Process" + EMPH_END
-				    + " rule - the rule will test each process of the application");
-				break;
-			case TYPE_RESOURCE:
-				ps.println("This is an " + EMPH_START + "Resource" + EMPH_END
-				    + " rule - the rule will test each resource of the application");
-				break;
-			case TYPE_PROJECT:
-				ps.println("This is an " + EMPH_START + "Application" + EMPH_END
-				    + " rule - the rule will test for some condition within the application");
-				break;
-		}
-		ps.println();
-
-
-
-		ps.println("## Why is this condition important?");
-		ps.println();
-		ps.println(longInfo);
-		ps.println();
-
-		
-
-		ps.println("## How to fix it?");
-		ps.println();
-		ps.println(fix);
-		ps.println();
-
-		ps.println("## How do I use this rule?");
-		ps.println();
-
-		writeSonarqubeSection(ps, check);
+            switch (type) {
+                case TYPE_PROCESS:
+                    ps.println("This is a " + EMPH_START + "Process" + EMPH_END
+                            + " rule - the rule will test each process of the application");
+                    break;
+                case TYPE_RESOURCE:
+                    ps.println("This is an " + EMPH_START + "Resource" + EMPH_END
+                            + " rule - the rule will test each resource of the application");
+                    break;
+                case TYPE_PROJECT:
+                    ps.println("This is an " + EMPH_START + "Application" + EMPH_END
+                            + " rule - the rule will test for some condition within the application");
+                    break;
+            }
+            ps.println();
 
 
-		ps.println("---");
-		ps.println(
-		    "[< Return to Rules list](./RULES.md) | [< Return to STANDALONE operation](../STANDALONE.md) | [<< Return to main README file](../../README.md)");
+            ps.println("## Why is this condition important?");
+            ps.println();
+            ps.println(longInfo);
+            ps.println();
 
-		fos.close();
-	}
 
-	private final static void writeSonarqubeSection(PrintStream ps, AbstractCheck check) throws DocumentationException {
+            ps.println("## How to fix it?");
+            ps.println();
+            ps.println(fix);
+            ps.println();
+
+            ps.println("## How do I use this rule?");
+            ps.println();
+
+            writeSonarqubeSection(ps, check);
+
+
+            ps.println("---");
+            ps.println(
+                    "[< Return to Rules list](./RULES.md) | [< Return to STANDALONE operation](../STANDALONE.md) | [<< Return to main README file](../../README.md)");
+
+
+        }
+    }
+
+	private static void writeSonarqubeSection(PrintStream ps, AbstractCheck check)  {
 
 
                 //TODO Do something for XPath Check
@@ -200,7 +200,7 @@ public class DocumentationUtil {
 			    + CODE_START + BWProcessQualityProfile.PROFILE_NAME + CODE_END + "\" quality profile and then disable the rule.");
 		ps.println();
 
-		if (info.getRuleParamsFromRuleClass(check).size() > 0) {
+		if (!info.getRuleParamsFromRuleClass(check).isEmpty()) {
 			ps.println(
 			    "This rule has configuration parameters that may be set within the SonarQube system. To change values clone the default \""
 			        + CODE_START

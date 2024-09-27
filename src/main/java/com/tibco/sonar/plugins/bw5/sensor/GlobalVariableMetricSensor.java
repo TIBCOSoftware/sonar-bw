@@ -28,7 +28,7 @@ import org.w3c.dom.Document;
 
 public class GlobalVariableMetricSensor implements Sensor {
 
-    private final static Logger LOG = Loggers.get(GlobalVariableMetricSensor.class);
+    private static final Logger LOG = Loggers.get(GlobalVariableMetricSensor.class);
     protected FileSystem fileSystem;
 
     private final FilePredicate mainFilesPredicate;

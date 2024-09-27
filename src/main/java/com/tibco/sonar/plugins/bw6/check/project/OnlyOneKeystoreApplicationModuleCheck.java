@@ -49,7 +49,7 @@ public class OnlyOneKeystoreApplicationModuleCheck extends AbstractProjectCheck 
 
             }
 
-            if (keystoreNames.size() > 0) {
+            if (!keystoreNames.isEmpty()) {
                 String keyStoreNames = "";
                 for (String kName : keystoreNames) {
                     keyStoreNames += " " + kName;
