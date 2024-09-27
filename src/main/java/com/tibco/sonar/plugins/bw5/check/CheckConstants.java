@@ -11,11 +11,8 @@ package com.tibco.sonar.plugins.bw5.check;
  * @author avazquez
  */
 public class CheckConstants {
-
-    private CheckConstants(){
-
-    }
-
+    private CheckConstants() {
+     }
 public static final String RULE_PROCESS_PROCESSCATCHALL_NAME="Process Catch All";
 public static final String RULE_PROCESS_PROCESSCATCHALL_DESCRIPTION="Check if a catch all activity is present in process file";
 public static final String RULE_PROCESS_PROCESSCATCHBWEXCEPTION_NAME="Process Catch BWException";
@@ -102,6 +99,7 @@ public static final String RULE_ADBADAPTER_ADBFILESINKFILECOUNTHARDCODINGCHECK_N
 public static final String RULE_ADBADAPTER_ADBFILESINKFILECOUNTHARDCODINGCHECK_DESCRIPTION="Check hard coded fileCount in FileSink in ADB Adapter file";
 public static final String RULE_ADBADAPTER_ADBFILESINKFILELIMITHARDCODINGCHECK_NAME="Adb File Sink File Limit Hardcoding Check";
 public static final String RULE_ADBADAPTER_ADBFILESINKFILELIMITHARDCODINGCHECK_DESCRIPTION="Check hard coded fileLimit in FileSink in ADB Adapter file";
+
 
 
 }

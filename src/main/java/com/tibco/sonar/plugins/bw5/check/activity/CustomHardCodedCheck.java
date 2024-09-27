@@ -10,7 +10,6 @@ package com.tibco.sonar.plugins.bw5.check.activity;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
-
 import com.tibco.sonar.plugins.bw5.check.AbstractProcessHardCodedCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
 import org.sonar.api.utils.log.Logger;

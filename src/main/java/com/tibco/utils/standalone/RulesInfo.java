@@ -6,13 +6,22 @@
 
 package com.tibco.utils.standalone;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import com.tibco.sonar.plugins.bw.check.AbstractCheck;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import com.tibco.sonar.plugins.bw.source.XmlSource;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 
@@ -74,7 +83,7 @@ public class RulesInfo {
             return new String(RulesInfo.class.getResourceAsStream(htmlPath).readAllBytes());
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getLogger(XmlSource.class.getName()).log(Level.SEVERE, null, e);
             throw new DocumentationException("Cannot read HTML documentation for rule - " + rule);
         } catch (NullPointerException e) {
             throw new DocumentationException("Cannot read HTML documentation for rule - " + rule);
