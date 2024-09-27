@@ -85,8 +85,8 @@ public class ProcessRuleSensor implements Sensor {
     protected CheckFactory checkFactory;
     private final FilePredicate mainFilesPredicate;
     private final Checks<Object> checkReturned;
-    protected static Map<String, Integer> foundResources = new HashMap<String, Integer>();
-    protected static Map<String, String> resourceExtensionMapper = new HashMap<String, String>();
+    protected static Map<String, Integer> foundResources = new HashMap<>();
+    protected static Map<String, String> resourceExtensionMapper = new HashMap<>();
 
     public ProcessRuleSensor(FileSystem fileSystem,
             CheckFactory checkFactory) {
@@ -225,7 +225,7 @@ public class ProcessRuleSensor implements Sensor {
             Set<String> referenceServiceName = referencedServices.keySet();
             Set<String> dupReferencedServiceName = new HashSet<>(referenceServiceName);
             dupReferencedServiceName.retainAll(serviceName);
-            if (dupReferencedServiceName.size() > 0) {
+            if (!dupReferencedServiceName.isEmpty()) {
                 String[] deadlockedService = dupReferencedServiceName.toArray(new String[dupReferencedServiceName.size()]);
                 if (deadlockedService != null && deadlockedService.length > 0) {
                     String referencedServiceNameSpace = referencedServices.get(deadlockedService[0]).getNamespace();
@@ -294,7 +294,7 @@ public class ProcessRuleSensor implements Sensor {
 
         LOG.debug("Project Input File: " + projectInputFile);
 
-        parseProjectProperties(context, bwProject);
+        parseProjectProperties(bwProject);
         parseProcesses(inputFiles, projectSource, bwProject);
         parseResources(bwProject, projectSource, context);
 
@@ -436,7 +436,7 @@ public class ProcessRuleSensor implements Sensor {
         fileSystem.inputFiles(mainFilesPredicate).forEach(inputFiles::add);
 
         LOG.info("Searching for BW Process files");
-        inputFiles.forEach((inputFile) -> {
+        inputFiles.forEach(inputFile -> {
             ProcessSource sourceCode = new ProcessSource(projectSource, inputFile); // TODO:  Handle this better....
             Process process = sourceCode.getProcessModel();
             if(process != null){
@@ -587,23 +587,13 @@ public class ProcessRuleSensor implements Sensor {
         return Arrays.asList(out);
     }
 
-    private void parseProjectProperties(SensorContext context, Project project) {
+    private void parseProjectProperties(Project project) {
 
-        parseModuleProperties(project, context);
-        parseModuleSharedVariables(project, context);
-        parseJobSharedVariables(project, context);
+        parseModuleProperties(project);
+        parseModuleSharedVariables(project);
+        parseJobSharedVariables(project);
     }
 
-    /**
-     * This sensor only executes on projects with active XML rules.
-     *
-     * @param inputModule
-     * @return
-     */
-    public boolean shouldExecuteOnProject(InputModule inputModule) {
-        return fileSystem.inputFiles(fileSystem.predicates().hasLanguage(languageKey)).iterator().hasNext();
-
-    }
 
     @Override
     public String toString() {
@@ -617,13 +607,13 @@ public class ProcessRuleSensor implements Sensor {
         .name("ProcessRuleSensor");
     }
 
-    private void parseModuleProperties(Project project, SensorContext context) {
+    private void parseModuleProperties(Project project) {
         LOG.debug("parseModuleProperties - START");
         InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasExtension("bwm"));
         LOG.debug("Input file: " + inputFile);
         try {
             if (inputFile != null) {
-                LOG.debug("Input file: " + inputFile.filename());
+                LOG.debug("Input filename: " + inputFile.filename());
                 XmlFile file = XmlFile.create(inputFile);
                 project.setBwmDocument(file.getDocument());
                 ModuleProperties moduleprops = new ModuleProperties(file.getDocument());
@@ -637,7 +627,7 @@ public class ProcessRuleSensor implements Sensor {
         LOG.debug("parseModuleProperties - END");
     }
 
-    private void parseModuleSharedVariables(Project project, SensorContext context) {
+    private void parseModuleSharedVariables(Project project) {
         LOG.debug("parseModuleSharedVariables - START");
         InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasExtension("msv"));
         LOG.debug("Input file: " + inputFile);
@@ -654,7 +644,7 @@ public class ProcessRuleSensor implements Sensor {
         LOG.debug("parseModuleSharedVariables - END");
     }
 
-    private void parseJobSharedVariables(Project project, SensorContext context) {
+    private void parseJobSharedVariables(Project project) {
         LOG.debug("parseJobSharedVariables - START");
         InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasExtension("jsv"));
         LOG.debug("Input file: " + inputFile);

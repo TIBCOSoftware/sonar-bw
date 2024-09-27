@@ -16,9 +16,9 @@
    protected List<Transition> transitions;
    
    public Group() {
-     this.activities = new java.util.ArrayList();
-     this.groups = new java.util.ArrayList();
-     this.transitions = new java.util.ArrayList();
+     this.activities = new java.util.ArrayList<>();
+     this.groups = new java.util.ArrayList<>();
+     this.transitions = new java.util.ArrayList<>();
    }
    
    public int getWidth() { return this.width; }
@@ -146,7 +146,7 @@
  
    public List<String> getJavaScriptModelAsLines(String parentName)
    {
-     java.util.ArrayList<String> result = new java.util.ArrayList();
+     java.util.ArrayList<String> result = new java.util.ArrayList<>();
      result.addAll(getJavaScriptModelAsLine(parentName));
      for (Activity activity : getActivities()) {
        result.addAll(activity.getJavaScriptModelAsLine(getName()));
@@ -174,7 +174,7 @@
    }
    
    public List<Activity> getActivitiesByType(String activityType) {
-     List<Activity> result = new java.util.ArrayList();
+     List<Activity> result = new java.util.ArrayList<>();
      for (Activity activity : this.activities) {
        if (activity.getType().equals(activityType)) {
          result.add(activity);

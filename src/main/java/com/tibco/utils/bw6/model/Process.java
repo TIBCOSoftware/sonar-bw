@@ -711,25 +711,25 @@ public class Process {
         NodeList transitionNodeList = XmlHelper.evaluateXPath(processXmlDocument.getDocumentElement(), "/process/variables/variable");
         if (transitionNodeList != null) {
             for (int j = 0; j < transitionNodeList.getLength(); j++) {
-                Variable var = new Variable();
-                String name = XmlHelper.getAttributeValue((Element) transitionNodeList.item(j), "name");
+                Variable procVar = new Variable();
+                String nameElement = XmlHelper.getAttributeValue((Element) transitionNodeList.item(j), "name");
                 String internal = XmlHelper.getAttributeValue((Element) transitionNodeList.item(j), "sca-bpel:internal");
                 String privateProperty = XmlHelper.getAttributeValue((Element) transitionNodeList.item(j), "sca-bpel:privateProperty");
                 String source = XmlHelper.getAttributeValue((Element) transitionNodeList.item(j), "tibex:propertySource");
-                var.setName(name);
-                var.setInternal(Boolean.parseBoolean(internal));
-                var.setProperty(Boolean.parseBoolean(privateProperty));
+                procVar.setName(nameElement);
+                procVar.setInternal(Boolean.parseBoolean(internal));
+                procVar.setProperty(Boolean.parseBoolean(privateProperty));
                 if (source != null && !source.isEmpty()) {
-                    var.setSource(true);
-                    var.setValue(source);
+                    procVar.setSource(true);
+                    procVar.setValue(source);
                 } else {
                     Element result = XmlHelper.evalueXPathSingleElement((Element) transitionNodeList.item(j), "from/literal");
                     if (result != null) {
-                        var.setValue(result.getTextContent());
+                        procVar.setValue(result.getTextContent());
                     }
                 }
-                LOG.debug("Variable name: " + var.getName() + " and value: " + var.getValue() + " source: " + var.isSource());
-                variables.add(var);
+                LOG.debug("Variable name: " + procVar.getName() + " and value: " + procVar.getValue() + " source: " + procVar.isSource());
+                variables.add(procVar);
             }
         }
     }

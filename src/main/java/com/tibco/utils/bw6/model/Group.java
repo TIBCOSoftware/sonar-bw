@@ -72,25 +72,25 @@ public class Group extends Activity {
         NodeList transitionNodeList = XmlHelper.evaluateXPath((Element) node, "variables/variable");
         if (transitionNodeList != null) {
             for (int j = 0; j < transitionNodeList.getLength(); j++) {
-                Variable var = new Variable();
+                Variable procVar = new Variable();
                 String name = XmlHelper.getAttributeValue((Element) transitionNodeList.item(j), "name");
                 String internal = XmlHelper.getAttributeValue((Element) transitionNodeList.item(j), "sca-bpel:internal");
                 String privateProperty = XmlHelper.getAttributeValue((Element) transitionNodeList.item(j), "sca-bpel:privateProperty");
                 String source = XmlHelper.getAttributeValue((Element) transitionNodeList.item(j), "tibex:propertySource");
-                var.setName(name);
-                var.setInternal(Boolean.parseBoolean(internal));
-                var.setProperty(Boolean.parseBoolean(privateProperty));
+                procVar.setName(name);
+                procVar.setInternal(Boolean.parseBoolean(internal));
+                procVar.setProperty(Boolean.parseBoolean(privateProperty));
                 if (source != null && !source.isEmpty()) {
-                    var.setSource(true);
-                    var.setValue(source);
+                    procVar.setSource(true);
+                    procVar.setValue(source);
                 } else {
                     Element result = XmlHelper.evalueXPathSingleElement((Element) transitionNodeList.item(j), "from/literal");
                     if (result != null) {
-                        var.setValue(result.getTextContent());
+                        procVar.setValue(result.getTextContent());
                     }
                 }
-                LOG.debug("Variable name: " + var.getName() + " and value: " + var.getValue() + " source: " + var.isSource());
-                variables.add(var);
+                LOG.debug("Variable name: " + procVar.getName() + " and value: " + procVar.getValue() + " source: " + procVar.isSource());
+                variables.add(procVar);
             }
         }
     }
@@ -140,7 +140,7 @@ public class Group extends Activity {
     }
 
     public Activity getFirstActivity() {
-        if (activities.size() > 0) {
+        if (!activities.isEmpty()) {
             Activity activity = activities.get(0);
             return getFirstActivity(activity);
         }
@@ -193,6 +193,7 @@ public class Group extends Activity {
     /**
      * @return the incomingTransitions
      */
+    @Override
     public List<Transition> getInputTransitions() {
         List<Transition> tmp = new ArrayList<>();
         for(Transition tr : inputTransitions){
@@ -203,6 +204,7 @@ public class Group extends Activity {
         return tmp;
     }
 
+    @Override
     public List<Transition> getOutputTransitions() {
         List<Transition> tmp = new ArrayList<>();
         for(Transition tr : outputTransitions){

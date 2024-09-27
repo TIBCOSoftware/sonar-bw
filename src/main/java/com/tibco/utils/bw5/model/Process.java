@@ -35,9 +35,9 @@
    
    protected Starter starter = new Starter();
    protected Ender ender = new Ender();
-   protected List<Activity> activities = new ArrayList();
-   protected List<Group> groups = new ArrayList();
-   protected List<Transition> transitions = new ArrayList();
+   protected List<Activity> activities = new ArrayList<>();
+   protected List<Group> groups = new ArrayList<>();
+   protected List<Transition> transitions = new ArrayList<>();
    
  
    protected Document processXmlDocument;

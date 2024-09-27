@@ -28,8 +28,8 @@ public class Activity extends ProcessNode {
 
     public Activity(Process process) {
         this.process = process;
-        inputTransitions = new ArrayList<Transition>();
-        outputTransitions = new ArrayList<Transition>();
+        inputTransitions = new ArrayList<>();
+        outputTransitions = new ArrayList<>();
     }
 
     public Element getConfiguration() {
@@ -171,16 +171,14 @@ public class Activity extends ProcessNode {
     }
 
     public boolean hasParallelFlow() {
-       if(outputTransitions != null){
-           if(outputTransitions.size() > 1){
-               int out = 0;
-               for(Transition tr : outputTransitions){
-                   if(!"SUCCESSWITHNOCONDITION".equals(tr.getConditionType())){
-                       out++;
-                   }
+       if(outputTransitions != null && outputTransitions.size() > 1){
+           int out = 0;
+           for(Transition tr : outputTransitions){
+               if(!"SUCCESSWITHNOCONDITION".equals(tr.getConditionType())){
+                   out++;
                }
-               return out > 1;
            }
+           return out > 1;
        }
        return false;
     }

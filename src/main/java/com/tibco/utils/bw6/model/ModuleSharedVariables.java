@@ -13,9 +13,8 @@ import org.w3c.dom.Document;
 
 public class ModuleSharedVariables  extends ModuleProperties{
 
-    private static final Logger LOG = Loggers.get(ModuleSharedVariables.class);
-
     
+    @Override
     public String getElementName(){
         return "moduleSharedVariable";
     }

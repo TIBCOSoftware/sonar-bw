@@ -42,7 +42,7 @@ import org.w3c.dom.NodeList;
  */
 public class Project {
 
-    protected static Logger LOG = Loggers.get(Project.class);
+    private static final Logger LOG = Loggers.get(Project.class);
 
     protected File file;
 
@@ -543,10 +543,8 @@ public class Project {
         if (promote != null) {
             for (Component comp : components) {
                 for (Service service : comp.getServices()) {
-                    if (service != null) {
-                        if (promote.equals(comp.getName() + "/" + service.getName())) {
-                            return service;
-                        }
+                    if (service != null && promote.equals(comp.getName() + "/" + service.getName())) {
+                        return service;
                     }
                 }
             }
@@ -657,20 +655,6 @@ public class Project {
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    /**
-     * @return the LOG
-     */
-    public static Logger getLOG() {
-        return LOG;
-    }
-
-    /**
-     * @param aLOG the LOG to set
-     */
-    public static void setLOG(Logger aLOG) {
-        LOG = aLOG;
     }
 
     /**

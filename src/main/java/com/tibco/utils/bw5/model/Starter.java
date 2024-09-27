@@ -10,7 +10,7 @@
  
  public class Starter extends Activity
  {
-   public Node nodeName;
+   protected Node nodeName;
    
    public Starter()
    {

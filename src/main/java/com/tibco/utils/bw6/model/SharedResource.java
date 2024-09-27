@@ -25,7 +25,6 @@ public class SharedResource {
     private String name;
     private String type;
     private Document document;
-    //protected File file;
     protected String fileName;
     private List<SharedResourceParameter> properties = new ArrayList<>();
     

@@ -13,9 +13,9 @@ import org.w3c.dom.Document;
 
 public class JobSharedVariables  extends ModuleProperties{
 
-    private static final Logger LOG = Loggers.get(JobSharedVariables.class);
 
 
+    @Override
     public String getElementName(){
         return "jobSharedVariable";
     }

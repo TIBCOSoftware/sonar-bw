@@ -56,19 +56,8 @@ public class JKSValidationCheck extends AbstractProjectCheck {
                         Certificate cert = keystore.getCertificate(alias);
                         if(cert instanceof X509Certificate){
                             X509Certificate x509cert = (X509Certificate)cert;
-                            try {
-                                x509cert.checkValidity();
-                            } catch (CertificateExpiredException ex) {
-                                reportIssueOnFile("Certificate alias ["+alias+"] is expired:  " + ex.getMessage());
-                            } catch (CertificateNotYetValidException ex) {
-                                reportIssueOnFile("Certificate alias ["+alias+"] is not valid:  " + ex.getMessage());
-                            }
-                            String subjectDN = x509cert.getSubjectDN() == null? "" : x509cert.getSubjectDN().getName();
-                            String issuerDN = x509cert.getIssuerDN()  == null? "" : x509cert.getIssuerDN().getName();
-                            if(subjectDN.equals(issuerDN)){
-                                    reportIssueOnFile("Certificate ["+alias+"] is autosigned");
-                            }
-                            
+                            validateCertAndReportIssue(x509cert, alias);
+
                         }
                     }
                 } catch (KeyStoreException ex) {
@@ -78,6 +67,21 @@ public class JKSValidationCheck extends AbstractProjectCheck {
         }
             
         
+    }
+
+    private void validateCertAndReportIssue(X509Certificate x509cert, String alias) {
+        try {
+            x509cert.checkValidity();
+        } catch (CertificateExpiredException ex) {
+            reportIssueOnFile("Certificate alias ["+ alias +"] is expired:  " + ex.getMessage());
+        } catch (CertificateNotYetValidException ex) {
+            reportIssueOnFile("Certificate alias ["+ alias +"] is not valid:  " + ex.getMessage());
+        }
+        String subjectDN = x509cert.getSubjectDN() == null? "" : x509cert.getSubjectDN().getName();
+        String issuerDN = x509cert.getIssuerDN()  == null? "" : x509cert.getIssuerDN().getName();
+        if(subjectDN.equals(issuerDN)){
+                reportIssueOnFile("Certificate ["+ alias +"] is autosigned");
+        }
     }
 
     @Override

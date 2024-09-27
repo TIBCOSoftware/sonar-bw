@@ -25,9 +25,9 @@ public final class ProcessRuleDefinition implements RulesDefinition {
     private static final String REPOSITORY_NAME = "SonarQube";
     private static final List<String> LANGUAGE_KEYS = Arrays.asList(BWProcessLanguage.KEY);
 
-    private static List<Class> checkRules;
 
-    private static final Class[] check = {
+
+    private static final Class<?>[] check = {
         com.tibco.sonar.plugins.bw6.check.process.NoDescriptionCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.NumberofActivitiesCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.TransitionLabelCheck.class,
@@ -160,10 +160,6 @@ public final class ProcessRuleDefinition implements RulesDefinition {
     };
 
 
-
-    public ProcessRuleDefinition() {
-    }
-
     private void setDescriptionFromHtml(NewRule rule) {
         String htmlPath = "/org/sonar/l10n/bw6/rules/" + rule.key() + ".html";
         String description = "<p></p>";
@@ -202,9 +198,8 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         }
     }
 
-    public static List<Class> getChecks() {
-        checkRules = Arrays.asList(check);
-        return checkRules;
+    public static List<Class<?>> getChecks() {
+        return Arrays.asList(check);
     }
 
     public static List<AbstractCheck> getCheckList() {

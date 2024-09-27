@@ -71,71 +71,47 @@ public class GvHelper {
 		return loadGVFile(new File(file));
 	}
 
-	public static RepositoryType renameGV(RepositoryType inputStructure, String oldGVName, String newGVName)
-			throws Exception {
-		if (inputStructure == null) {
-			throw new Exception("The input global variable structure is null");
-		}
-		if ((inputStructure.getGlobalVariables() == null)
-				|| (inputStructure.getGlobalVariables().getGlobalVariable().isEmpty())) {
-			throw new Exception("The input global variable structure does not contain any GV");
-		}
-		if ((oldGVName == null) || (oldGVName.isEmpty())) {
-			throw new Exception("The old GV name is incorrect: " + oldGVName);
-		}
-		if ((newGVName == null) || (newGVName.isEmpty())) {
-			throw new Exception("The new GV name is incorrect: " + newGVName);
-		}
-		for (GlobalVariableType gv : inputStructure.getGlobalVariables().getGlobalVariable()) {
-			if (gv.getName().equals(oldGVName)) {
-				gv.setName(newGVName);
-				break;
+	public static RepositoryType renameGV(RepositoryType inputStructure, String oldGVName, String newGVName) {
+		if(inputStructure != null && !((inputStructure.getGlobalVariables() == null)
+				|| (inputStructure.getGlobalVariables().getGlobalVariable().isEmpty())) && !((oldGVName == null) || (oldGVName.isEmpty())) && !((newGVName == null) || (newGVName.isEmpty()))) {
+			for (GlobalVariableType gv : inputStructure.getGlobalVariables().getGlobalVariable()) {
+				if (gv.getName().equals(oldGVName)) {
+					gv.setName(newGVName);
+					break;
+				}
 			}
 		}
 
 		return inputStructure;
 	}
 
-	public static void overwriteGVFile(RepositoryType inputStructure, File gvFile) throws Exception {
-		if (inputStructure == null) {
-			throw new Exception("The input global variable structure is null");
+	public static void overwriteGVFile(RepositoryType inputStructure, File gvFile) throws JAXBException, IOException {
+		if(inputStructure != null && !((gvFile.exists()) && (!gvFile.getName().equals(GV_FILE_NAME)))) {
+			FileUtils.write(gvFile, JaxbHelper.objectToXmlString(inputStructure, GV_FILE_QNAME));
 		}
-		if ((gvFile.exists()) && (!gvFile.getName().equals(GV_FILE_NAME))) {
-			throw new IOException("File " + gvFile.getAbsolutePath() + " is not a TIBCO Designer global variable file");
-		}
-
-		FileUtils.write(gvFile, JaxbHelper.objectToXmlString(inputStructure, GV_FILE_QNAME));
 	}
 
-	public static void renameGVInFile(File gvFile, String oldGVName, String newGVName) throws Exception {
+	public static void renameGVInFile(File gvFile, String oldGVName, String newGVName) throws JAXBException, ParserConfigurationException, IOException, SAXException {
 		RepositoryType struct = loadGVFile(gvFile);
 		struct = renameGV(struct, oldGVName, newGVName);
 		overwriteGVFile(struct, gvFile);
 	}
 
-	public static RepositoryType updateGV(RepositoryType inputStructure, String gvName, String newGVValue)
-			throws Exception {
-		if (inputStructure == null) {
-			throw new Exception("The input global variable structure is null");
-		}
-		if ((inputStructure.getGlobalVariables() == null)
-				|| (inputStructure.getGlobalVariables().getGlobalVariable().isEmpty())) {
-			throw new Exception("The input global variable structure does not contain any GV");
-		}
-		if ((gvName == null) || (gvName.isEmpty())) {
-			throw new Exception("The GV name is incorrect: " + gvName);
-		}
-		for (GlobalVariableType gv : inputStructure.getGlobalVariables().getGlobalVariable()) {
-			if (gv.getName().equals(gvName)) {
-				gv.setValue(newGVValue);
-				break;
+	public static RepositoryType updateGV(RepositoryType inputStructure, String gvName, String newGVValue) {
+		if(inputStructure != null && !((inputStructure.getGlobalVariables() == null)
+				|| (inputStructure.getGlobalVariables().getGlobalVariable().isEmpty())) && !((gvName == null) || (gvName.isEmpty()))) {
+			for (GlobalVariableType gv : inputStructure.getGlobalVariables().getGlobalVariable()) {
+				if (gv.getName().equals(gvName)) {
+					gv.setValue(newGVValue);
+					break;
+				}
 			}
 		}
 
 		return inputStructure;
 	}
 
-	public static void updateGVInFile(File gvFile, String gvName, String newGVValue) throws Exception {
+	public static void updateGVInFile(File gvFile, String gvName, String newGVValue) throws JAXBException, ParserConfigurationException, IOException, SAXException {
 		RepositoryType struct = loadGVFile(gvFile);
 		struct = updateGV(struct, gvName, newGVValue);
 		overwriteGVFile(struct, gvFile);
@@ -160,6 +136,7 @@ public class GvHelper {
 		if ((inputStructure == null) || (inputStructure.getGlobalVariables() == null)) {
 			throw new Exception("The input global variable structure is null");
 		}
+
 
 		for (GlobalVariableType newGV : gvList) {
 			for (GlobalVariableType existingGV : inputStructure.getGlobalVariables().getGlobalVariable()) {

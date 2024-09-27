@@ -89,7 +89,7 @@ public class DocumentationUtil {
                             String type = getType(rule);
 //TODO Revisar el role
                             String state = rule instanceof XPathCheck ? "Disabled" : "Enabled";
-                            ps.println("| [`" + name + "`](" + name + ".md) | " + type + " | " + (info.getRuleParamsFromRuleClass(rule).size() > 0 ? "Yes"
+                            ps.println("| [`" + name + "`](" + name + ".md) | " + type + " | " + (!info.getRuleParamsFromRuleClass(rule).isEmpty() ? "Yes"
                                     : "No") + " | " + state + " | " + describe + " |");
                         } catch (DocumentationException ex) {
                             System.err.println(ex.getMessage());
@@ -106,9 +106,9 @@ public class DocumentationUtil {
         }
     }
 
-	private final static String TYPE_PROCESS = "Process";
-	private final static String TYPE_PROJECT = "Project";
-	private final static String TYPE_RESOURCE = "Resource";
+	private static final String TYPE_PROCESS = "Process";
+	private static final String TYPE_PROJECT = "Project";
+	private static final String TYPE_RESOURCE = "Resource";
 
 	private static String getType(AbstractCheck check) {
 		if (check instanceof AbstractProcessCheck)
@@ -145,17 +145,18 @@ public class DocumentationUtil {
 
             switch (type) {
                 case TYPE_PROCESS:
-                    ps.println("This is a " + EMPH_START + "Process" + EMPH_END
+                    ps.println("This is a " + EMPH_START + TYPE_PROCESS + EMPH_END
                             + " rule - the rule will test each process of the application");
                     break;
                 case TYPE_RESOURCE:
-                    ps.println("This is an " + EMPH_START + "Resource" + EMPH_END
+                    ps.println("This is an " + EMPH_START + TYPE_RESOURCE + EMPH_END
                             + " rule - the rule will test each resource of the application");
                     break;
                 case TYPE_PROJECT:
                     ps.println("This is an " + EMPH_START + "Application" + EMPH_END
                             + " rule - the rule will test for some condition within the application");
                     break;
+				default: break;
             }
             ps.println();
 

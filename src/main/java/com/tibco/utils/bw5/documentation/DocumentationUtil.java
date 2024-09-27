@@ -103,8 +103,8 @@ public class DocumentationUtil {
         }
     }
 
-	private final static String TYPE_PROCESS = "Process";
-	private final static String TYPE_PROJECT = "Project";
+	private static final String TYPE_PROCESS = "Process";
+	private static final String TYPE_PROJECT = "Project";
 
 
 	private static String getType(AbstractCheck check) {
@@ -144,6 +144,7 @@ public class DocumentationUtil {
                     ps.println("This is an " + EMPH_START + "Application" + EMPH_END
                             + " rule - the rule will test for some condition within the application");
                     break;
+				default: break;
             }
             ps.println();
 

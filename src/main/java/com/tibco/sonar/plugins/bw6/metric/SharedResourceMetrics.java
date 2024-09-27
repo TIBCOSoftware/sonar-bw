@@ -6,7 +6,6 @@
 package com.tibco.sonar.plugins.bw6.metric;
 
 import java.util.List;
-import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.measures.Metrics;
 // TODO: Recommend to convert to this below...Apprarently. Needs research...
@@ -146,14 +145,14 @@ public class SharedResourceMetrics implements Metrics {
 			.setDomain(MEASURES_DOMANIN).create();
 
 	public static final String BWRESOURCES_KEYSTORE_PROVIDER_KEY = 	"KeystoreProvider";	
-	public static final Metric<Integer> BWRESOURCES_KEYSTORE_PROVIDER = new Metric.Builder("KeystoreProvider",
+	public static final Metric<Integer> BWRESOURCES_KEYSTORE_PROVIDER = new Metric.Builder(BWRESOURCES_KEYSTORE_PROVIDER_KEY,
 			"BW Keystore Providers", Metric.ValueType.INT)
 			.setDescription("Total resources")
 			.setDirection(Metric.DIRECTION_WORST).setQualitative(false)
 			.setDomain(MEASURES_DOMANIN).create();
 
 	public static final String BWRESOURCES_LDAP_AUTHENTICATION_KEY = "LDAPAuthentication"; 		
-	public static final Metric<Integer> BWRESOURCES_LDAP_AUTHENTICATION = new Metric.Builder("LDAPAuthentication",
+	public static final Metric<Integer> BWRESOURCES_LDAP_AUTHENTICATION = new Metric.Builder(BWRESOURCES_LDAP_AUTHENTICATION_KEY,
 			"BW LDAP Authentications", Metric.ValueType.INT)
 			.setDescription("Total resources")
 			.setDirection(Metric.DIRECTION_WORST).setQualitative(false)

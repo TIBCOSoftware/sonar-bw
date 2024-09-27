@@ -10,7 +10,7 @@
  
  public class Ender extends Activity
  {
-   public Node nodeName;
+   protected Node nodeName;
    
    public Ender()
    {
