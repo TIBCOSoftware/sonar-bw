@@ -35,7 +35,7 @@ public class HardCodedUserCheck extends AbstractXmlCheck {
     public static final String NAMING_SECTION_ELEMENT_NAME = "NamingEnvironment";
 
     @Override
-    protected void validate(XmlBw5Source xmlSource) {
+    protected void validateXml(XmlBw5Source xmlSource) {
         Document document = xmlSource.getDocument(false);
         try {
             Element config = XmlHelper.firstChildElement(document.getDocumentElement(), CONFIG_ELEMENT_NAME);

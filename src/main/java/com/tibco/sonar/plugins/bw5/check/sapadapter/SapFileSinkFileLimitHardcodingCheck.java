@@ -32,7 +32,7 @@ public class SapFileSinkFileLimitHardcodingCheck extends AbstractXmlCheck {
 	public static final String FILE_LIMIT_ELEMENT_DESCRIPTION = "Hardcoded File Limit in FileSink of Sap Adapter";
 
 	@Override
-	protected void validate(XmlBw5Source xmlSource) {
+	protected void validateXml(XmlBw5Source xmlSource) {
 		Document document = xmlSource.getFile().getNamespaceAwareDocument();
 		try {
 			Element fileSinkElement = XmlHelper.firstChildElement(document.getDocumentElement(),

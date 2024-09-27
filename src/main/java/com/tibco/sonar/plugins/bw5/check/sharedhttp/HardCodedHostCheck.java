@@ -31,7 +31,7 @@ public class HardCodedHostCheck extends AbstractXmlCheck {
     public static final String HOST_ELEMENT_DESC = "Shared HTTP connection resource host";
 
     @Override
-    protected void validate(XmlBw5Source xmlSource) {
+    protected void validateXml(XmlBw5Source xmlSource) {
         Document document = xmlSource.getDocument(false);
         try {
             Element config = XmlHelper.firstChildElement(

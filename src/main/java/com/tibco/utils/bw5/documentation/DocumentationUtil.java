@@ -36,7 +36,7 @@ public class DocumentationUtil {
 	}
 
 	private static int getMeasuresCount() {
-		return BusinessWorksMetrics.BWRESOURCES_METRICS_LIST.length;
+		return new BusinessWorksMetrics().getMetrics().size();
 	}
 
 	public static void generate() throws FileNotFoundException, DocumentationException {

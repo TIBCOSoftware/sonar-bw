@@ -17,7 +17,6 @@ import java.util.logging.Level;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
@@ -33,8 +32,7 @@ public class GlobalVariableMetricSensor implements Sensor {
 
     private final FilePredicate mainFilesPredicate;
 
-    public GlobalVariableMetricSensor(FileSystem fileSystem,
-            CheckFactory checkFactory) {
+    public GlobalVariableMetricSensor(FileSystem fileSystem) {
         LOG.debug("ProcessRuleSensor - START");
 
         this.fileSystem = fileSystem;

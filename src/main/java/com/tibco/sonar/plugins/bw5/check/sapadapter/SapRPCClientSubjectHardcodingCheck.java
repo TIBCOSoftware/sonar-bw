@@ -33,7 +33,7 @@ public class SapRPCClientSubjectHardcodingCheck extends AbstractXmlCheck {
 	public static final String SUBJECT_ELEMENT_DESCRIPTION = "Hardcoded subject in RPC Client in Sap Adapter";
 
 	@Override
-	protected void validate(XmlBw5Source xmlSource) {
+	protected void validateXml(XmlBw5Source xmlSource) {
 		Document document = xmlSource.getDocument(true);
 		try {
 

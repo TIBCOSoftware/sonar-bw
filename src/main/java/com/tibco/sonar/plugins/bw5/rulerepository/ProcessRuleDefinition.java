@@ -38,7 +38,6 @@ public class ProcessRuleDefinition implements RulesDefinition {
     protected static final String REPOSITORY_NAME = "SonarQube";
     protected static final List<String> LANGUAGE_KEYS = Arrays.asList(BusinessWorks5Language.KEY);
 
-    private static List<Class> checkRules;
 
     public ProcessRuleDefinition() {
     }
@@ -74,13 +73,10 @@ public class ProcessRuleDefinition implements RulesDefinition {
 
     @Override
     public void define(Context context) {
-        LANGUAGE_KEYS.forEach(languageKey -> {
-            defineRulesForLanguage(context, ProcessRuleDefinition.REPOSITORY_KEY, ProcessRuleDefinition.REPOSITORY_NAME,
-                    languageKey);
-        });
+        LANGUAGE_KEYS.forEach(languageKey -> defineRulesForLanguage(context, ProcessRuleDefinition.REPOSITORY_KEY, ProcessRuleDefinition.REPOSITORY_NAME, languageKey));
     }
 
-    public static List<Class> getChecks() {
+    public static List<Class<?>> getChecks() {
         return Arrays.asList(new Class[]{
             //Custom
             com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForStarterProcess.class,

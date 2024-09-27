@@ -65,7 +65,7 @@ public final class BusinessWorksMetrics implements Metrics {
             .setDomain(CoreMetrics.DOMAIN_SIZE).create();
 
     public static final String BWRESOURCES_KEY = "bwresources";
-    public static final Metric[] BWRESOURCES_METRICS_LIST = {
+    protected static final Metric[] BWRESOURCES_METRICS_LIST = {
         BWRESOURCES_JDBC_CONNECTION,
         BWRESOURCES_JMS_CONNECTION,
         BWRESOURCES_HTTP_CONNECTION

@@ -32,7 +32,7 @@ public class SapFileSinkFileCountHardcodingCheck extends AbstractXmlCheck {
 	public static final String FILE_COUNT_ELEMENT_DESCRIPTION = "Hardcoded File Count in FileSink of Sap Adapter";
 
 	@Override
-	protected void validate(XmlBw5Source xmlSource) {
+	protected void validateXml(XmlBw5Source xmlSource) {
 		Document document = xmlSource.getDocument(true);
 		try {
 			Element fileSinkElement = XmlHelper.firstChildElement(document.getDocumentElement(),

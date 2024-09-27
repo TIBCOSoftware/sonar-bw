@@ -40,11 +40,8 @@ public class ApplicationJsonRuleCheck extends AbstractProcessCheck {
             for (int index = 0; index < nodeList.getLength(); index++) {
                 if (nodeList.item(index).getParentNode().getNodeName().equals("type")) {
                     Element typeElement = (Element) nodeList.item(index);
-                    if (typeElement.getParentNode().getNodeName().equals("type")) {
-                        //	System.out.println("Application JSON : " + typeElement.getAttribute("select"));
-                        if (typeElement.getAttribute("select").contains("application-json")) {
+                    if (typeElement.getParentNode().getNodeName().equals("type") && typeElement.getAttribute("select").contains("application-json")) {
                             reportIssueOnFile("'application-json' is not supported. Please replace it with 'application/json'", 1);
-                        }
                     }
                 }
             }

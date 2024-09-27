@@ -17,11 +17,11 @@ import com.tibco.sonar.plugins.bw5.source.XmlBw5Source;
  */
 public abstract class AbstractXmlCheck extends AbstractCheck {
 
-	protected abstract <S extends XmlBw5Source> void validate(S xmlSource);
+	protected abstract <S extends XmlBw5Source> void validateXml(S xmlSource);
 
 	public <S extends Source> void validate(S source) {
 		if(source instanceof XmlBw5Source){
-			validate((XmlBw5Source)source);
+			validateXml((XmlBw5Source)source);
 		}
 	}
 }

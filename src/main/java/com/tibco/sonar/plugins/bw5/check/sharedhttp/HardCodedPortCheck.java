@@ -31,7 +31,7 @@ public class HardCodedPortCheck extends AbstractXmlCheck {
 	public static final String PORT_ELEMENT_DESC = "Shared HTTP connection resource port";
 
 	@Override
-    protected void validate(XmlBw5Source xmlSource) {
+    protected void validateXml(XmlBw5Source xmlSource) {
 		Document document = xmlSource.getDocument(false);
 		try {
 			Element config = XmlHelper.firstChildElement(

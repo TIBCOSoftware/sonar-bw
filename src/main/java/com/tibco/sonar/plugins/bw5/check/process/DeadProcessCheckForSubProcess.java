@@ -39,7 +39,7 @@ public class DeadProcessCheckForSubProcess extends AbstractXmlCheck {
 	public static final String DEAD_CODE_DESCRIPTION = "Dead Code: This sub process is not used any where in the code";
 
 	@Override
-	protected void validate(XmlBw5Source xmlSource) {
+	protected void validateXml(XmlBw5Source xmlSource) {
 		Document document = xmlSource.getDocument(true);
 		try {
 			boolean isDynamicExist = checkDynamicCode();
@@ -76,9 +76,7 @@ public class DeadProcessCheckForSubProcess extends AbstractXmlCheck {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Exception Occured in DeadProcessCheckForSubProcess");
-			//Violation violation = new DefaultViolation(getRuleKey(), 1, DEAD_CODE_DESCRIPTION);
-			//xmlSource.addViolation(violation);
+			LOG.error("Exception Occured in DeadProcessCheckForSubProcess");
 		}
 	}
 

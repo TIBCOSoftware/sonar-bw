@@ -35,7 +35,7 @@ public class HardCodedUrlCheck extends AbstractXmlCheck {
     public static final String URL_ELEMENT_DESC = "Shared JMS connection resource URL";
 
     @Override
-    protected void validate(XmlBw5Source xmlSource) {
+    protected void validateXml(XmlBw5Source xmlSource) {
         Document document = xmlSource.getDocument(false);
         try {
             Element config = XmlHelper.firstChildElement(document.getDocumentElement(), CONFIG_ELEMENT_NAME);

@@ -44,7 +44,7 @@ public class DeadProcessCheckForDynamicSubProcess extends AbstractXmlCheck {
 	List<String> dynamicProcesses=null;
 	
 	@Override
-	protected void validate(XmlBw5Source xmlSource) {
+	protected void validateXml(XmlBw5Source xmlSource) {
 		Document document = xmlSource.getDocument(true);
 		try {
 			boolean isDynamicExist = checkDynamicCode();
@@ -91,9 +91,7 @@ public class DeadProcessCheckForDynamicSubProcess extends AbstractXmlCheck {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Exception Occured in DeadProcessCheckForDynamicSubProcess");
-			//Violation violation = new DefaultViolation(getRuleKey(), 1, DEAD_CODE_DESCRIPTION);
-			//xmlSource.addViolation(violation);
+			LOG.error("Exception Occured in DeadProcessCheckForDynamicSubProcess");
 		}
 	}
 

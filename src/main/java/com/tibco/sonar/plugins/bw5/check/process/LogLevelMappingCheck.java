@@ -31,7 +31,7 @@ public class LogLevelMappingCheck extends AbstractXmlCheck {
 	public static final String LOG_LEVEL_ELEMENT_DESCRIPTION = "Log Level element should be mapped with ServiceLogLevel only";
 
 	@Override
-	protected void validate(XmlBw5Source xmlSource) {
+	protected void validateXml(XmlBw5Source xmlSource) {
 		Document document = xmlSource.getDocument(true);
 		try {
 			NodeList nodeList = document.getDocumentElement().getElementsByTagNameNS(VALUE_OF_ELEMENT_NAMESPACE,

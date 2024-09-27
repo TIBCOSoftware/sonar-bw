@@ -32,7 +32,7 @@ public class AdbFileSinkFileLimitHardcodingCheck extends AbstractXmlCheck {
 	public static final String FILE_LIMIT_ELEMENT_DESCRIPTION = "Hardcoded File Limit in FileSink of Adb Adapter";
 
 	@Override
-	protected void validate(XmlBw5Source xmlSource) {
+	protected void validateXml(XmlBw5Source xmlSource) {
 		Document document = xmlSource.getDocument(true);
 		try {
 			Element fileSinkElement = XmlHelper.firstChildElement(document.getDocumentElement(),

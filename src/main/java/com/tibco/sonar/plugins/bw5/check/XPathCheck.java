@@ -106,7 +106,7 @@ public class XPathCheck extends AbstractCheck {
     }
 
     private boolean isFileIncluded(XmlFile file) {
-        LOG.debug("Checking file name ["+file.getInputFile().absolutePath()+"] against file pattern ["+filePattern+"]");
+        LOG.debug("Checking file name ["+file.getInputFile().filename() +"] against file pattern ["+filePattern+"]");
         return filePattern == null || WildcardPattern.create(filePattern).match(file.getInputFile().absolutePath());
     }
 
