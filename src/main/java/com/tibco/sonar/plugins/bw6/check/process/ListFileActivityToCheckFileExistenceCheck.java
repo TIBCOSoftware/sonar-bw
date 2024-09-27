@@ -38,30 +38,34 @@ public class ListFileActivityToCheckFileExistenceCheck extends AbstractProcessCh
             List<Activity> fileListActivities = process.getActivitiesByType("bw.file.list");
             if(fileListActivities != null){
                 for(Activity act : fileListActivities ){
-                    
-                    String expression = act.getExpression();
-                     String fileTest = null;
-                    if(expression != null){
-                        Pattern pat = Pattern.compile("<fileName><xsl:value-of select=\"([^\"]+)\"/></fileName>");
-                        Matcher m = pat.matcher(expression);
-                        if(m != null && m.find()){
-                            fileTest = m.group(1);
-                            fileTest = fileTest.replaceAll(Pattern.quote("&quot;"), "");
-                        }
-                    }
-                   if(fileTest == null){
-                        fileTest = act.getProperty("fileName"); 
-                   }
-                    
 
-                    if(fileTest != null && FilenameUtils.getExtension(fileTest) != null && !"".equals(FilenameUtils.getExtension(fileTest))){
-                        reportIssueOnFile("ListFiles Activity with name ["+act.getName()+"] is being used for check for a single file existence. This should be replaced for a ReadFile activity with no check content",XmlHelper.getLineNumber(act.getNode()));
-                    }
+                    checkFileActivity(act);
 
                 }
             }
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
+    }
+
+    private void checkFileActivity(Activity act) {
+        String expression = act.getExpression();
+        String fileTest = null;
+        if(expression != null){
+            Pattern pat = Pattern.compile("<fileName><xsl:value-of select=\"([^\"]+)\"/></fileName>");
+            Matcher m = pat.matcher(expression);
+            if(m != null && m.find()){
+                fileTest = m.group(1);
+                fileTest = fileTest.replaceAll(Pattern.quote("&quot;"), "");
+            }
+        }
+        if(fileTest == null){
+             fileTest = act.getProperty("fileName");
+        }
+
+
+        if(fileTest != null && FilenameUtils.getExtension(fileTest) != null && !"".equals(FilenameUtils.getExtension(fileTest))){
+            reportIssueOnFile("ListFiles Activity with name ["+ act.getName()+"] is being used for check for a single file existence. This should be replaced for a ReadFile activity with no check content",XmlHelper.getLineNumber(act.getNode()));
+        }
     }
 
     @Override

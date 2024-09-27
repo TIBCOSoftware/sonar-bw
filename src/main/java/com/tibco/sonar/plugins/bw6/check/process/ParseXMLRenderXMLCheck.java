@@ -37,31 +37,34 @@ public class ParseXMLRenderXMLCheck extends AbstractProcessCheck {
         List<Activity> activityList = process.getActivitiesByType("bw.xml.parsexml");
         if(activityList != null){
             for(Activity activity : activityList){
-                
-                String expression = activity.getExpression();
-                Pattern pattern = Pattern.compile(".*<xsl:value\\-of select=\"\\$([^\"]+)\"/>.*",Pattern.DOTALL | Pattern.MULTILINE);
-                Matcher m = pattern.matcher(expression);
-                if(m.matches()){
-                    String variable = m.group(1);
-                      
-                    List<Activity> renderXmlList = process.getActivitiesByType("bw.xml.renderxml");
-                    if(renderXmlList != null){
-                        for(Activity renderXml : renderXmlList){
-                            if(variable.equals(renderXml.getName())){
-                               reportIssueOnFile("The activity [" + renderXml.getName() + "] should be avoided to be included in the ParseXML activity",XmlHelper.getLineNumber(renderXml.getNode()));
-                            }
-                            
-                        }
-                    }
-                    
-                
-                    }
-                }
+                checkActivity(activity, process);
+            }
                 
             }
         
 
         LOG.debug("Validation ended for rule: " + RULE_KEY);
+    }
+
+    private void checkActivity(Activity activity, Process process) {
+        String expression = activity.getExpression();
+        Pattern pattern = Pattern.compile(".*<xsl:value\\-of select=\"\\$([^\"]+)\"/>.*",Pattern.DOTALL | Pattern.MULTILINE);
+        Matcher m = pattern.matcher(expression);
+        if(m.matches()){
+            String variable = m.group(1);
+
+            List<Activity> renderXmlList = process.getActivitiesByType("bw.xml.renderxml");
+            if(renderXmlList != null){
+                for(Activity renderXml : renderXmlList){
+                    if(variable.equals(renderXml.getName())){
+                       reportIssueOnFile("The activity [" + renderXml.getName() + "] should be avoided to be included in the ParseXML activity",XmlHelper.getLineNumber(renderXml.getNode()));
+                    }
+
+                }
+            }
+
+
+            }
     }
 
     @Override

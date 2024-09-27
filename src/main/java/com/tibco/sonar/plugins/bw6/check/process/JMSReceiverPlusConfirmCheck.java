@@ -40,32 +40,36 @@ public class JMSReceiverPlusConfirmCheck extends AbstractProcessCheck {
             if (activity.getType() != null && activity.getType().contains("bw.jms.receive")) {
                 LOG.debug("JMS Receive Message activity detected");
                 if("client".equals( activity.getProperty("ackMode"))){
-                    List<List<Activity>> flowList = activity.checkFlowArray(true);
-                    if(flowList != null){
-                        for(List<Activity> flow : flowList){
-                            Activity last = activity;
-                            boolean found = false;
-                            for(Activity act : flow){
-                                last = act;
-                                if("bw.generalactivities.confirm".equals(act.getType())){
-                                    found=true;
-                                }
-                            }
-                            if(!found){
-                                reportIssueOnFile("Confirm activitites should cover all OK flows to be ready to consume the message not depending on the logic flow",XmlHelper.getLineNumber(last.getNode()));
-                            }
-                        }
-                        
-                    }
-                    
-                    
+                    checkForConfirmActivity(activity);
+
+
                 }
             }
         });
         
         LOG.debug("Validation ended for rule: " + RULE_KEY);
     }
-    
+
+    private void checkForConfirmActivity(Activity activity) {
+        List<List<Activity>> flowList = activity.checkFlowArray(true);
+        if(flowList != null){
+            for(List<Activity> flow : flowList){
+                Activity last = activity;
+                boolean found = false;
+                for(Activity act : flow){
+                    last = act;
+                    if("bw.generalactivities.confirm".equals(act.getType())){
+                        found=true;
+                    }
+                }
+                if(!found){
+                    reportIssueOnFile("Confirm activitites should cover all OK flows to be ready to consume the message not depending on the logic flow",XmlHelper.getLineNumber(last.getNode()));
+                }
+            }
+
+        }
+    }
+
     @Override
     public String getRuleKeyName() {
         return RULE_KEY;

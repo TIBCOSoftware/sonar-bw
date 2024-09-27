@@ -47,20 +47,24 @@ public class NumberOfPropertiesSameGroupCheck extends AbstractProjectCheck {
             if(propertyPathList != null){
                 LOG.debug("Properties path list: "+propertyPathList.size());
                 for(String propertyPath : propertyPathList){
-                    LOG.debug("Checking Path: "+propertyPath);
-                    List<Property> propertyList = project.getProperties().getPropertyByPath(propertyPath);
-                    if(propertyList != null){
-                        LOG.debug("Number of properties that belong to path: "+propertyPath + " - " + propertyList.size()) ;
-                        if(propertyList.size() > maxProperties){
-                            reportIssueOnFile("Module Property group ["+propertyPath+"] has more properties  ("+propertyList.size()+") that allowed ("+maxProperties+") ");
-                        }
-                    }
-                    
+                    checkProperties(propertyPath, project);
+
                     LOG.debug("Checking Path: "+propertyPath + " DONE");
                 }
             }
         }
         
+    }
+
+    private void checkProperties(String propertyPath, Project project) {
+        LOG.debug("Checking Path: "+ propertyPath);
+        List<Property> propertyList = project.getProperties().getPropertyByPath(propertyPath);
+        if(propertyList != null){
+            LOG.debug("Number of properties that belong to path: "+ propertyPath + " - " + propertyList.size()) ;
+            if(propertyList.size() > maxProperties){
+                reportIssueOnFile("Module Property group ["+ propertyPath +"] has more properties  ("+propertyList.size()+") that allowed ("+maxProperties+") ");
+            }
+        }
     }
 
     @Override

@@ -6,6 +6,7 @@
 package com.tibco.sonar.plugins.bw6.check.process;
 
 
+import com.tibco.utils.common.helper.XmlHelper;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -33,27 +34,31 @@ public class NoOtherwiseConditionCheck extends AbstractProcessCheck {
         Process process = processSource.getProcessModel();
         if(process != null){
             for(Activity activity : process.getActivities()){
-                boolean shouldHaveOtherwise = false;
-                boolean haveOtherwise = false;
-                List<Transition> outcomingTransitionList = activity.getOutputTransitions();
-                if(outcomingTransitionList != null){
-                    for(Transition tr : outcomingTransitionList){
-                        if(tr != null){
-                            LOG.debug("Checking transition ["+tr.getFrom()+"] --- "+  tr.getConditionType() + "  ----> ["+tr.getTo()+"]");
-                            if("SUCCESSWITHCONDITION".equals(tr.getConditionType())){
-                                shouldHaveOtherwise = true;
-                            }else if("SUCCESSWITHNOCONDITION".equals(tr.getConditionType())){
-                                haveOtherwise = true;
-                            }
-                        }
+                checkTransitionsFromActivity(activity);
+            }
+        }
+    }
+
+    private void checkTransitionsFromActivity(Activity activity) {
+        boolean shouldHaveOtherwise = false;
+        boolean haveOtherwise = false;
+        List<Transition> outcomingTransitionList = activity.getOutputTransitions();
+        if(outcomingTransitionList != null){
+            for(Transition tr : outcomingTransitionList){
+                if(tr != null){
+                    LOG.debug("Checking transition ["+tr.getFrom()+"] --- "+  tr.getConditionType() + "  ----> ["+tr.getTo()+"]");
+                    if("SUCCESSWITHCONDITION".equals(tr.getConditionType())){
+                        shouldHaveOtherwise = true;
+                    }else if("SUCCESSWITHNOCONDITION".equals(tr.getConditionType())){
+                        haveOtherwise = true;
                     }
                 }
-                 LOG.debug("Checking transition for activity ["+activity.getName()+"]");
-                if(shouldHaveOtherwise && !haveOtherwise){
-                    //TODO Add line number
-                     reportIssueOnFile("The transition from activity "+activity.getName() +" doesn't have an 'Sucess with no matching' transition to be able to handle all possible outcomes",1);
-                }
             }
+        }
+        LOG.debug("Checking transition for activity ["+ activity.getName()+"]");
+        if(shouldHaveOtherwise && !haveOtherwise){
+            //TODO Add line number
+             reportIssueOnFile("The transition from activity "+ activity.getName() +" doesn't have an 'Sucess with no matching' transition to be able to handle all possible outcomes", XmlHelper.getLineNumber(activity.getNode()));
         }
     }
 

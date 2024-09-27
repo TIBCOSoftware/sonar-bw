@@ -137,7 +137,7 @@ public class DocumentationUtil {
 
             switch (type) {
                 case TYPE_PROCESS:
-                    ps.println("This is a " + EMPH_START + "Process" + EMPH_END
+                    ps.println("This is a " + EMPH_START + TYPE_PROCESS + EMPH_END
                             + " rule - the rule will test each process of the application");
                     break;
                 case TYPE_PROJECT:

@@ -17,6 +17,8 @@ import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 
+import java.util.Objects;
+
 @Rule(
         key = SharedResourceUsingModuleProperty.RULE_KEY,
         name = "Parameter Resource using Module Property",
@@ -38,9 +40,7 @@ public class SharedResourceUsingModuleProperty extends AbstractResourceCheck {
         for (SharedResourceParameter prop : resource.getProperties()) {
             LOG.debug("Parameter name : [" + prop.getName() + "] value: [" + prop.getValue() + "]" + " Global Variable [" + prop.isGlobalVariable() + "] isBinding [" + prop.isBinding() + "] isRequired [" + prop.isRequired() + "]");
         }
-        resource.getProperties().stream().filter((parameter) -> (parameter != null)).filter((parameter) -> (parameter.isRequired() && !parameter.isGlobalVariable())).forEachOrdered((parameter) -> {
-            reportIssueOnFile(String.format("Parameter [" + parameter.getName() + "] should be defined using module property and it is not"));
-        });
+        resource.getProperties().stream().filter(Objects::nonNull).filter(parameter -> (parameter.isRequired() && !parameter.isGlobalVariable())).forEachOrdered(parameter ->  reportIssueOnFile(String.format("Parameter [" + parameter.getName() + "] should be defined using module property and it is not")));
 
         LOG.debug("Finished rule: " + this.getClass());
     }

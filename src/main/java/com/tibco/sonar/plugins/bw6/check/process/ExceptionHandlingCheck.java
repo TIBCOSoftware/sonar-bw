@@ -25,10 +25,8 @@ public class ExceptionHandlingCheck extends AbstractProcessCheck {
     @Override
     protected void validate(ProcessSource processSource) {
         LOG.debug("Start validation for rule: " + RULE_KEY);
-        if (!processSource.getProcessModel().isSubProcess()) {
-            if (processSource.getProcessModel().getCatchcount() == 0) {
-                reportIssueOnFile("Exception is not handled in component process: " + processSource.getProcessModel().getName(),XmlHelper.getLineNumber(processSource.getProcessModel().getNode()));
-            }
+        if (!processSource.getProcessModel().isSubProcess() && processSource.getProcessModel().getCatchcount() == 0) {
+            reportIssueOnFile("Exception is not handled in component process: " + processSource.getProcessModel().getName(),XmlHelper.getLineNumber(processSource.getProcessModel().getNode()));
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
     }

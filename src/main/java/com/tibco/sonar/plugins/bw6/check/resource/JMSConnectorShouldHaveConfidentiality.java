@@ -15,8 +15,6 @@ import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 
 @Rule(
         key = JMSConnectorShouldHaveConfidentiality.RULE_KEY,

@@ -36,20 +36,24 @@ public class HttpClientMustBeUsedinHTTPBindingCheck extends AbstractProcessCheck
             for(Entry<String,Service> entry : process.getProcessReferenceServices().entrySet()){
                 Service reference = entry.getValue();
                 if(reference instanceof Reference){
-                    LOG.debug("Reference detected: " + reference.getName());
-                    Binding binding = reference.getBinding();
-                    if(binding != null){
-                        LOG.debug("Binding detected type: "+binding.getTransportBindingType());
-                        if("HTTP".equals(binding.getTransportBindingType()) && !(binding.getProperty("httpClient")  != null && !"".equals(binding.getProperty("httpClient")) )){
-                            reportIssueOnFile("HTTP Binding ["+reference.getName()+"] has no HTTP Client Resource configured");
-                        }
-                    }
+                    checkReference(reference);
                 }
             }
         }
         LOG.debug("Start validation for rule: " + RULE_KEY);
         
 
+    }
+
+    private void checkReference(Service reference) {
+        LOG.debug("Reference detected: " + reference.getName());
+        Binding binding = reference.getBinding();
+        if(binding != null){
+            LOG.debug("Binding detected type: "+binding.getTransportBindingType());
+            if("HTTP".equals(binding.getTransportBindingType()) && !(binding.getProperty("httpClient")  != null && !"".equals(binding.getProperty("httpClient")) )){
+                reportIssueOnFile("HTTP Binding ["+ reference.getName()+"] has no HTTP Client Resource configured");
+            }
+        }
     }
 
     @Override

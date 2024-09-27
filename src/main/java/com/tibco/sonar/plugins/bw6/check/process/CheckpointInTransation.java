@@ -47,28 +47,32 @@ public class CheckpointInTransation extends AbstractProcessCheck {
         if (!groups.isEmpty() && runvalidationflag) {
             for (Activity activity : process.getActivities()) {
                 if (activity.getType() != null && activity.getType().equals("bw.internal.checkpoint")) {
-                    NodeList nodes = activity.getNode().getChildNodes();
-                    for (int i = 0; i < nodes.getLength(); i++) {
-                        if (nodes.item(i).getNodeName().equals("bpws:targets")) {
-                            NodeList transitionsTo = nodes.item(i).getChildNodes();
-                            for (int j = 0; j < transitionsTo.getLength(); j++) {
-                                if (transitionsTo.item(j).getNodeName().equals("bpws:target")) {
-                                    String transitionName = transitionsTo.item(j).getAttributes().getNamedItem("linkName").getTextContent();
-                                    if (process.getTransitions().get(transitionName) == null) {
-                                        Map<String, String> groupMapping = process.getSynonymsGroupMapping();
-                                        transitionName = groupMapping.get(transitionName);
-                                    }
-                                    Transition transition = process.getTransitions().get(transitionName);
-                                    String from = transition.getFrom();
-                                    findViolation(from, process, processSource);
-                                }
-                            }
-                        }
-                    }
+                    checkActivities(processSource, activity, process);
                 }
             }
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
+    }
+
+    private void checkActivities(ProcessSource processSource, Activity activity, Process process) {
+        NodeList nodes = activity.getNode().getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            if (nodes.item(i).getNodeName().equals("bpws:targets")) {
+                NodeList transitionsTo = nodes.item(i).getChildNodes();
+                for (int j = 0; j < transitionsTo.getLength(); j++) {
+                    if (transitionsTo.item(j).getNodeName().equals("bpws:target")) {
+                        String transitionName = transitionsTo.item(j).getAttributes().getNamedItem("linkName").getTextContent();
+                        if (process.getTransitions().get(transitionName) == null) {
+                            Map<String, String> groupMapping = process.getSynonymsGroupMapping();
+                            transitionName = groupMapping.get(transitionName);
+                        }
+                        Transition transition = process.getTransitions().get(transitionName);
+                        String from = transition.getFrom();
+                        findViolation(from, process, processSource);
+                    }
+                }
+            }
+        }
     }
 
     public void findViolation(String from, Process process, ProcessSource processSource) {

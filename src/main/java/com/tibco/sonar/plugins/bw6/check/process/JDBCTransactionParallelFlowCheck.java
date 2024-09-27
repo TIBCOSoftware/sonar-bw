@@ -35,38 +35,40 @@ public class JDBCTransactionParallelFlowCheck extends AbstractProcessCheck {
             for(Group group : process.getGroups()){
                 LOG.debug("Group type ["+group.getType() + "] - ["+group.getName()+"]");
                 if("localTX".equals(group.getType())){
-                    LOG.debug("Local Transaction detected: ["+ group.getActivities() + "]");                
-                    for(Activity activity : group.getActivities()){
-                        LOG.debug("Activity name ["+activity.getName()+"]");
-                        if(activity.hasParallelFlow()){
-                            List<List<Activity>> flows = activity.checkFlowArray(false);
-                            int flowJDBC = 0;
-                            for(List<Activity> flow : flows){
-                                boolean usingJDBC = false;
-                                String flowString  = "";
-                                for(Activity item : flow){
-                                    flowString += item.getName() + " --> ";
-                                    if(!usingJDBC && item.getType().contains("jdbc")){
-                                        flowJDBC++;
-                                        usingJDBC = true;
-                                    }
-                                   
-                                }
-                                LOG.debug("Flow ["+flowString+"]");
-                            }
-                            if(flowJDBC > 1){
-                                reportIssueOnFile("JDBC Parallel flow inside a transaction group is not supported. So unexpected behavior in runtime will be generated",XmlHelper.getLineNumber(activity.getNode()));
-                            }
-                        }
-                    }
-                        
-                        
-                        
-                    
+                    checkParallelInTransaction(group);
+
+
                 }
             }
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
+    }
+
+    private void checkParallelInTransaction(Group group) {
+        LOG.debug("Local Transaction detected: ["+ group.getActivities() + "]");
+        for(Activity activity : group.getActivities()){
+            LOG.debug("Activity name ["+activity.getName()+"]");
+            if(activity.hasParallelFlow()){
+                List<List<Activity>> flows = activity.checkFlowArray(false);
+                int flowJDBC = 0;
+                for(List<Activity> flow : flows){
+                    boolean usingJDBC = false;
+                    String flowString  = "";
+                    for(Activity item : flow){
+                        flowString += item.getName() + " --> ";
+                        if(!usingJDBC && item.getType().contains("jdbc")){
+                            flowJDBC++;
+                            usingJDBC = true;
+                        }
+
+                    }
+                    LOG.debug("Flow ["+flowString+"]");
+                }
+                if(flowJDBC > 1){
+                    reportIssueOnFile("JDBC Parallel flow inside a transaction group is not supported. So unexpected behavior in runtime will be generated",XmlHelper.getLineNumber(activity.getNode()));
+                }
+            }
+        }
     }
 
     @Override

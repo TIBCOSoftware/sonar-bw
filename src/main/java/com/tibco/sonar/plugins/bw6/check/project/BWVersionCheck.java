@@ -50,16 +50,20 @@ public class BWVersionCheck extends AbstractProjectCheck {
             else {
                 Attributes attr = project.getManifest().getMainAttributes();
 
-                if (attr != null) {
-                    String appModule = attr.getValue("TIBCO-BW-Version");
-                    if (appModule != null) {
-                    int vend = appModule.indexOf('V');
-                    if (vend != -1) { appModule = appModule.substring(0,vend).trim(); }
-                    if (!appModule.matches(baselineBWversionpattern)) {
-                            LOG.debug("Current TIBCO-BW-Version : " + appModule);
-                            reportIssueOnFile("BusinessWorks module is not built with the recommended version");
-                        }
-                    }
+                checkAttributes(attr);
+            }
+        }
+    }
+
+    private void checkAttributes(Attributes attr) {
+        if (attr != null) {
+            String appModule = attr.getValue("TIBCO-BW-Version");
+            if (appModule != null) {
+            int vend = appModule.indexOf('V');
+            if (vend != -1) { appModule = appModule.substring(0,vend).trim(); }
+            if (!appModule.matches(baselineBWversionpattern)) {
+                    LOG.debug("Current TIBCO-BW-Version : " + appModule);
+                    reportIssueOnFile("BusinessWorks module is not built with the recommended version");
                 }
             }
         }

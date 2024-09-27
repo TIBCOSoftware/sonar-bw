@@ -45,22 +45,26 @@ public class BindingShouldHavePolicyAssociatedCheck extends AbstractProjectCheck
                 if(comp.getServices() != null){
                     LOG.debug("Services are not null");
                 for(Service service : comp.getServices()){
-                    if(service != null){
-                        LOG.debug("Service is not null");
-                        Binding binding = service.getBinding();
-                        if(binding != null){
-                            LOG.debug("Binding is not null");
-                            if("HTTP".equals(binding.getTransportBindingType()) && binding.getProperty("policySets") == null){
-                                reportIssueOnFile("HTTP Binding of this component ["+comp.getName()+"] should have a policy associated");
-                            }
-                        }                   
-                    }
+                    checkService(comp, service);
                 }
                 }
             }
         }
             
         
+    }
+
+    private void checkService(Component comp, Service service) {
+        if(service != null){
+            LOG.debug("Service is not null");
+            Binding binding = service.getBinding();
+            if(binding != null){
+                LOG.debug("Binding is not null");
+                if("HTTP".equals(binding.getTransportBindingType()) && binding.getProperty("policySets") == null){
+                    reportIssueOnFile("HTTP Binding of this component ["+ comp.getName()+"] should have a policy associated");
+                }
+            }
+        }
     }
 
     @Override

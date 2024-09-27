@@ -59,32 +59,36 @@ public abstract class AbstractProcessHardCodedCheck extends
         
         // For each activity found
         for (Activity activity : activities) {
-            // By default prepare to check activity configuration
-            boolean checkConfig = true;
-            // If input binding xpath is defined in order
-            // to retrieve a configuration node to check	
-            if (getInputBindingXPath() != null && !getInputBindingXPath().isEmpty()) {
-                // Retrieve target node
-                Node targetedMappedConfig;
-                try {
-                    targetedMappedConfig = XmlHelper.evaluateXpathNode(activity.getInputBindings(), getInputBindingXPath());
-                    if (targetedMappedConfig != null) {
-                        reportIssueOnFile(getMessage());
-                        checkConfig = false;
-                    } else {
-                        checkConfig = true;
-                    }
-                } catch (Exception e) {
-                    // Cannot evaluate XPath query to retrieve the mapping 
-                    // element then check directly in the configuration
-                    checkConfig = true;
-                }
-            }
-            // if check config is possible
-            if (checkConfig && getConfigXPath() != null && !getConfigXPath().isEmpty()) {                
-                reportIssueOnFile(getMessage());
-            }
+            checkActivity(activity);
         }        
     }
-    
+
+    private void checkActivity(Activity activity) {
+        // By default prepare to check activity configuration
+        boolean checkConfig = true;
+        // If input binding xpath is defined in order
+        // to retrieve a configuration node to check
+        if (getInputBindingXPath() != null && !getInputBindingXPath().isEmpty()) {
+            // Retrieve target node
+            Node targetedMappedConfig;
+            try {
+                targetedMappedConfig = XmlHelper.evaluateXpathNode(activity.getInputBindings(), getInputBindingXPath());
+                if (targetedMappedConfig != null) {
+                    reportIssueOnFile(getMessage());
+                    checkConfig = false;
+                } else {
+                    checkConfig = true;
+                }
+            } catch (Exception e) {
+                // Cannot evaluate XPath query to retrieve the mapping
+                // element then check directly in the configuration
+                checkConfig = true;
+            }
+        }
+        // if check config is possible
+        if (checkConfig && getConfigXPath() != null && !getConfigXPath().isEmpty()) {
+            reportIssueOnFile(getMessage());
+        }
+    }
+
 }

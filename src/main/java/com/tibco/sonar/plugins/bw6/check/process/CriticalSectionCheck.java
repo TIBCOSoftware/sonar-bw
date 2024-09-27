@@ -38,9 +38,7 @@ public class CriticalSectionCheck
         for (final Group group : groups) {
             
             if (group.getType().equals("critical")) {
-                group.getActivities().stream().filter(activity -> (activity.getType() != null && CriticalSectionCheck.CONSTANTS.contains(activity.getType()))).forEachOrdered((Activity activity) -> {
-                    reportIssueOnFile("The activity " + activity.getName() + " in process " + process.getBasename() + " should not be used within Critical Section group.",XmlHelper.getLineNumber(activity.getNode()));
-                });
+                group.getActivities().stream().filter(activity -> (activity.getType() != null && CriticalSectionCheck.CONSTANTS.contains(activity.getType()))).forEachOrdered((Activity activity) -> reportIssueOnFile("The activity " + activity.getName() + " in process " + process.getBasename() + " should not be used within Critical Section group.",XmlHelper.getLineNumber(activity.getNode())) );
             }
         }        
         LOG.debug("Validation ended for rule: " + RULE_KEY);

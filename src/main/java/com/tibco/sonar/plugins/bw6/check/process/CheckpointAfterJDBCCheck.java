@@ -34,7 +34,7 @@ public class CheckpointAfterJDBCCheck extends AbstractProcessCheck {
         protected void validate(ProcessSource processSource) {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         Process process = processSource.getProcessModel();
-        process.getActivities().stream().filter(activity -> (activity.getType() != null && activity.getType().equals("bw.internal.checkpoint"))).map((activity) -> {
+        process.getActivities().stream().filter(activity -> (activity.getType() != null && activity.getType().equals("bw.internal.checkpoint"))).map(activity -> {
             LOG.debug("Checkpoint activity detected");
             return activity;
         }).forEachOrdered(this::checkPreviousActivities);

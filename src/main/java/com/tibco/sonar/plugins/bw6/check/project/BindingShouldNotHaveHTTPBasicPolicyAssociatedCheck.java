@@ -44,29 +44,33 @@ public class BindingShouldNotHaveHTTPBasicPolicyAssociatedCheck extends Abstract
             for (Component comp : project.getComponents()) {
                 if (comp.getServices() != null) {
                     for (Service service : comp.getServices()) {
-                        if (service != null) {
-                            Binding binding = service.getBinding();
-                            if (binding != null) {
-                                LOG.debug("Binding Transport Binding Type: [" + binding.getTransportBindingType() + "] and Policies Sets: " + binding.getProperty("policySets"));
-                                if ("HTTP".equals(binding.getTransportBindingType()) && binding.getProperty("policySets") != null) {
-                                    String policyName = binding.getProperty("policySets");
-                                    LOG.debug("Detected policy name: " + policyName);
-                                    Policy p = project.getPolicyByName(policyName);
-                                    if (p != null) {
-                                        LOG.debug("Retrieved policy data from policy name: " + p.getName());
-                                        if ("template_2010:BasicAuthentication".equals(p.getType())) {
-                                            reportIssueOnFile("HTTP Binding of this component [" + comp.getName() + "] should not use HTTP Basic Authentication as their authentication method");
-                                        }
-                                    }
-
-                                }
-                            }
-                        }
+                        checkService(comp, service, project);
                     }
                 }
             }
         }
 
+    }
+
+    private void checkService(Component comp, Service service, Project project) {
+        if (service != null) {
+            Binding binding = service.getBinding();
+            if (binding != null) {
+                LOG.debug("Binding Transport Binding Type: [" + binding.getTransportBindingType() + "] and Policies Sets: " + binding.getProperty("policySets"));
+                if ("HTTP".equals(binding.getTransportBindingType()) && binding.getProperty("policySets") != null) {
+                    String policyName = binding.getProperty("policySets");
+                    LOG.debug("Detected policy name: " + policyName);
+                    Policy p = project.getPolicyByName(policyName);
+                    if (p != null) {
+                        LOG.debug("Retrieved policy data from policy name: " + p.getName());
+                        if ("template_2010:BasicAuthentication".equals(p.getType())) {
+                            reportIssueOnFile("HTTP Binding of this component [" + comp.getName() + "] should not use HTTP Basic Authentication as their authentication method");
+                        }
+                    }
+
+                }
+            }
+        }
     }
 
     @Override

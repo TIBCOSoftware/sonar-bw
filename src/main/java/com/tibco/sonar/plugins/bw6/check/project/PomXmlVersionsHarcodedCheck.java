@@ -47,21 +47,25 @@ public class PomXmlVersionsHarcodedCheck extends AbstractProjectCheck {
             NodeList dependency = XmlHelper.evaluateXPath(pom.getDocumentElement(), "//dependency");
             if(dependency != null){
                 for(int i=0;i<dependency.getLength();i++){
-                    Node dep = dependency.item(i);
-                    Element artifactIdEl = XmlHelper.firstChildElement(dep, "artifactId");
-                    String artifactId = artifactIdEl == null ? "" : artifactIdEl.getNodeValue();
-
-                    Element versionEl = XmlHelper.firstChildElement(dep, "version");
-                    String version = versionEl == null ? "" : versionEl.getNodeValue();
-
-                    if(!version.startsWith("${")){
-                        reportIssueOnFile("pom.xml version from artifactId ["+artifactId+"] is harcoded: ["+version+"]");
-                    }
+                    checkDependency(dependency, i);
                 }
             }
 
         }
         
+    }
+
+    private void checkDependency(NodeList dependency, int i) {
+        Node dep = dependency.item(i);
+        Element artifactIdEl = XmlHelper.firstChildElement(dep, "artifactId");
+        String artifactId = artifactIdEl == null ? "" : artifactIdEl.getNodeValue();
+
+        Element versionEl = XmlHelper.firstChildElement(dep, "version");
+        String version = versionEl == null ? "" : versionEl.getNodeValue();
+
+        if(!version.startsWith("${")){
+            reportIssueOnFile("pom.xml version from artifactId ["+artifactId+"] is harcoded: ["+version+"]");
+        }
     }
 
     @Override

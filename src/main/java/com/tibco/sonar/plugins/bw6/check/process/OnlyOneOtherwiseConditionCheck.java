@@ -6,6 +6,7 @@
 package com.tibco.sonar.plugins.bw6.check.process;
 
 
+import com.tibco.utils.common.helper.XmlHelper;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -42,8 +43,7 @@ public class OnlyOneOtherwiseConditionCheck extends AbstractProcessCheck {
             }
             LOG.debug("Number of otherwise for activity ["+activity.getName()+"]: "+numberOfOtherwiseChecks);
             if (numberOfOtherwiseChecks > 1) {
-                //TODO Add line number
-                reportIssueOnFile("The transition from activity "+activity.getName() +" have more than one 'Success with no matching condition' and must have only one",1);
+                reportIssueOnFile("The transition from activity "+activity.getName() +" have more than one 'Success with no matching condition' and must have only one", XmlHelper.getLineNumber(activity.getNode()));
             }
         });
     }

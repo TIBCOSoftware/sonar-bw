@@ -41,19 +41,23 @@ public class HttpClientSSLShouldHaveConfidentiality extends AbstractResourceChec
             if ("http:HttpClientConfiguration".equals(resource.getType())) {
                 LOG.debug("Detected resource as HTTP Client. Continue to check details");
                 SharedResourceParameter port = resource.getParameterByName("tcpDetails_port");
-                if (port != null) {
-                    LOG.debug("TCP Port: "+port);
-                    if ("443".equals(port.getValue())) {
-                        LOG.debug("Port detected as 443");
-                        if (!(resource.getParameterByName("useSSL") != null || resource.getParameterByName("useDefaultSSL") != null)) {
-                            reportIssueOnFile("Shared resource of type HTTP Client [" + resource.getName() + "] using 443 port is not setting Confidentiality settings");
-                        }
-                    }
-                }
+                checkPort(port, resource);
             }
         }
 
         LOG.debug("Finished rule: " + this.getClass());
+    }
+
+    private void checkPort(SharedResourceParameter port, SharedResource resource) {
+        if (port != null) {
+            LOG.debug("TCP Port: "+ port);
+            if ("443".equals(port.getValue())) {
+                LOG.debug("Port detected as 443");
+                if (!(resource.getParameterByName("useSSL") != null || resource.getParameterByName("useDefaultSSL") != null)) {
+                    reportIssueOnFile("Shared resource of type HTTP Client [" + resource.getName() + "] using 443 port is not setting Confidentiality settings");
+                }
+            }
+        }
     }
 
     @Override
