@@ -58,7 +58,7 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: sonar-businessworks6-plugin
+          name: sonar-businessworks-plugin
           path: ./target
 
   test:
