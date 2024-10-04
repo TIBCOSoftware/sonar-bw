@@ -127,7 +127,7 @@ jobs:
             python /opt/cover2cover.py /workspace/target/site/jacoco/jacoco.xml /workspace/src/main/java/ > ${{ github.workspace }}/target/site/cobertura.xml
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: cobertura-report
           path: ${{ github.workspace }}/target/site/cobertura.xml
