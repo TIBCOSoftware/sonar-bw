@@ -51,7 +51,21 @@ jobs:
           fi
 
       - name: Build with Maven
-        run: mvn $MAVEN_CLI_OPTS -Dproject.versionSuffix=${{ env.VERSION_SUFFIX }} clean initialize package install deploy
+        run: mvn $MAVEN_CLI_OPTS -Dproject.versionSuffix=${{ env.VERSION_SUFFIX }} clean initialize package
+        env:
+          MAVEN_OPTS: ${{ secrets.MAVEN_OPTS }}
+
+      - name: Vulnerability Check
+        id: check
+        run: |
+          if [ "${GITHUB_REF_NAME}" == "main" || "${GITHUB_REF_NAME}" == "develop" ]; then
+            mvn $MAVEN_CLI_OPTS -Dproject.versionSuffix=${{ env.VERSION_SUFFIX }} org.owasp:dependency-check-maven
+          fi
+        env:
+          MAVEN_OPTS: ${{ secrets.MAVEN_OPTS }}
+
+      - name: Deploy with maven with Maven
+        run: mvn $MAVEN_CLI_OPTS -Dproject.versionSuffix=${{ env.VERSION_SUFFIX }} install deploy
         env:
           MAVEN_OPTS: ${{ secrets.MAVEN_OPTS }}
 
