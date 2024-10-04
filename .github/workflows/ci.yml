@@ -65,14 +65,14 @@ jobs:
           MAVEN_OPTS: ${{ secrets.MAVEN_OPTS }}
 
       - name: Deploy with maven with Maven
-        run: mvn $MAVEN_CLI_OPTS -Dproject.versionSuffix=${{ env.VERSION_SUFFIX }} install deploy
+        run: mvn $MAVEN_CLI_OPTS -Dproject.versionSuffix=${{ env.VERSION_SUFFIX }} deploy
         env:
           MAVEN_OPTS: ${{ secrets.MAVEN_OPTS }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: sonar-businessworks-plugin
+          name: sonar-bw
           path: ./target
 
   test:
@@ -101,7 +101,7 @@ jobs:
         run: mvn $MAVEN_CLI_OPTS clean org.jacoco:jacoco-maven-plugin:prepare-agent test jacoco:report
 
       - name: Upload test coverage
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
           path: target/site/jacoco/jacoco.xml
@@ -114,7 +114,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Download JaCoCo report
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: jacoco-report
           path: target/site/jacoco/
