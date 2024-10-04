@@ -20,14 +20,17 @@ import com.tibco.sonar.plugins.bw5.check.sharedjms.HardCodedJndiUrlCheck;
 import com.tibco.sonar.plugins.bw5.check.sharedjms.HardCodedJndiUserCheck;
 import com.tibco.sonar.plugins.bw5.language.BusinessWorks5Language;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinitionAnnotationLoader;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+
 
 /**
  * Replacement for org.sonar.plugins.squid.SquidRuleRepository
@@ -64,7 +67,9 @@ public class ProcessRuleDefinition implements RulesDefinition {
         String htmlPath = "/org/sonar/l10n/bw5/rules/" + rule.key() + ".html";
         String description = "<p></p>";
         try {
-            description = Files.readString(Paths.get(this.getClass().getResource(htmlPath).toExternalForm()),UTF_8);
+            description = new BufferedReader(
+                    new InputStreamReader(this.getClass().getResourceAsStream(htmlPath), StandardCharsets.UTF_8))
+                    .lines().collect(Collectors.joining("\n"));
         } catch (Exception e) {
             description= "<p>Description not available</p>";
         }
