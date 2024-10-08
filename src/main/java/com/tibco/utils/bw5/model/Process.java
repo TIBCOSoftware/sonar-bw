@@ -150,7 +150,7 @@
    private void parseChild(Node node) {
      ElementsName element;
      try {
-       element = ElementsName.valueOf(node.getNodeName());
+       element = ElementsName.valueOf(node.getLocalName());
      } catch (Exception e) {
        return;
      }

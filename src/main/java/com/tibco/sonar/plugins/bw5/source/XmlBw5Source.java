@@ -49,6 +49,7 @@ public class XmlBw5Source extends XmlSource {
 		this.file = xmlFile;
 	}
 
+
 	public XmlBw5Source(InputFile file) {
 		super(file);
 	}
@@ -112,7 +113,7 @@ public class XmlBw5Source extends XmlSource {
 	public void getViolationsHardCodedChild(RuleKey rule, Element parent, String childName, String message){
 	
 		try{
-			Element elem = XmlHelper.firstChildElement(parent, childName);
+			Element elem = XmlHelper.firstChildElement(parent, null, childName);
 			getViolationsHardCodedNode(rule, elem, message);
 		}catch (Exception e) {
 		
@@ -161,7 +162,7 @@ public class XmlBw5Source extends XmlSource {
 	}
 
 
-    private void reportOnIssue(RuleKey ruleKey, int line, String string) {
+    public void reportOnIssue(RuleKey ruleKey, int line, String string) {
           NewIssue issue = context.newIssue();
 
         NewIssueLocation location = issue.newLocation()

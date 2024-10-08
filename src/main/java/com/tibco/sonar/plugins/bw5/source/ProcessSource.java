@@ -32,7 +32,7 @@ public class ProcessSource extends AbstractSource {
         try {
             this.file = XmlFile.create(file);
             this.process = new Process();
-            this.process.setProcessXmlDocument(this.file.getNamespaceUnawareDocument());
+            this.process.setProcessXmlDocument(this.file.getNamespaceAwareDocument());
             process.parse();
         } catch (IOException ex) {
             Logger.getLogger(ProcessSource.class.getName()).log(Level.SEVERE, null, ex);
@@ -43,7 +43,7 @@ public class ProcessSource extends AbstractSource {
 
         this.file = XmlFile.create(file);
         this.process = new Process();
-        this.process.setProcessXmlDocument(this.file.getNamespaceUnawareDocument());
+        this.process.setProcessXmlDocument(this.file.getNamespaceAwareDocument());
         process.parse();
 
     }

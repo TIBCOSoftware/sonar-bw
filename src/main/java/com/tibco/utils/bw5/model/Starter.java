@@ -22,7 +22,7 @@
      this.nodeName = node;
    }
    
-   public Node getNodeName() {
+   public Node getLocalName() {
      return this.nodeName;
    }
  }

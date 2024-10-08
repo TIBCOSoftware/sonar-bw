@@ -76,7 +76,7 @@
    private void parseChild(Node node) {
      Child child;
      try {
-       child = Child.valueOf(node.getNodeName());
+       child = Child.valueOf(node.getLocalName());
      } catch (Exception e) {
        return;
      }

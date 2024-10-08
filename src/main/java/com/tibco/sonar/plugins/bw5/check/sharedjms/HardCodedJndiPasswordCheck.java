@@ -37,11 +37,11 @@ public class HardCodedJndiPasswordCheck extends AbstractXmlCheck {
     protected void validateXml(XmlBw5Source xmlSource) {
         Document document = xmlSource.getDocument(false);
         try {
-            Element config = XmlHelper.firstChildElement(document.getDocumentElement(), CONFIG_ELEMENT_NAME);
+            Element config = XmlHelper.firstChildElement(document.getDocumentElement(), null, CONFIG_ELEMENT_NAME);
             if (config.hasChildNodes()) {
-                Element namingEnvironment = XmlHelper.firstChildElement(config, NAMING_SECTION_ELEMENT_NAME);
+                Element namingEnvironment = XmlHelper.firstChildElement(config, null, NAMING_SECTION_ELEMENT_NAME);
                 if (config.hasChildNodes()) {
-                    Element useJNDI = XmlHelper.firstChildElement(namingEnvironment, JNDI_FLAG_ELEMENT_NAME);
+                    Element useJNDI = XmlHelper.firstChildElement(namingEnvironment, null, JNDI_FLAG_ELEMENT_NAME);
                     if (useJNDI.getTextContent() != null && useJNDI.getTextContent().equals("true")) {
                         xmlSource.findAndValidateHardCodedChild(getRuleKey(), namingEnvironment, JNDI_PWD_ELEMENT_NAME, JNDI_PWD_ELEMENT_DESC);
                     }

@@ -35,7 +35,7 @@ public class HardCodedPortCheck extends AbstractXmlCheck {
 		Document document = xmlSource.getDocument(false);
 		try {
 			Element config = XmlHelper.firstChildElement(
-					document.getDocumentElement(), CONFIG_ELEMENT_NAME);
+					document.getDocumentElement(), null, CONFIG_ELEMENT_NAME);
 			if (config.hasChildNodes()) {
 				xmlSource.findAndValidateHardCodedChild(getRuleKey(), config,
 						PORT_ELEMENT_NAME, PORT_ELEMENT_DESC);

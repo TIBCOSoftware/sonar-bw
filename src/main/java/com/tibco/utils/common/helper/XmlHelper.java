@@ -12,7 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Iterator;
 import java.util.Stack;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -340,7 +342,7 @@ public class XmlHelper {
             NamedNodeMap attributes = node.getAttributes();
             if(attributes != null){
                 for (int i = 0; i < attributes.getLength(); i++) {
-                    String attrName = attributes.item(i).getNodeName();
+                    String attrName = attributes.item(i).getLocalName();
                     if (LINE_NUMBER_KEY_NAME.equals(attrName)) {
                         return Integer.parseInt(attributes.item(i).getTextContent());
                     }
@@ -409,17 +411,34 @@ public class XmlHelper {
     }
 
     public static Element firstChildElement(Element element, String childName) {
-        return firstChildElement(element, null, childName);
+        return firstChildElement(element, "*", childName);
     }
 
     public static Element firstChildElement(Node element, String childName) {
-        return firstChildElement((Element) element, null, childName);
+        return firstChildElement((Element) element, "*", childName);
     }
 
     public static Node evaluateXpathNode(Node rootNode,
             String xPathQuery) {
         try {
             XPath xPath = XPathFactory.newInstance().newXPath();
+            xPath.setNamespaceContext(new NamespaceContext() {
+                @Override
+                public String getNamespaceURI(String prefix) {
+                    // Always return null to ignore the namespace
+                    return null;
+                }
+
+                @Override
+                public String getPrefix(String uri) {
+                    return null;  // Ignore prefixes
+                }
+
+                @Override
+                public Iterator getPrefixes(String uri) {
+                    return null;  // Ignore prefixes
+                }
+            });
             return (Node) xPath.compile(xPathQuery).evaluate(rootNode, XPathConstants.NODE);
         } catch (XPathExpressionException ex) {
             LOG.warn("Failed on executing XPath expression: " + xPathQuery, ex);
@@ -430,6 +449,23 @@ public class XmlHelper {
     public static NodeList evaluateXpathNodeSet(Node rootNode, String xPathQuery) {
         try {
             XPath xPath = XPathFactory.newInstance().newXPath();
+            xPath.setNamespaceContext(new NamespaceContext() {
+                @Override
+                public String getNamespaceURI(String prefix) {
+                    // Always return null to ignore the namespace
+                    return null;
+                }
+
+                @Override
+                public String getPrefix(String uri) {
+                    return null;  // Ignore prefixes
+                }
+
+                @Override
+                public Iterator getPrefixes(String uri) {
+                    return null;  // Ignore prefixes
+                }
+            });
             return (NodeList) xPath.compile(xPathQuery).evaluate(rootNode, XPathConstants.NODESET);
         } catch (XPathExpressionException ex) {
             LOG.warn("Failed on executing XPath expression: " + xPathQuery, ex);

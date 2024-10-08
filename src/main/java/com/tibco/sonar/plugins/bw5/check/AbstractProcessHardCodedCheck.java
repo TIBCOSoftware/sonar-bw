@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.xml.xpath.XPathExpressionException;
 
+import com.tibco.utils.bw5.helper.GvHelper;
 import com.tibco.utils.common.helper.XmlHelper;
 import org.w3c.dom.Node;
 
@@ -87,7 +88,12 @@ public abstract class AbstractProcessHardCodedCheck extends
         }
         // if check config is possible
         if (checkConfig && getConfigXPath() != null && !getConfigXPath().isEmpty()) {
-            reportIssueOnFile(getMessage());
+            Node targetedMappedConfig = XmlHelper.evaluateXpathNode(activity.getConfiguration(), getConfigXPath());
+            if(targetedMappedConfig != null && !GvHelper.isGVReference(targetedMappedConfig.getTextContent())){
+                reportIssueOnFile(getMessage());
+            }
+
+
         }
     }
 

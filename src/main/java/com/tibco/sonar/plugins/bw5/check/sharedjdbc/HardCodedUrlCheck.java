@@ -33,7 +33,7 @@ public class HardCodedUrlCheck extends AbstractXmlCheck {
 	protected void validateXml(XmlBw5Source xmlSource) {
 		Document document = xmlSource.getDocument(false);
 		try{
-			Element config = XmlHelper.firstChildElement(document.getDocumentElement(), CONFIG_ELEMENT_NAME);
+			Element config = XmlHelper.firstChildElement(document.getDocumentElement(), null, CONFIG_ELEMENT_NAME);
 			if(config.hasChildNodes()){
 				xmlSource.findAndValidateHardCodedChild(getRuleKey(), config, URL_ELEMENT_NAME, URL_ELEMENT_DESC);
 			}else{

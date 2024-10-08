@@ -33,7 +33,7 @@ public class HardCodedUserCheck extends AbstractXmlCheck {
 	protected void validateXml(XmlBw5Source xmlSource) {
 		Document document = xmlSource.getDocument(false);
 		try{
-			Element config = XmlHelper.firstChildElement(document.getDocumentElement(), CONFIG_ELEMENT_NAME);
+			Element config = XmlHelper.firstChildElement(document.getDocumentElement(), null, CONFIG_ELEMENT_NAME);
 			if(config.hasChildNodes()){
 				xmlSource.findAndValidateHardCodedChild(getRuleKey(), config, USER_ELEMENT_NAME, USER_ELEMENT_DESC);
 			}else{				

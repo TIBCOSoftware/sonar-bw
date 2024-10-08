@@ -40,9 +40,9 @@ public class HardCodedUrlCheck extends AbstractXmlCheck {
         try {
             Element config = XmlHelper.firstChildElement(document.getDocumentElement(), CONFIG_ELEMENT_NAME);
             if (config.hasChildNodes()) {
-                Element namingEnvironment = XmlHelper.firstChildElement(config, NAMING_SECTION_ELEMENT_NAME);
+                Element namingEnvironment = XmlHelper.firstChildElement(config, null, NAMING_SECTION_ELEMENT_NAME);
                 if (config.hasChildNodes()) {
-                    Element useJNDI = XmlHelper.firstChildElement(namingEnvironment, JNDI_FLAG_ELEMENT_NAME);
+                    Element useJNDI = XmlHelper.firstChildElement(namingEnvironment, null, JNDI_FLAG_ELEMENT_NAME);
                     if (useJNDI.getTextContent() == null || !useJNDI.getTextContent().equals("true")) {
                         xmlSource.findAndValidateHardCodedChild(getRuleKey(), namingEnvironment, URL_ELEMENT_NAME, URL_ELEMENT_DESC);
                     }

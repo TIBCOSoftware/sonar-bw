@@ -87,14 +87,12 @@ public class ProcessRuleDefinition implements RulesDefinition {
             com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForStarterProcess.class,
             com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForSubProcess.class,
             com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForDynamicSubProcess.class,
-            com.tibco.sonar.plugins.bw5.check.process.LogLevelMappingCheck.class,
             com.tibco.sonar.plugins.bw5.check.process.ApplicationJsonRuleCheck.class,
             // Common
             com.tibco.sonar.plugins.bw5.check.process.NoDescriptionCheck.class,
             // Catch activities
             com.tibco.sonar.plugins.bw5.check.activity.catcherror.CustomCatchCheck.class,
             com.tibco.sonar.plugins.bw5.check.activity.catcherror.CatchAllCheck.class,
-            com.tibco.sonar.plugins.bw5.check.activity.catcherror.CatchBWExceptionCheck.class,
             // Generic Reusable Rule for Hard Coded Values
             com.tibco.sonar.plugins.bw5.check.activity.CustomHardCodedCheck.class,
             // HTTP Request Activity
@@ -139,14 +137,12 @@ public class ProcessRuleDefinition implements RulesDefinition {
                 new com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForStarterProcess(),
                 new com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForSubProcess(),
                 new com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForDynamicSubProcess(),
-                new com.tibco.sonar.plugins.bw5.check.process.LogLevelMappingCheck(),
                 new com.tibco.sonar.plugins.bw5.check.process.ApplicationJsonRuleCheck(),
                 // Common
                 new com.tibco.sonar.plugins.bw5.check.process.NoDescriptionCheck(),
                 // Catch activities
                 new com.tibco.sonar.plugins.bw5.check.activity.catcherror.CustomCatchCheck(),
                 new com.tibco.sonar.plugins.bw5.check.activity.catcherror.CatchAllCheck(),
-                new com.tibco.sonar.plugins.bw5.check.activity.catcherror.CatchBWExceptionCheck(),
                 // Generic Reusable Rule for Hard Coded Values
                 new com.tibco.sonar.plugins.bw5.check.activity.CustomHardCodedCheck(),
                 // HTTP Request Activity

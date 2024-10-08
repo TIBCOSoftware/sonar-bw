@@ -38,11 +38,11 @@ public class HardCodedUserCheck extends AbstractXmlCheck {
     protected void validateXml(XmlBw5Source xmlSource) {
         Document document = xmlSource.getDocument(false);
         try {
-            Element config = XmlHelper.firstChildElement(document.getDocumentElement(), CONFIG_ELEMENT_NAME);
+            Element config = XmlHelper.firstChildElement(document.getDocumentElement(), null, CONFIG_ELEMENT_NAME);
             if (config.hasChildNodes()) {
-                Element namingEnvironment = XmlHelper.firstChildElement(config, NAMING_SECTION_ELEMENT_NAME);
+                Element namingEnvironment = XmlHelper.firstChildElement(config, null, NAMING_SECTION_ELEMENT_NAME);
                 if (config.hasChildNodes()) {
-                    Element connectionAttributes = XmlHelper.firstChildElement(config, CREDENTIAL_SECTION_ELEMENT_NAME);
+                    Element connectionAttributes = XmlHelper.firstChildElement(config, null, CREDENTIAL_SECTION_ELEMENT_NAME);
                     if (connectionAttributes.hasChildNodes()) {
                         xmlSource.findAndValidateHardCodedChild(getRuleKey(), connectionAttributes, USER_ELEMENT_NAME, USER_ELEMENT_DESC);
                     } else {
