@@ -62,16 +62,16 @@ public class JDBCTransactionParallelFlowCheck extends AbstractProcessCheck {
     private static int checkJDBCFlowActivities(List<List<Activity>> flows, int flowJDBC) {
         for(List<Activity> flow : flows){
             boolean usingJDBC = false;
-            String flowString  = "";
+            StringBuilder flowString  = new StringBuilder();
             for(Activity item : flow){
-                flowString += item.getName() + " --> ";
+                flowString.append(item.getName()).append(" --> ");
                 if(!usingJDBC && item.getType().contains("jdbc")){
                     flowJDBC++;
                     usingJDBC = true;
                 }
 
             }
-            LOG.debug("Flow ["+flowString+"]");
+            LOG.debug("Flow ["+flowString.toString()+"]");
         }
         return flowJDBC;
     }

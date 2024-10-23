@@ -50,10 +50,7 @@ public class OnlyOneKeystoreApplicationModuleCheck extends AbstractProjectCheck 
             }
 
             if (!keystoreNames.isEmpty()) {
-                String keyStoreNames = "";
-                for (String kName : keystoreNames) {
-                    keyStoreNames += " " + kName;
-                }
+                String keyStoreNames = String.join(" ",keystoreNames);
                 reportIssueOnFile("Application Module has more than one keystore inside [" + keyStoreNames + "]");
             }
         }

@@ -22,7 +22,6 @@ import java.util.Map;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.batch.fs.InputModule;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.batch.sensor.Sensor;
@@ -30,6 +29,7 @@ import org.sonar.api.batch.sensor.SensorContext;
 import com.tibco.utils.bw5.model.Process;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.rule.RuleKey;
+import org.sonar.api.scanner.fs.InputProject;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
@@ -44,7 +44,7 @@ public class ProcessRuleSensor implements Sensor {
     protected List<Process> processList = new ArrayList<>();
     protected FileSystem fileSystem;
     protected String languageKey;
-    protected InputModule project;
+    protected InputProject project;
     protected SensorContext sensorContext;
     protected CheckFactory checkFactory;
     private final FilePredicate mainFilesPredicate;
