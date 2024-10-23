@@ -6,6 +6,7 @@
 
 package com.tibco.sonar.plugins.bw5.check.sharedjms;
 
+import com.tibco.sonar.plugins.bw5.language.SharedJms;
 import com.tibco.utils.common.helper.XmlHelper;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
@@ -36,27 +37,29 @@ public class HardCodedUserCheck extends AbstractXmlCheck {
 
     @Override
     protected void validateXml(XmlBw5Source xmlSource) {
-        Document document = xmlSource.getDocument(false);
-        try {
-            Element config = XmlHelper.firstChildElement(document.getDocumentElement(), null, CONFIG_ELEMENT_NAME);
-            if (config.hasChildNodes()) {
-                Element namingEnvironment = XmlHelper.firstChildElement(config, null, NAMING_SECTION_ELEMENT_NAME);
+        if(SharedJms.KEY.equals(xmlSource.getExtension())) {
+            Document document = xmlSource.getDocument(false);
+            try {
+                Element config = XmlHelper.firstChildElement(document.getDocumentElement(), CONFIG_ELEMENT_NAME);
                 if (config.hasChildNodes()) {
-                    Element connectionAttributes = XmlHelper.firstChildElement(config, null, CREDENTIAL_SECTION_ELEMENT_NAME);
-                    if (connectionAttributes.hasChildNodes()) {
-                        xmlSource.findAndValidateHardCodedChild(getRuleKey(), connectionAttributes, USER_ELEMENT_NAME, USER_ELEMENT_DESC);
-                    } else {
-                        reportIssueOnFile("Shared JMS connection resource connection attributes are empty", xmlSource.getLineForNode(connectionAttributes));                        
-                    }
+                    Element namingEnvironment = XmlHelper.firstChildElement(config, NAMING_SECTION_ELEMENT_NAME);
+                    if (config.hasChildNodes()) {
+                        Element connectionAttributes = XmlHelper.firstChildElement(config, CREDENTIAL_SECTION_ELEMENT_NAME);
+                        if (connectionAttributes.hasChildNodes()) {
+                            xmlSource.findAndValidateHardCodedChild(getRuleKey(), connectionAttributes, USER_ELEMENT_NAME, USER_ELEMENT_DESC);
+                        } else {
+                            reportIssueOnFile("Shared JMS connection resource connection attributes are empty", xmlSource.getLineForNode(connectionAttributes));
+                        }
 
+                    } else {
+                        reportIssueOnFile("Shared JMS connection resource naming environment is empty", xmlSource.getLineForNode(namingEnvironment));
+                    }
                 } else {
-                    reportIssueOnFile("Shared JMS connection resource naming environment is empty", xmlSource.getLineForNode(namingEnvironment));                                        
+                    reportIssueOnFile("Shared JMS connection resource configuration is empty", xmlSource.getLineForNode(config));
                 }
-            } else {
-                reportIssueOnFile("Shared JMS connection resource configuration is empty", xmlSource.getLineForNode(config));                
+            } catch (Exception e) {
+                reportIssueOnFile("No configuration found in shared JMS connection resource");
             }
-        } catch (Exception e) {
-            reportIssueOnFile("No configuration found in shared JMS connection resource");            
         }
     }
 

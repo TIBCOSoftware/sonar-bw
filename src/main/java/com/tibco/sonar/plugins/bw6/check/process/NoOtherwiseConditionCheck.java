@@ -57,7 +57,6 @@ public class NoOtherwiseConditionCheck extends AbstractProcessCheck {
         }
         LOG.debug("Checking transition for activity ["+ activity.getName()+"]");
         if(shouldHaveOtherwise && !haveOtherwise){
-            //TODO Add line number
              reportIssueOnFile("The transition from activity "+ activity.getName() +" doesn't have an 'Sucess with no matching' transition to be able to handle all possible outcomes", XmlHelper.getLineNumber(activity.getNode()));
         }
     }

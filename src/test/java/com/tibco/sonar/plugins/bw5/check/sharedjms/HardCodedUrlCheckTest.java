@@ -42,6 +42,7 @@ public class HardCodedUrlCheckTest extends TestCase {
                 "</BWSharedResource>";
         Document doc = TestUtils.generateDocumentFromXML(xmlContent);
         when(source.getDocument(anyBoolean())).thenReturn(doc);
+        when(source.getExtension()).thenReturn("sharedjms");
         System.out.println("testValidate");
         HardCodedPasswordCheck instance = new HardCodedPasswordCheck();
         HardCodedPasswordCheck spyInstance = Mockito.spy(instance);
@@ -80,7 +81,7 @@ public class HardCodedUrlCheckTest extends TestCase {
 
         Document doc = TestUtils.generateDocumentFromXML(xmlContent);
         when(source.getDocument(anyBoolean())).thenReturn(doc);
-
+        when(source.getExtension()).thenReturn("sharedjms");
 
         System.out.println("testValidate");
         HardCodedPasswordCheck instance = new HardCodedPasswordCheck();

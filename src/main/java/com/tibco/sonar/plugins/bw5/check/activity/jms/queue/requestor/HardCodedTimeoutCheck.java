@@ -22,8 +22,8 @@ public class HardCodedTimeoutCheck extends AbstractProcessHardCodedCheck {
     private static final Logger LOG = Loggers.get(HardCodedTimeoutCheck.class);
 	public static final String RULE_KEY = "JMSQueueRequestorTimeoutHardCoded";
 	
-	protected static final String CONFIG_XPATH_DEFAULT = "//ConfigurableHeaders/JMSExpiration";
-	protected static final String INPUTBINDING_XPATH_DEFAULT = "//*[local-name()='ActivityInput']/JMSExpiration";
+	protected static final String CONFIG_XPATH_DEFAULT = "";
+	protected static final String INPUTBINDING_XPATH_DEFAULT = "//*[local-name()='ActivityInput']/requestTimeout";
 	protected static final String ACTIVITY_TYPE_DEFAULT = "com.tibco.plugin.jms.JMSQueueRequestReplyActivity";
 	protected static final String MESSAGE_DEFAULT = "Timeout hard coded in JMS Queue Requestor activity";
 	

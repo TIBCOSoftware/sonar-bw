@@ -40,7 +40,8 @@ public class SharedResourceUsingModuleProperty extends AbstractResourceCheck {
         for (SharedResourceParameter prop : resource.getProperties()) {
             LOG.debug("Parameter name : [" + prop.getName() + "] value: [" + prop.getValue() + "]" + " Global Variable [" + prop.isGlobalVariable() + "] isBinding [" + prop.isBinding() + "] isRequired [" + prop.isRequired() + "]");
         }
-        resource.getProperties().stream().filter(Objects::nonNull).filter(parameter -> (parameter.isRequired() && !parameter.isGlobalVariable())).forEachOrdered(parameter ->  reportIssueOnFile(String.format("Parameter [" + parameter.getName() + "] should be defined using module property and it is not")));
+
+        resource.getProperties().stream().filter(Objects::nonNull).filter(parameter -> (parameter.isRequired() && !parameter.isGlobalVariable())).forEachOrdered(parameter ->  reportIssueOnFile(String.format("Parameter [ %s ] should be defined using module property and it is not",parameter.getName())));
 
         LOG.debug("Finished rule: " + this.getClass());
     }

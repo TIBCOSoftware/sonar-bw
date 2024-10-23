@@ -36,9 +36,7 @@ public class CheckpointAfterHttpCheck extends AbstractProcessCheck {
         process.getActivities().stream().filter(activity -> (activity.getType() != null && activity.getType().equals("bw.internal.checkpoint"))).map(activity -> {
             LOG.debug("Checkpoint activity detected");
             return activity;
-        }).forEachOrdered(activity -> {
-            checkPreviousActivities(activity);
-        });
+        }).forEachOrdered(this::checkPreviousActivities);
         LOG.debug("Validation ended for rule: " + RULE_KEY);
     }
 

@@ -42,6 +42,7 @@ public class HardCodedJndiUrlCheckTest extends TestCase {
                 "</BWSharedResource>";
         Document doc = TestUtils.generateDocumentFromXML(xmlContent);
         when(source.getDocument(anyBoolean())).thenReturn(doc);
+        when(source.getExtension()).thenReturn("sharedhttp");
         System.out.println("testValidate");
         HardCodedJndiUrlCheck instance = new HardCodedJndiUrlCheck();
         HardCodedJndiUrlCheck spyInstance = Mockito.spy(instance);
@@ -80,7 +81,7 @@ public class HardCodedJndiUrlCheckTest extends TestCase {
 
         Document doc = TestUtils.generateDocumentFromXML(xmlContent);
         when(source.getDocument(anyBoolean())).thenReturn(doc);
-
+        when(source.getExtension()).thenReturn("sharedjms");
 
         System.out.println("testValidate");
         HardCodedJndiUrlCheck instance = new HardCodedJndiUrlCheck();

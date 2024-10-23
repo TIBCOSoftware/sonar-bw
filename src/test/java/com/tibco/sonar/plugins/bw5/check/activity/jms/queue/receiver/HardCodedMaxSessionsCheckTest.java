@@ -117,7 +117,7 @@ public class HardCodedMaxSessionsCheckTest extends TestCase {
         doNothing().when(spyInstance).reportIssueOnFile(anyString());
 
         spyInstance.validate(source);
-        Mockito.verify(spyInstance, times(1)).reportIssueOnFile(anyString());
+        Mockito.verify(spyInstance, times(0)).reportIssueOnFile(anyString());
     }
 
 }

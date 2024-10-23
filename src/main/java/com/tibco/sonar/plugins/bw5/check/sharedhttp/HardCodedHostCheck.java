@@ -6,6 +6,8 @@
 
 package com.tibco.sonar.plugins.bw5.check.sharedhttp;
 
+import com.tibco.sonar.plugins.bw5.language.SharedHttp;
+import com.tibco.sonar.plugins.bw5.sensor.BWResourceMetricSensor;
 import com.tibco.utils.common.helper.XmlHelper;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
@@ -30,20 +32,24 @@ public class HardCodedHostCheck extends AbstractXmlCheck {
     public static final String HOST_ELEMENT_NAME = "Host";
     public static final String HOST_ELEMENT_DESC = "Shared HTTP connection resource host";
 
+
     @Override
     protected void validateXml(XmlBw5Source xmlSource) {
-        Document document = xmlSource.getDocument(false);
-        try {
-            Element config = XmlHelper.firstChildElement(
-                    document.getDocumentElement(), null, CONFIG_ELEMENT_NAME);
-            if (config.hasChildNodes()) {
-                xmlSource.findAndValidateHardCodedChild(getRuleKey(), config,
-                        HOST_ELEMENT_NAME, HOST_ELEMENT_DESC);
-            } else {
-                reportIssueOnFile("Shared HTTP connection resource configuration is empty", xmlSource.getLineForNode(config));
+
+        if(SharedHttp.KEY.equals(xmlSource.getExtension())) {
+            Document document = xmlSource.getDocument(false);
+            try {
+                Element config = XmlHelper.firstChildElement(
+                        document.getDocumentElement(), CONFIG_ELEMENT_NAME);
+                if (config.hasChildNodes()) {
+                    xmlSource.findAndValidateHardCodedChild(getRuleKey(), config,
+                            HOST_ELEMENT_NAME, HOST_ELEMENT_DESC);
+                } else {
+                    reportIssueOnFile("Shared HTTP connection resource configuration is empty", xmlSource.getLineForNode(config));
+                }
+            } catch (Exception e) {
+                reportIssueOnFile("No configuration found in shared HTTP connection resource");
             }
-        } catch (Exception e) {
-            reportIssueOnFile("No configuration found in shared HTTP connection resource");
         }
     }
 

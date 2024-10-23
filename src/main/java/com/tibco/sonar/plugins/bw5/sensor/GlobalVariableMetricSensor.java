@@ -6,6 +6,7 @@
 
 package com.tibco.sonar.plugins.bw5.sensor;
 
+import com.tibco.sonar.plugins.bw5.language.BusinessWorks5Language;
 import com.tibco.sonar.plugins.bw5.settings.BW5LanguageFileSuffixProperty;
 import com.tibco.sonar.plugins.bw5.metric.BusinessWorksMetrics;
 import com.tibco.utils.common.SaxParser;
@@ -69,7 +70,7 @@ public class GlobalVariableMetricSensor implements Sensor {
 
     @Override
     public void describe(SensorDescriptor descriptor) {
-        
+        descriptor.onlyOnLanguage(BusinessWorks5Language.KEY);
     }
 
     @Override

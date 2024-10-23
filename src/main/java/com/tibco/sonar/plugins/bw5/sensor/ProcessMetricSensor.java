@@ -66,7 +66,7 @@ public class ProcessMetricSensor implements Sensor {
 
     @Override
     public void describe(SensorDescriptor descriptor) {
-
+        descriptor.onlyOnLanguage(BusinessWorks5Language.KEY);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class ProcessMetricSensor implements Sensor {
             LOG.info("Completed Search of BW5 Resources");
             LOG.debug("execute - END");
         } catch (Exception ex) {
-
+            LOG.error(ex.getMessage(),ex);
         }
     }
 

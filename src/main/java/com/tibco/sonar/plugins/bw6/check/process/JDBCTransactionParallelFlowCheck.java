@@ -51,24 +51,29 @@ public class JDBCTransactionParallelFlowCheck extends AbstractProcessCheck {
             if(activity.hasParallelFlow()){
                 List<List<Activity>> flows = activity.checkFlowArray(false);
                 int flowJDBC = 0;
-                for(List<Activity> flow : flows){
-                    boolean usingJDBC = false;
-                    String flowString  = "";
-                    for(Activity item : flow){
-                        flowString += item.getName() + " --> ";
-                        if(!usingJDBC && item.getType().contains("jdbc")){
-                            flowJDBC++;
-                            usingJDBC = true;
-                        }
-
-                    }
-                    LOG.debug("Flow ["+flowString+"]");
-                }
+                flowJDBC = checkJDBCFlowActivities(flows, flowJDBC);
                 if(flowJDBC > 1){
                     reportIssueOnFile("JDBC Parallel flow inside a transaction group is not supported. So unexpected behavior in runtime will be generated",XmlHelper.getLineNumber(activity.getNode()));
                 }
             }
         }
+    }
+
+    private static int checkJDBCFlowActivities(List<List<Activity>> flows, int flowJDBC) {
+        for(List<Activity> flow : flows){
+            boolean usingJDBC = false;
+            String flowString  = "";
+            for(Activity item : flow){
+                flowString += item.getName() + " --> ";
+                if(!usingJDBC && item.getType().contains("jdbc")){
+                    flowJDBC++;
+                    usingJDBC = true;
+                }
+
+            }
+            LOG.debug("Flow ["+flowString+"]");
+        }
+        return flowJDBC;
     }
 
     @Override

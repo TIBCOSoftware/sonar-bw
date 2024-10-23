@@ -58,7 +58,7 @@ public class SwaggerValidationCheck extends AbstractProjectCheck {
         String response = null;
 
         try {
-            parser.read(file.absolutePath(), null, null);
+            parser.parse(file.contents());
         } catch (Exception ex) {
             response = ex.getMessage() + "\n";
         }

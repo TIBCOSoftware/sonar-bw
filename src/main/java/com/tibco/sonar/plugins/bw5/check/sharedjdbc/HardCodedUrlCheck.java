@@ -5,6 +5,7 @@
 */
 package com.tibco.sonar.plugins.bw5.check.sharedjdbc;
 
+import com.tibco.sonar.plugins.bw5.language.SharedJdbc;
 import com.tibco.utils.common.helper.XmlHelper;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
@@ -31,16 +32,18 @@ public class HardCodedUrlCheck extends AbstractXmlCheck {
 
 	@Override
 	protected void validateXml(XmlBw5Source xmlSource) {
-		Document document = xmlSource.getDocument(false);
-		try{
-			Element config = XmlHelper.firstChildElement(document.getDocumentElement(), null, CONFIG_ELEMENT_NAME);
-			if(config.hasChildNodes()){
-				xmlSource.findAndValidateHardCodedChild(getRuleKey(), config, URL_ELEMENT_NAME, URL_ELEMENT_DESC);
-			}else{
-                                reportIssueOnFile("Shared JDBC connection resource configuration is empty",xmlSource.getLineForNode(config));
+		if(SharedJdbc.KEY.equals(xmlSource.getExtension())) {
+			Document document = xmlSource.getDocument(false);
+			try {
+				Element config = XmlHelper.firstChildElement(document.getDocumentElement(), CONFIG_ELEMENT_NAME);
+				if (config.hasChildNodes()) {
+					xmlSource.findAndValidateHardCodedChild(getRuleKey(), config, URL_ELEMENT_NAME, URL_ELEMENT_DESC);
+				} else {
+					reportIssueOnFile("Shared JDBC connection resource configuration is empty", xmlSource.getLineForNode(config));
+				}
+			} catch (Exception e) {
+				reportIssueOnFile("No configuration found in shared JDBC connection resource");
 			}
-		}catch (Exception e) {			
-                        reportIssueOnFile("No configuration found in shared JDBC connection resource");
 		}
 	}
 

@@ -54,7 +54,7 @@ public class BWResourceMetricSensor implements Sensor {
 
     @Override
     public void describe(SensorDescriptor descriptor) {
-       
+        descriptor.onlyOnLanguage(BusinessWorks5Language.KEY);
     }
 
     @Override

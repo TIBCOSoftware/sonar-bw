@@ -13,7 +13,7 @@ import java.util.List;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.measures.Metrics;
-import org.sonar.api.utils.SonarException;
+import org.sonar.api.utils.MessageException;
 
 
 
@@ -119,7 +119,7 @@ public final class BusinessWorksMetrics implements Metrics {
                     Metric<Serializable> metric = (Metric<Serializable>) field.get(null);
                     METRICS.add(metric);
                 } catch (IllegalAccessException e) {
-                    throw new SonarException("can not introspect "
+                    throw  MessageException.of("can not introspect "
                             + CoreMetrics.class + " to get metrics", e);
                 }
             }

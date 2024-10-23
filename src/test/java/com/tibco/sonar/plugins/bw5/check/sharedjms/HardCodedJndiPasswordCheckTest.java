@@ -49,6 +49,7 @@ public class HardCodedJndiPasswordCheckTest extends TestCase {
                 "</BWSharedResource>";
         Document doc = TestUtils.generateDocumentFromXML(xmlContent);
         when(source.getDocument(anyBoolean())).thenReturn(doc);
+        when(source.getExtension()).thenReturn("sharedjms");
         System.out.println("testValidate");
         HardCodedJndiPasswordCheck instance = new HardCodedJndiPasswordCheck();
         HardCodedJndiPasswordCheck spyInstance = Mockito.spy(instance);
@@ -87,7 +88,7 @@ public class HardCodedJndiPasswordCheckTest extends TestCase {
 
         Document doc = TestUtils.generateDocumentFromXML(xmlContent);
         when(source.getDocument(anyBoolean())).thenReturn(doc);
-
+        when(source.getExtension()).thenReturn("sharedjms");
 
         System.out.println("testValidate");
         HardCodedJndiPasswordCheck instance = new HardCodedJndiPasswordCheck();

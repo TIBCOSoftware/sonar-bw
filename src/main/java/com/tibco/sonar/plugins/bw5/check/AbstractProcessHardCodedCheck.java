@@ -74,8 +74,8 @@ public abstract class AbstractProcessHardCodedCheck extends
             Node targetedMappedConfig;
             try {
                 targetedMappedConfig = XmlHelper.evaluateXpathNode(activity.getInputBindings(), getInputBindingXPath());
-                if (targetedMappedConfig != null) {
-                    reportIssueOnFile(getMessage());
+                if (targetedMappedConfig != null)  {
+                    checkHardocdedValueAndReport(targetedMappedConfig);
                     checkConfig = false;
                 } else {
                     checkConfig = true;
@@ -93,7 +93,16 @@ public abstract class AbstractProcessHardCodedCheck extends
                 reportIssueOnFile(getMessage());
             }
 
+        }
+    }
 
+    private void checkHardocdedValueAndReport(Node targetedMappedConfig) {
+        Node valueOf = XmlHelper.evaluateXpathNode(targetedMappedConfig,"//*[local-name()='value-of']/@select");
+        if(valueOf != null){
+            String value = valueOf.getNodeValue();
+            if(value != null && !(value.contains("$") || value.contains("("))){
+                reportIssueOnFile(getMessage());
+            }
         }
     }
 

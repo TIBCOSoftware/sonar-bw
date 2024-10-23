@@ -62,7 +62,7 @@ public class SharedResourceNotUsed extends AbstractResourceCheck {
         if (!isDefinitionFile(resource, file)) {
             try {
                 LOG.debug("Checking file contents: "+ file.filename() + " ...");
-                if (file.contents().contains(resource.getName())) {
+                if (resource != null && file.contents().contains(resource.getName())) {
                     found = true;
                 }
             } catch (IOException ex) {

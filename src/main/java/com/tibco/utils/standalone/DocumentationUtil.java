@@ -6,14 +6,18 @@
 package com.tibco.utils.standalone;
 
 
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.Loggers;
+
 public class DocumentationUtil {
 
+	private static final Logger LOG = Loggers.get(DocumentationUtil.class);
 
 	public static void main(String[] args) throws Exception {
-		System.out.println("***** GENERATING DOCUMENTATION *****");
+		LOG.debug("***** GENERATING DOCUMENTATION *****");
 		com.tibco.utils.bw5.documentation.DocumentationUtil.generate();
 		com.tibco.utils.bw6.documentation.DocumentationUtil.generate();
-		System.out.println("***** DOCUMENTATION GENERATED *****");
+		LOG.debug("***** DOCUMENTATION GENERATED *****");
 
 	}
 

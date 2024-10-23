@@ -42,9 +42,6 @@ public class ProcessRuleDefinition implements RulesDefinition {
     protected static final List<String> LANGUAGE_KEYS = Arrays.asList(BusinessWorks5Language.KEY);
 
 
-    public ProcessRuleDefinition() {
-    }
-
     private void defineRulesForLanguage(Context context, String repositoryKey, String repositoryName, String languageKey) {
         NewRepository repository = context.createRepository(repositoryKey, languageKey).setName(repositoryName);
         RulesDefinitionAnnotationLoader annotationLoader = new RulesDefinitionAnnotationLoader();
@@ -86,10 +83,14 @@ public class ProcessRuleDefinition implements RulesDefinition {
             //Custom
             com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForStarterProcess.class,
             com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForSubProcess.class,
-            com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForDynamicSubProcess.class,
-            com.tibco.sonar.plugins.bw5.check.process.ApplicationJsonRuleCheck.class,
             // Common
             com.tibco.sonar.plugins.bw5.check.process.NoDescriptionCheck.class,
+            com.tibco.sonar.plugins.bw5.check.process.NoOtherwiseConditionCheck.class,
+            com.tibco.sonar.plugins.bw5.check.process.NumberofActivitiesCheck.class,
+            com.tibco.sonar.plugins.bw5.check.process.OnlyOneOtherwiseConditionCheck.class,
+            com.tibco.sonar.plugins.bw5.check.process.TransitionLabelCheck.class,
+            com.tibco.sonar.plugins.bw5.check.process.ProcessNamingConventionCheck.class,
+            com.tibco.sonar.plugins.bw5.check.process.RenderXMLPrettyPrintCheck.class,
             // Catch activities
             com.tibco.sonar.plugins.bw5.check.activity.catcherror.CustomCatchCheck.class,
             com.tibco.sonar.plugins.bw5.check.activity.catcherror.CatchAllCheck.class,
@@ -136,10 +137,14 @@ public class ProcessRuleDefinition implements RulesDefinition {
         return Arrays.asList(//Custom
                 new com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForStarterProcess(),
                 new com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForSubProcess(),
-                new com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForDynamicSubProcess(),
-                new com.tibco.sonar.plugins.bw5.check.process.ApplicationJsonRuleCheck(),
                 // Common
                 new com.tibco.sonar.plugins.bw5.check.process.NoDescriptionCheck(),
+                new com.tibco.sonar.plugins.bw5.check.process.NoOtherwiseConditionCheck(),
+                new com.tibco.sonar.plugins.bw5.check.process.NumberofActivitiesCheck(),
+                new com.tibco.sonar.plugins.bw5.check.process.OnlyOneOtherwiseConditionCheck(),
+                new com.tibco.sonar.plugins.bw5.check.process.TransitionLabelCheck(),
+                new com.tibco.sonar.plugins.bw5.check.process.ProcessNamingConventionCheck(),
+                new com.tibco.sonar.plugins.bw5.check.process.RenderXMLPrettyPrintCheck(),
                 // Catch activities
                 new com.tibco.sonar.plugins.bw5.check.activity.catcherror.CustomCatchCheck(),
                 new com.tibco.sonar.plugins.bw5.check.activity.catcherror.CatchAllCheck(),

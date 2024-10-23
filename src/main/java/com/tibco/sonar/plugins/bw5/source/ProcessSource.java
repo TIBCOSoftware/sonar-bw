@@ -10,9 +10,11 @@ package com.tibco.sonar.plugins.bw5.source;
 import com.tibco.sonar.plugins.bw.source.AbstractSource;
 import com.tibco.utils.bw5.model.Process;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.sonar.api.batch.fs.InputFile;
 import org.sonarsource.analyzer.commons.xml.XmlFile;
 
@@ -28,6 +30,8 @@ public class ProcessSource extends AbstractSource {
 
     private XmlFile file;
 
+    private File baseDir;
+
     public ProcessSource(InputFile file) {
         try {
             this.file = XmlFile.create(file);
@@ -38,6 +42,8 @@ public class ProcessSource extends AbstractSource {
             Logger.getLogger(ProcessSource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+
 
     public ProcessSource(String file) {
 
@@ -71,4 +77,11 @@ public class ProcessSource extends AbstractSource {
         this.file = file;
     }
 
+    public File getBaseDir() {
+        return baseDir;
+    }
+
+    public void setBaseDir(File baseDir) {
+        this.baseDir = baseDir;
+    }
 }

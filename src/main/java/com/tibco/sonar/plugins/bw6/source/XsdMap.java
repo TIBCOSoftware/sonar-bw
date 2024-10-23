@@ -23,12 +23,7 @@ public class XsdMap {
     }
 
     public boolean addFile(GenericResource schema, InputFile file) {
-        InputFile target = map.get(schema);
-        if(target == null){
-            map.put(schema, file);
-            return true;
-        }
-        return false;
+        return map.putIfAbsent(schema,file) == null;
     }
     
     public InputFile getFile(GenericResource schema) {

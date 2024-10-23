@@ -7,10 +7,8 @@ package com.tibco.utils.common.helper;
 
 import com.tibco.utils.common.logger.Logger;
 import com.tibco.utils.common.logger.Loggers;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Stack;
@@ -60,7 +58,7 @@ public class XmlHelper {
     }
 
     public static boolean evaluateXPathAsBoolean(Element document, String expression) {
-        Boolean out = null;
+        Boolean out = false;
         if (document != null) {
             try {
                 XPathExpression tmp = getXPathExpressionForDocument(expression);
@@ -86,84 +84,9 @@ public class XmlHelper {
 
     public static Document getDocument(File file) {
         try {
-            final Document doc;
-
-            SAXParser parser;
-            try {
-            	SAXParserFactory factory = null;
-            	ClassLoader ocl = Thread.currentThread().getContextClassLoader();
-        		try{
-        			Thread.currentThread().setContextClassLoader(javax.xml.parsers.SAXParserFactory.class.getClassLoader());
-        			factory  = SAXParserFactory.newDefaultInstance();
-                                factory.setNamespaceAware(false);
-	                parser = factory.newSAXParser();
-	                final DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newDefaultInstance();
-
-	                final DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-	                doc = docBuilder.newDocument();
-        		}finally{
-        			Thread.currentThread().setContextClassLoader(ocl);
-        		}
-            } catch (final ParserConfigurationException e) {
-                throw new RuntimeException(EXCEPTION_MSG, e);
-            }
-
-            final Stack<Element> elementStack = new Stack<Element>();
-            final StringBuilder textBuffer = new StringBuilder();
-
-            final DefaultHandler handler = new DefaultHandler() {
-                private Locator locator;
-
-                @Override
-                public void setDocumentLocator(final Locator locator) {
-                    this.locator = locator; // Save the locator, so that it can be used later for line tracking when traversing nodes.
-                }
-
-                @Override
-                public void startElement(final String uri, final String localName, final String qName, final Attributes attributes)
-                        throws SAXException {
-                    addTextIfNeeded();
-                    final Element el = doc.createElement(qName);
-                    for (int i = 0; i < attributes.getLength(); i++) {
-                        el.setAttribute(attributes.getQName(i), attributes.getValue(i));
-                    }
-                    el.setAttribute(LINE_NUMBER_KEY_NAME, String.valueOf(this.locator.getLineNumber()));
-                    elementStack.push(el);
-                }
-
-                @Override
-                public void endElement(final String uri, final String localName, final String qName) {
-                    addTextIfNeeded();
-                    final Element closedEl = elementStack.pop();
-                    if (elementStack.isEmpty()) { // Is this the root element?
-                        doc.appendChild(closedEl);
-                    } else {
-                        final Element parentEl = elementStack.peek();
-                        parentEl.appendChild(closedEl);
-                    }
-                }
-
-                @Override
-                public void characters(final char[] ch, final int start, final int length) throws SAXException {
-                    textBuffer.append(ch, start, length);
-                }
-
-                // Outputs text accumulated under the current node
-                private void addTextIfNeeded() {
-                    if (textBuffer.length() > 0) {
-                        final Element el = elementStack.peek();
-                        final Node textNode = doc.createTextNode(textBuffer.toString());
-                        el.appendChild(textNode);
-                        textBuffer.delete(0, textBuffer.length());
-                    }
-                }
-            };
-            parser.parse(file, handler);
-            return doc;
-        } catch (SAXException ex) {
-            //TODO LoggerFactory.getLogger(XmlHelper.class.getName()).error(null, ex);
-        } catch (IOException ex) {
-          //TODO  LoggerFactory.getLogger(XmlHelper.class.getName()).error(null, ex);
+            return getDocument(new FileInputStream(file));
+        }catch(FileNotFoundException ex){
+            LOG.warn(ex.getMessage(),ex);
         }
         return null;
     }
@@ -247,94 +170,13 @@ public class XmlHelper {
             parser.parse(file, handler);
             return doc;
         } catch (SAXException | IOException ex) {
-            //TODO LoggerFactory.getLogger(XmlHelper.class.getName()).error(null, ex);
+            LOG.warn(ex.getMessage(), ex);
         }
         return null;
     }
 
     public static Document getDocument(String file) {
-        try {
-            final Document doc;
-
-            SAXParser parser;
-            try {
-            	SAXParserFactory factory = null;
-            	ClassLoader ocl = Thread.currentThread().getContextClassLoader();
-        		try{
-        			Thread.currentThread().setContextClassLoader(javax.xml.parsers.SAXParserFactory.class.getClassLoader());
-        			factory  = SAXParserFactory.newDefaultInstance();
-                                factory.setNamespaceAware(false);
-	                parser = factory.newSAXParser();
-	                final DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newDefaultInstance();
-
-	                final DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-	                doc = docBuilder.newDocument();
-        		}finally{
-        			Thread.currentThread().setContextClassLoader(ocl);
-        		}
-            } catch (final ParserConfigurationException e) {
-                throw new RuntimeException(EXCEPTION_MSG, e);
-            }
-
-            final Stack<Element> elementStack = new Stack<Element>();
-            final StringBuilder textBuffer = new StringBuilder();
-
-            final DefaultHandler handler = new DefaultHandler() {
-                private Locator locator;
-
-                @Override
-                public void setDocumentLocator(final Locator locator) {
-                    this.locator = locator; // Save the locator, so that it can be used later for line tracking when traversing nodes.
-                }
-
-                @Override
-                public void startElement(final String uri, final String localName, final String qName, final Attributes attributes)
-                        throws SAXException {
-                    addTextIfNeeded();
-                    final Element el = doc.createElement(qName);
-                    for (int i = 0; i < attributes.getLength(); i++) {
-                        el.setAttribute(attributes.getQName(i), attributes.getValue(i));
-                    }
-                    el.setAttribute(LINE_NUMBER_KEY_NAME, String.valueOf(this.locator.getLineNumber()));
-                    elementStack.push(el);
-                }
-
-                @Override
-                public void endElement(final String uri, final String localName, final String qName) {
-                    addTextIfNeeded();
-                    final Element closedEl = elementStack.pop();
-                    if (elementStack.isEmpty()) { // Is this the root element?
-                        doc.appendChild(closedEl);
-                    } else {
-                        final Element parentEl = elementStack.peek();
-                        parentEl.appendChild(closedEl);
-                    }
-                }
-
-                @Override
-                public void characters(final char[] ch, final int start, final int length) throws SAXException {
-                    textBuffer.append(ch, start, length);
-                }
-
-                // Outputs text accumulated under the current node
-                private void addTextIfNeeded() {
-                    if (textBuffer.length() > 0) {
-                        final Element el = elementStack.peek();
-                        final Node textNode = doc.createTextNode(textBuffer.toString());
-                        el.appendChild(textNode);
-                        textBuffer.delete(0, textBuffer.length());
-                    }
-                }
-            };
-            parser.parse(new ByteArrayInputStream(file.getBytes(Charset.defaultCharset())), handler);
-            return doc;
-        } catch (SAXException ex) {
-            LOG.warn("SAX Exception", ex);
-
-        } catch (IOException ex) {
-            LOG.warn("IO Exception", ex);
-        }
-        return null;
+        return getDocument(new ByteArrayInputStream(file.getBytes(Charset.defaultCharset())));
     }
 
     public static int getLineNumber(Node node) {
@@ -381,7 +223,7 @@ public class XmlHelper {
         			Thread.currentThread().setContextClassLoader(ocl);
         		}
             } catch (XPathExpressionException ex) {
-
+                LOG.warn(ex.getMessage(),ex);
             }
         }
         return null;
@@ -411,11 +253,11 @@ public class XmlHelper {
     }
 
     public static Element firstChildElement(Element element, String childName) {
-        return firstChildElement(element, "*", childName);
+        return firstChildElement(element, null, childName);
     }
 
     public static Element firstChildElement(Node element, String childName) {
-        return firstChildElement((Element) element, "*", childName);
+        return firstChildElement((Element) element, null, childName);
     }
 
     public static Node evaluateXpathNode(Node rootNode,

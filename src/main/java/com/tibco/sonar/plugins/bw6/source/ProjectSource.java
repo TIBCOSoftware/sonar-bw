@@ -11,7 +11,7 @@ import com.tibco.utils.bw6.model.Project;
 import java.util.ArrayList;
 import java.util.List;
 import org.sonar.api.batch.fs.InputComponent;
-import org.sonar.api.batch.fs.InputModule;
+import org.sonar.api.scanner.fs.InputProject;
 
 /**
  * Checks and analyzes report measurements, issues and other findings in
@@ -31,7 +31,7 @@ public class ProjectSource extends AbstractSource {
     
     protected List<SharedResourceSource> resource;
 
-    public ProjectSource(InputModule file) {
+    public ProjectSource(InputProject file) {
             this.file = file;
             process = new ArrayList<>();
             resource = new ArrayList<>();

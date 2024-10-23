@@ -6,23 +6,15 @@
 
 package com.tibco.utils.standalone;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-
 import com.tibco.sonar.plugins.bw.check.AbstractCheck;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import com.tibco.sonar.plugins.bw.source.XmlSource;
-import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 
 public class RulesInfo {
@@ -35,18 +27,6 @@ public class RulesInfo {
             Pattern.MULTILINE | Pattern.DOTALL);
     static final Pattern[] fields = {p1, p2, p3};
 
-    public static final String PRIORITY_PARAM = "priority";
-    public static final String PRIORITY_INFO = "INFO";
-    public static final String PRIORITY_MINOR = "MINOR";
-    public static final String PRIORITY_MAJOR = "MAJOR";
-    public static final String PRIORITY_CRITICAL = "CRITICAL";
-    public static final String PRIORITY_BLOCKER = "BLOCKER";
-
-    public static final String TYPE_PARAM = "type";
-    public static final String TYPE_SMELL = "CODE_SMELL";
-    public static final String TYPE_BUG = "BUG";
-    public static final String TYPE_SECURITY_HOTSPOT = "SECURITY_HOTSPOT";
-    public static final String TYPE_VULNARABILITY = "VULNERABILITY";
 
     public static class DocumentationException extends Exception {
 
@@ -57,15 +37,6 @@ public class RulesInfo {
         }
     }
 
-    public RulesInfo() throws DocumentationException {
-
-    }
-
-    public Rule getRuleFromRuleClass(AbstractCheck check) {
-
-        return check.getClass().getAnnotation(org.sonar.check.Rule.class);
-
-    }
 
     public List<RuleProperty> getRuleParamsFromRuleClass(AbstractCheck check) {
         List<RuleProperty> out = new ArrayList<>();

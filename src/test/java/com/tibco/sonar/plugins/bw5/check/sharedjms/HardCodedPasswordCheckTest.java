@@ -42,6 +42,7 @@ public class HardCodedPasswordCheckTest extends TestCase {
                 "</BWSharedResource>";
         Document doc = TestUtils.generateDocumentFromXML(xmlContent);
         when(source.getDocument(anyBoolean())).thenReturn(doc);
+        when(source.getExtension()).thenReturn("sharedjms");
         System.out.println("testValidate");
         HardCodedPasswordCheck instance = new HardCodedPasswordCheck();
         HardCodedPasswordCheck spyInstance = Mockito.spy(instance);
@@ -80,12 +81,13 @@ public class HardCodedPasswordCheckTest extends TestCase {
 
         Document doc = TestUtils.generateDocumentFromXML(xmlContent);
         when(source.getDocument(anyBoolean())).thenReturn(doc);
-
+        when(source.getExtension()).thenReturn("sharedjms");
 
         System.out.println("testValidate");
         HardCodedPasswordCheck instance = new HardCodedPasswordCheck();
         HardCodedPasswordCheck spyInstance = Mockito.spy(instance);
         doNothing().when(spyInstance).reportIssueOnFile(any(), anyInt());
+
         doCallRealMethod().when(source).findAndValidateHardCodedChild(any(), any(), anyString(), anyString());
         doCallRealMethod().when(source).getViolationsHardCodedNode(any(), any(), anyString());
         doCallRealMethod().when(source).getViolationsHardCodedChild(any(), any(), anyString(), anyString());

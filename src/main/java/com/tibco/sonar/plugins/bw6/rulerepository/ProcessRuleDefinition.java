@@ -89,7 +89,6 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         com.tibco.sonar.plugins.bw6.check.project.PomXmlVersionsHarcodedCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.ProjectStructureCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.SwaggerValidationCheck.class,
-     //TODO Disabling it until dependencies are managed com.tibco.sonar.plugins.bw6.check.project.XSDValidationCheck.class, 
         com.tibco.sonar.plugins.bw6.check.project.BindingShouldHavePolicyAssociatedCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.BindingShouldNotHaveHTTPBasicPolicyAssociatedCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.JKSValidationCheck.class

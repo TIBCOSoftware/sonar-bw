@@ -8,6 +8,7 @@ package com.tibco.sonar.plugins.bw5.sensor;
 
 import com.tibco.sonar.plugins.bw.check.AbstractCheck;
 import com.tibco.sonar.plugins.bw5.check.AbstractProcessCheck;
+import com.tibco.sonar.plugins.bw5.check.AbstractXmlCheck;
 import com.tibco.sonar.plugins.bw5.check.XPathCheck;
 import com.tibco.sonar.plugins.bw5.language.BusinessWorks5Language;
 import com.tibco.sonar.plugins.bw5.rulerepository.ProcessRuleDefinition;
@@ -53,7 +54,6 @@ public class ProcessRuleSensor implements Sensor {
     public ProcessRuleSensor(FileSystem fileSystem,
             CheckFactory checkFactory) {
         LOG.debug("ProcessRuleSensor - START");
-
         this.fileSystem = fileSystem;
         checkReturned = checkFactory.create(ProcessRuleDefinition.REPOSITORY_KEY).addAnnotatedChecks(ProcessRuleDefinition.getChecks());
         this.mainFilesPredicate = fileSystem.predicates().and(
@@ -64,7 +64,8 @@ public class ProcessRuleSensor implements Sensor {
   protected void analyseFile(InputFile file) {
         LOG.debug("analyseFile - START");
         if (file != null) {
-            ProcessSource sourceCode = new ProcessSource(file); // TODO:  Handle this better....
+            ProcessSource sourceCode = new ProcessSource(file);
+            sourceCode.setBaseDir(fileSystem.baseDir());
             com.tibco.utils.bw5.model.Process process = sourceCode.getProcessModel();         
             processList.add(process);
 
@@ -78,7 +79,6 @@ public class ProcessRuleSensor implements Sensor {
             }
         }
         LOG.debug("analyseFile - END");
-
     }
  
   
@@ -88,11 +88,18 @@ public class ProcessRuleSensor implements Sensor {
         for (InputFile file : files) {
             try{
                 XmlBw5Source xSource = new XmlBw5Source(file);
+
                 for (Iterator<Object> it = checkReturned.all().iterator(); it.hasNext();) {
                     AbstractCheck check = (AbstractCheck) it.next();
                     if (check instanceof XPathCheck) {
                         LOG.debug("## XPathCheck detected: [" + check.getRuleKeyName() + "]");
                         XPathCheck xmlCheck = (XPathCheck) check;
+                        RuleKey ruleKey = checkReturned.ruleKey(xmlCheck);
+                        xmlCheck.setRuleKey(ruleKey);
+                        xmlCheck.scanFile(sensorContext, ruleKey, xSource);
+                    }else if(check instanceof AbstractXmlCheck) {
+                        LOG.debug("## Abstract XML check detected: [" + check.getRuleKeyName() + "]");
+                        AbstractXmlCheck xmlCheck = (AbstractXmlCheck) check;
                         RuleKey ruleKey = checkReturned.ruleKey(xmlCheck);
                         xmlCheck.setRuleKey(ruleKey);
                         xmlCheck.scanFile(sensorContext, ruleKey, xSource);
@@ -127,7 +134,7 @@ public class ProcessRuleSensor implements Sensor {
 
         LOG.info("Searching for BW5 PrcoessFiles");
         inputFiles.forEach(this::analyseFile);
-        LOG.info("Completed Search of BW5 Resources");        
+        LOG.info("Completed Search of BW5 Process Files");
         checkCustom();
         LOG.debug("execute - END");
     }
@@ -135,7 +142,7 @@ public class ProcessRuleSensor implements Sensor {
 
     @Override
     public void describe(SensorDescriptor descriptor) {
-     
+        descriptor.onlyOnLanguage(BusinessWorks5Language.KEY);
     }
 
 }

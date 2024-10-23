@@ -17,11 +17,11 @@
  {
    public Element getConfiguration()
    {
-     return XmlHelper.firstChildElement((Element)getNode(), "config");
+     return XmlHelper.firstChildElement((Element)getNode(), "*","config");
    }
    
    public Element getInputBindings() {
-     return XmlHelper.firstChildElement((Element)getNode(), "inputBindings");
+     return XmlHelper.firstChildElement((Element)getNode(), "*","inputBindings");
    }
    
  

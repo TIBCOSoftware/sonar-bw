@@ -11,6 +11,8 @@ import com.tibco.sonar.plugins.bw5.check.*;
 import com.tibco.sonar.plugins.bw5.metric.BusinessWorksMetrics;
 import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw5.rulerepository.ProcessRuleDefinition;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.Loggers;
 import com.tibco.utils.standalone.RulesInfo;
 import com.tibco.utils.standalone.RulesInfo.DocumentationException;
 import org.sonar.check.RuleProperty;
@@ -19,6 +21,7 @@ import java.io.*;
 
 public class DocumentationUtil {
 
+	private static final Logger LOG = Loggers.get(DocumentationUtil.class);
 	private static final String CODE_START = "**`";
 	private static final String CODE_END = "`**";
 
@@ -39,8 +42,8 @@ public class DocumentationUtil {
 		return new BusinessWorksMetrics().getMetrics().size();
 	}
 
-	public static void generate() throws FileNotFoundException, DocumentationException {
-		System.out.println("***** GENERATING BW5 DOCS *****");
+	public static void generate() throws FileNotFoundException {
+		LOG.debug("***** GENERATING BW5 DOCS *****");
 
 		info = new RulesInfo();
 
@@ -49,16 +52,10 @@ public class DocumentationUtil {
 		ProcessRuleDefinition.getCheckList().forEach(x -> {
 			try {
 				writeRulesFile(x);
-			} catch (DocumentationException ex) {
-				System.err.print(ex.getMessage());
-				//System.exit(1);
-			} catch (IOException ex) {
-				ex.printStackTrace(System.err);
-				System.exit(1);
+			} catch (DocumentationException | IOException  ex ) {
+				LOG.warn(ex.getMessage(),ex);
 			}
 		});
-
-		System.err.print(false);
 	}
 
 	private static void writeRulesFile() throws FileNotFoundException {
@@ -85,13 +82,12 @@ public class DocumentationUtil {
                             String htmldocs = info.getHTMLDocForRule("bw5", name);
                             String describe = info.getFieldFromHTMLDoc(htmldocs, 1, true);
                             String type = getType(rule);
-//TODO Revisar el role
+
                             String state = rule instanceof XPathCheck ? "Disabled" : "Enabled";
-                            ps.println("| [`" + name + "`](" + name + ".md) | " + type + " | " + (info.getRuleParamsFromRuleClass(rule).size() > 0 ? "Yes"
+                            ps.println("| [`" + name + "`](" + name + ".md) | " + type + " | " + (!info.getRuleParamsFromRuleClass(rule).isEmpty() ? "Yes"
                                     : "No") + " | " + state + " | " + describe + " |");
                         } catch (DocumentationException ex) {
-                            System.err.println(ex.getMessage());
-//TODO System.exit(1);
+                            LOG.warn(ex.getMessage(),ex);
                         }
                     });
 
@@ -115,10 +111,11 @@ public class DocumentationUtil {
 
 	private static void writeRulesFile(AbstractCheck check) throws DocumentationException, IOException {
 
-		System.out.println("Generating documentation file " + check.getRuleKeyName() + ".md");
+		LOG.debug("Generating documentation file " + check.getRuleKeyName() + ".md");
 
 		FileOutputStream fos = new FileOutputStream("docs/rules/bw5/" + check.getRuleKeyName() + ".md");
         try (PrintStream ps = new PrintStream(fos)) {
+
 
 
             String htmldocs = info.getHTMLDocForRule("bw5", check.getRuleKeyName());
@@ -173,10 +170,9 @@ public class DocumentationUtil {
 
 	}
 
-	private static void writeSonarqubeSection(PrintStream ps, AbstractCheck check) throws DocumentationException {
+	private static void writeSonarqubeSection(PrintStream ps, AbstractCheck check)  {
 
 
-                //TODO Do something for XPath Check
 		if (check instanceof XPathCheck)
 			ps.println("This is a " + EMPH_START + "template" + EMPH_END
 			    + " rule. By default it is not enabled or available. To enable it, clone the default \""

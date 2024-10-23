@@ -26,21 +26,23 @@ public class AdbFileSinkFileLimitHardcodingCheck extends AbstractXmlCheck {
 
     private static final Logger LOG = Loggers.get(AdbFileSinkFileLimitHardcodingCheck.class);
 	public static final String RULE_KEY = "AdbFileSinkFileLimitHardcodingCheck";
-	public static final String FILESINK_ELEMENT_NAME = "fileSink";
+	public static final String FILESINK_ELEMENT_NAME = "//*[local-name()='fileSink']";
 	public static final String FILESINK_ELEMENT_NAMESPACE = "http://www.tibco.com/xmlns/aemeta/adapter/2002";
-	public static final String FILE_LIMIT_ELEMENT_NAME = "fileLimit";
+	public static final String FILE_LIMIT_ELEMENT_NAME = "AESDK:fileLimit";
 	public static final String FILE_LIMIT_ELEMENT_DESCRIPTION = "Hardcoded File Limit in FileSink of Adb Adapter";
 
 	@Override
 	protected void validateXml(XmlBw5Source xmlSource) {
-		Document document = xmlSource.getDocument(true);
-		try {
-			Element fileSinkElement = XmlHelper.firstChildElement(document.getDocumentElement(),
-					FILESINK_ELEMENT_NAMESPACE, FILESINK_ELEMENT_NAME);
-			xmlSource.findAndValidateHardCodedChild(getRuleKey(), fileSinkElement, FILE_LIMIT_ELEMENT_NAME,
-					FILE_LIMIT_ELEMENT_DESCRIPTION);
-		} catch (Exception e) {			
-                        reportIssueOnFile(FILE_LIMIT_ELEMENT_DESCRIPTION);
+		if("adb".equals(xmlSource.getExtension())) {
+			Document document = xmlSource.getDocument(true);
+			try {
+				Element fileSinkElement = XmlHelper.firstChildElement(document.getDocumentElement(),
+						FILESINK_ELEMENT_NAMESPACE, FILESINK_ELEMENT_NAME);
+				xmlSource.findAndValidateHardCodedChild(getRuleKey(), fileSinkElement, FILE_LIMIT_ELEMENT_NAME,
+						FILE_LIMIT_ELEMENT_DESCRIPTION);
+			} catch (Exception e) {
+				reportIssueOnFile(FILE_LIMIT_ELEMENT_DESCRIPTION);
+			}
 		}
 
 	}

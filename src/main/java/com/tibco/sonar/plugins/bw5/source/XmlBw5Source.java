@@ -33,7 +33,6 @@ import com.tibco.sonar.plugins.bw.source.XmlSource;
  */
 public class XmlBw5Source extends XmlSource {
 
-        private XmlFile file;
         private SensorContext context;
 
 	/**
@@ -46,7 +45,6 @@ public class XmlBw5Source extends XmlSource {
 	public XmlBw5Source(SensorContext context, XmlFile xmlFile) {
 		super(xmlFile.getInputFile());
         this.context = context;
-		this.file = xmlFile;
 	}
 
 
@@ -63,6 +61,17 @@ public class XmlBw5Source extends XmlSource {
 	 */
 	public int getLineForNode(Node node) {
 		return SaxParser.getLineNumber(node);
+	}
+
+
+	public  String getExtension() {
+		String fileName = file.getInputFile().filename();
+		int dotIndex = fileName.lastIndexOf('.');
+
+		if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
+			return fileName.substring(dotIndex + 1);
+		}
+		return ""; // No extension found
 	}
 
 
@@ -113,7 +122,7 @@ public class XmlBw5Source extends XmlSource {
 	public void getViolationsHardCodedChild(RuleKey rule, Element parent, String childName, String message){
 	
 		try{
-			Element elem = XmlHelper.firstChildElement(parent, null, childName);
+			Element elem = XmlHelper.firstChildElement(parent,  childName);
 			getViolationsHardCodedNode(rule, elem, message);
 		}catch (Exception e) {
 		

@@ -77,8 +77,8 @@ public class JKSValidationCheck extends AbstractProjectCheck {
         } catch (CertificateNotYetValidException ex) {
             reportIssueOnFile("Certificate alias ["+ alias +"] is not valid:  " + ex.getMessage());
         }
-        String subjectDN = x509cert.getSubjectDN() == null? "" : x509cert.getSubjectDN().getName();
-        String issuerDN = x509cert.getIssuerDN()  == null? "" : x509cert.getIssuerDN().getName();
+        String subjectDN = x509cert.getSubjectX500Principal() == null? "" : x509cert.getSubjectX500Principal().getName();
+        String issuerDN = x509cert.getIssuerX500Principal()  == null? "" : x509cert.getIssuerX500Principal().getName();
         if(subjectDN.equals(issuerDN)){
                 reportIssueOnFile("Certificate ["+ alias +"] is autosigned");
         }

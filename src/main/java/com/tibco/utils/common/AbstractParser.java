@@ -7,7 +7,7 @@
 package com.tibco.utils.common;
 
 import org.apache.xerces.jaxp.SAXParserFactoryImpl;
-import org.sonar.api.utils.SonarException;
+import org.sonar.api.utils.MessageException;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -42,10 +42,8 @@ public abstract class AbstractParser {
   protected SAXParser newSaxParser(boolean namespaceAware) {
     try {
       return namespaceAware ? SAX_FACTORY_NAMESPCE_AWARE.newSAXParser() : SAX_FACTORY_NAMESPCE_UNAWARE.newSAXParser();
-    } catch (SAXException e) {
-      throw new SonarException(e);
-    } catch (ParserConfigurationException e) {
-      throw new SonarException(e);
+    } catch (SAXException | ParserConfigurationException e) {
+      throw MessageException.of("Error creating SAX Parser", e);
     }
   }
 
@@ -57,10 +55,8 @@ public abstract class AbstractParser {
       factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
       factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
       factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-    } catch (SAXException e) {
-      throw new SonarException(e);
-    } catch (ParserConfigurationException e) {
-      throw new SonarException(e);
+    } catch (SAXException |ParserConfigurationException e) {
+      throw MessageException.of("Error setting Common Conf to SAX Parser", e);
     }
   }
 

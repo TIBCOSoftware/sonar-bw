@@ -93,16 +93,7 @@ public class ProjectStructureCheck extends AbstractProjectCheck {
                 JsonObject structure = structureArray.get(i).getAsJsonObject();
 
                 if (structure != null) {
-                    String namePattern = structure.get("namePattern").getAsString();
-                    String type = structure.get("type").getAsString();
-                    if (child.getName().matches(namePattern) && type != null && (("file".equals(type) && childItem.isFile()) || ("folder".equals(type) && childItem.isDirectory()))) {
-
-                        valid = true;
-                        if (childItem.isDirectory()) {
-                            check(childItem, structure);
-                        }
-
-                    }
+                    valid = checkJSONStructure(child, childItem, structure, valid);
                 }
             }
             
@@ -110,6 +101,20 @@ public class ProjectStructureCheck extends AbstractProjectCheck {
                 reportIssueOnFile("File ["+childItem.getAbsolutePath()+"] is not allowed here");
             }
         }
+    }
+
+    private boolean checkJSONStructure(File child, File childItem, JsonObject structure, boolean valid) {
+        String namePattern = structure.get("namePattern").getAsString();
+        String type = structure.get("type").getAsString();
+        if (child.getName().matches(namePattern) && type != null && (("file".equals(type) && childItem.isFile()) || ("folder".equals(type) && childItem.isDirectory()))) {
+
+            valid = true;
+            if (childItem.isDirectory()) {
+                check(childItem, structure);
+            }
+
+        }
+        return valid;
     }
 
 }

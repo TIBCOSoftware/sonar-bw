@@ -9,11 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,8 +21,8 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.batch.fs.InputModule;
 import org.sonar.api.rule.RuleKey;
+import org.sonar.api.scanner.fs.InputProject;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.w3c.dom.Document;
@@ -51,7 +49,6 @@ import com.tibco.utils.bw6.model.ModuleProperties;
 import com.tibco.utils.bw6.model.ModuleSharedVariables;
 import com.tibco.utils.bw6.model.Process;
 import com.tibco.utils.bw6.model.Project;
-import com.tibco.utils.bw6.model.Service;
 import com.tibco.utils.bw6.model.SharedResource;
 import com.tibco.utils.bw6.model.SharedResourceParameter;
 import com.tibco.utils.bw6.model.WsdlResource;
@@ -77,8 +74,6 @@ import org.w3c.dom.Element;
 public class ProcessRuleSensor implements Sensor {
 
     private static final Logger LOG = Loggers.get(ProcessRuleSensor.class);
-    private final Map<String, Process> servicetoprocess = new HashMap<>();
-    private String processname = null;
     protected FileSystem fileSystem;
     protected String languageKey;
     protected SensorContext sensorContext;
@@ -138,7 +133,6 @@ public class ProcessRuleSensor implements Sensor {
 
     private void checkSubprocess(Process process) {
         LOG.debug("checkSubprocess - START");
-        //TODO Change this code for something more "abstract"
         if (process != null) {
             LOG.debug("Checking if process is a subprocess: " + process.getName());
             File file = new File("META-INF/module.bwm");
@@ -170,34 +164,7 @@ public class ProcessRuleSensor implements Sensor {
 
     }
 
-    /*private void analyseDeadLock() {
-        LOG.debug("analyseDeadLock - START");
-        for (Iterator<Process> iterator = processList.iterator(); iterator.hasNext();) {
-            Process process = iterator.next();
-            LOG.debug("Adding service to process references for process: " + process.getName());
-            Map<String, Service> services = process.getServices();
-            if (services != null) {
-                for (String servicename : services.keySet()) {
-                    LOG.debug("Detected Service Name: " + servicename);
-                    String key = servicename + "-" + services.get(servicename).getNamespace() + "-" + process.getName();
-                    servicetoprocess.put(key, process);
-                }
-            }
-        }
-        //------All set ready to go
-        for (Iterator<Process> iterator = processList.iterator(); iterator.hasNext();) {
-            Process process = iterator.next();
-            String baseName = process.getBasename();
-            for (InputFile file : fileSystem.inputFiles(fileSystem.predicates().hasLanguage(languageKey))) {
-                if (file.filename().equals(baseName)) {
-                    LOG.debug("Finding deadlock for process: " + process.getName());
-                    ProcessSource sourceCode = new ProcessSource(file);
-                    findDeadLock(process.getServices(), process.getProcessReferenceServices(), process, sourceCode, file);
-                }
-            }
-        }
-        LOG.debug("analyseDeadLock - END");
-    }*/
+
     public final void reportIssueOnFile(RuleKey ruleKey, InputFile inputFile, String message, int line) {
         LOG.debug("reportIssueOnFile - START");
         LOG.info("Issue reported on file [" + inputFile.filename() + "] with message [" + message + "]");
@@ -218,65 +185,7 @@ public class ProcessRuleSensor implements Sensor {
         LOG.debug("reportIssueOnFile - END");
     }
 
-    public void findDeadLock(Map<String, Service> services, Map<String, Service> referencedServices, Process process, ProcessSource sourceCode, InputFile resource) {
-        LOG.debug("findDeadLock - START");
-        if (services != null && services.size() > 0 && referencedServices != null && referencedServices.size() > 0) {
-            Set<String> serviceName = services.keySet();
-            Set<String> referenceServiceName = referencedServices.keySet();
-            Set<String> dupReferencedServiceName = new HashSet<>(referenceServiceName);
-            dupReferencedServiceName.retainAll(serviceName);
-            if (!dupReferencedServiceName.isEmpty()) {
-                String[] deadlockedService = dupReferencedServiceName.toArray(new String[dupReferencedServiceName.size()]);
-                if (deadlockedService != null && deadlockedService.length > 0) {
-                    String referencedServiceNameSpace = referencedServices.get(deadlockedService[0]).getNamespace();
-                    LOG.debug("Referenced service namespace: " + referencedServiceNameSpace);
-                    String referenceProcessName = referencedServices.get(deadlockedService[0]).getImplementationProcess();
-                    LOG.debug("Reference process name: " + referenceProcessName);
-                    String serviceNamespace = services.get(deadlockedService[0]).getNamespace();
-                    LOG.debug("Service namespace: " + serviceNamespace);
-                    String proc2 = process.getName();
-                    LOG.debug("Process Name: " + proc2);
 
-                    if (referencedServiceNameSpace.equals(serviceNamespace) && proc2.equals(referenceProcessName)) {
-
-                        LOG.debug("Reference Process Name is equal to Process Name");
-                        for (Object checkObject : checkReturned.all()) {
-                            AbstractCheck check = (AbstractCheck) checkObject;
-                            if (check instanceof DeadLockCheck) {
-                                RuleKey ruleKey = checkReturned.ruleKey(check);
-                                check.setRuleKey(ruleKey);
-                                proc2 = process.getBasename();
-                                if (processname == null) {
-                                    reportIssueOnFile(check.getRuleKey(), resource, "There is a very high possibility of deadlock in the implementation of service " + deadlockedService[0] + " exposed by process " + proc2, 1);
-
-                                } else {
-                                    reportIssueOnFile(check.getRuleKey(), resource, "Deadlock is detected between processes " + proc2 + " and " + processname + ". There is a very high possibility of deadlock in the implementation of service " + deadlockedService[0] + " exposed by process " + proc2 + " and consumed by process " + processname, 1);
-                                }
-
-                            }
-                        }
-                    } else {
-                        for (String name : referenceServiceName) {
-                            Process proc = servicetoprocess.get(name + "-" + referencedServices.get(name).getNamespace() + "-" + referencedServices.get(name).getImplementationProcess());
-                            if (proc.getProcessReferenceServices() != null) {
-                                processname = proc.getBasename();
-                                findDeadLock(services, proc.getProcessReferenceServices(), process, sourceCode, resource);
-                            }
-                        }
-                    }
-                }
-            } else {
-                for (String name : referenceServiceName) {
-                    Process proc = servicetoprocess.get(name + "-" + referencedServices.get(name).getNamespace() + "-" + referencedServices.get(name).getImplementationProcess());
-                    if (proc != null && proc.getProcessReferenceServices() != null) {
-                        processname = proc.getBasename();
-                        findDeadLock(services, proc.getProcessReferenceServices(), process, sourceCode, resource);
-                    }
-                }
-            }
-        }
-        LOG.debug("findDeadLock - END");
-    }
 
     @Override
     public void execute(SensorContext context) {
@@ -287,7 +196,7 @@ public class ProcessRuleSensor implements Sensor {
         List<InputFile> inputFiles = new ArrayList<>();
 
         Project bwProject = new Project();
-        InputModule projectInputFile = context.module();
+        InputProject projectInputFile = context.project();
         ProjectSource projectSource = new ProjectSource(projectInputFile);
         projectSource.setProject(bwProject);
         bwProject.setFile(fileSystem.baseDir());
@@ -323,99 +232,14 @@ public class ProcessRuleSensor implements Sensor {
                 String extension = file.filename().substring(file.filename().lastIndexOf("."));
                 LOG.debug("Extension for file: " + extension);
 
-                if (".xsd".equals(extension)) {
-                    try {
-                        XmlFile xFile = XmlFile.create(file);
-                        XsdResource resource = bwProject.addSchema(xFile.getDocument());
-                        projectSource.getMap().addFile(resource, xFile.getInputFile());
-                        LOG.debug("Added schema to project: " + file.filename());
-                    } catch (Exception ex) {
-                    }
-                } else if (".wsdl".equals(extension)) {
-                    try {
-                        XmlFile xFile = XmlFile.create(file);
-                        WsdlResource resource = bwProject.addWSDL(xFile.getDocument());
-                        projectSource.getMap().addFile(resource, xFile.getInputFile());
-                        LOG.debug("Added service descriptor to project: " + file.filename());
-                    } catch (Exception ex) {
-                    }
-                } else if (".bwt".equals(extension)) {
-                    try {
-                        LOG.debug("Test file deteected");
-                        XmlFile xFile = XmlFile.create(file);
-                        List<String> testFiles = parseTest(xFile.getDocument());
-                        if (testFiles != null) {
-                            for (String process : testFiles) {
-                                Process procObj = bwProject.getProcessByName(process);
-                                if (procObj != null) {
-                                    LOG.debug("Process Name recovered by name: " + procObj.getName());
-                                    procObj.setHasTest(true);
-                                }
-                            }
-                        }
-                    } catch (Exception ex) {
-                    }
-                } else if (".json".equals(extension)) {
-                    LOG.debug("JSON file deteected");
-                    JSONResource resource = new JSONResource();
-                    bwProject.addJSONSchema(resource);
-                    projectSource.getMap().addFile(resource, file);
-                }
+                parseAdditionalResources(bwProject, projectSource, file, extension);
 
                 String resourceType = resourceExtensionMapper.get(extension);
                 LOG.debug("Resource Type for file: " + resourceType);
                 if (resourceType != null) {
-                    LOG.info("Found BW6 Resource " + resourceType + " " + file.filename());
-                    SharedResourceSource sourceCode = new SharedResourceSource(projectSource, fileSystem, file); // TODO:  Handle this better....
-                    SharedResource resource = sourceCode.getResource();
-                    resource.setProject(bwProject);
-                    bwProject.addResource(resource);
-                    resource.parse();
-
-                    List<String> parameterRequired = getRequiredParameters(resourceType);
-                    if (parameterRequired != null) {
-                        for (String parameter : parameterRequired) {
-                            SharedResourceParameter param = resource.getParameterByName(parameter);
-                            if (param != null) {
-                                LOG.debug("Setting as required parameter [" + param.getName() + "] for resources Type [" + resourceType + "]");
-                                param.setRequired(true);
-                            }
-                        }
-                    }
-
-
-
-                    context.<Integer>newMeasure()
-                            .forMetric(getSharedResourceMetric(resourceType))
-                            .on(file)
-                            .withValue(1)
-                            .save();
+                    parseMainResourceObject(bwProject, projectSource, context, file, resourceType);
                 }else{
-
-                    if("pom.xml".equals(file.filename())){
-                        LOG.debug("Detected pom.xml file --> This is a maven project");
-                        try{
-                            XmlFile xFile = XmlFile.create(file);
-                            bwProject.setPomFile(xFile.getDocument());
-                        }catch(IOException ex){
-
-                        }
-                    }
-
-                    if("MANIFEST.MF".equals(file.filename())){
-                        LOG.debug("Detected MANIFEST.MF");
-                        try{
-                            Manifest xmanifest = new Manifest(file.inputStream());
-                            bwProject.setManifest(xmanifest);
-
-                        }catch(IOException ex){
-                               LOG.error("Error reading the MANIFEST.MF file",ex);
-                        }
-                    }
-
-                    GenericResource resource = new GenericResource();
-                    bwProject.addOtherFile(resource);
-                    projectSource.getMap().addFile(resource, file);
+                    parseGenericResourceObject(bwProject, projectSource, file);
                 }
             }
             
@@ -432,12 +256,131 @@ public class ProcessRuleSensor implements Sensor {
         LOG.info("Completed Search of BW6 Resources");
     }
 
+    private static void parseGenericResourceObject(Project bwProject, ProjectSource projectSource, InputFile file) {
+        if("pom.xml".equals(file.filename())){
+            parsePOMResource(bwProject, file);
+        }
+
+        if("MANIFEST.MF".equals(file.filename())){
+            parseManifestResource(bwProject, file);
+        }
+
+        GenericResource resource = new GenericResource();
+        bwProject.addOtherFile(resource);
+        projectSource.getMap().addFile(resource, file);
+    }
+
+    private void parseMainResourceObject(Project bwProject, ProjectSource projectSource, SensorContext context, InputFile file, String resourceType) {
+        LOG.info("Found BW6 Resource " + resourceType + " " + file.filename());
+        SharedResourceSource sourceCode = new SharedResourceSource(projectSource, fileSystem, file);
+        SharedResource resource = sourceCode.getResource();
+        resource.setProject(bwProject);
+        bwProject.addResource(resource);
+        resource.parse();
+        parseResourceRequireParameters(resourceType, resource);
+        context.<Integer>newMeasure()
+                .forMetric(getSharedResourceMetric(resourceType))
+                .on(file)
+                .withValue(1)
+                .save();
+    }
+
+    private static void parseManifestResource(Project bwProject, InputFile file) {
+        LOG.debug("Detected MANIFEST.MF");
+        try{
+            Manifest xmanifest = new Manifest(file.inputStream());
+            bwProject.setManifest(xmanifest);
+
+        }catch(IOException ex){
+               LOG.error("Error reading the MANIFEST.MF file",ex);
+        }
+    }
+
+    private static void parsePOMResource(Project bwProject, InputFile file) {
+        LOG.debug("Detected pom.xml file --> This is a maven project");
+        try{
+            XmlFile xFile = XmlFile.create(file);
+            bwProject.setPomFile(xFile.getDocument());
+        }catch(IOException ex){
+            LOG.debug("Added schema to project: " + file.filename());
+        }
+    }
+
+    private void parseResourceRequireParameters(String resourceType, SharedResource resource) {
+        List<String> parameterRequired = getRequiredParameters(resourceType);
+        if (parameterRequired != null) {
+            for (String parameter : parameterRequired) {
+                SharedResourceParameter param = resource.getParameterByName(parameter);
+                if (param != null) {
+                    LOG.debug("Setting as required parameter [" + param.getName() + "] for resources Type [" + resourceType + "]");
+                    param.setRequired(true);
+                }
+            }
+        }
+    }
+
+    private void parseAdditionalResources(Project bwProject, ProjectSource projectSource, InputFile file, String extension) {
+        if (".xsd".equals(extension)) {
+            parseXSDResource(bwProject, projectSource, file);
+        } else if (".wsdl".equals(extension)) {
+            parseWSDLResource(bwProject, projectSource, file);
+        } else if (".bwt".equals(extension)) {
+            parseBWTResource(bwProject, file);
+        } else if (".json".equals(extension)) {
+            LOG.debug("JSON file deteected");
+            JSONResource resource = new JSONResource();
+            bwProject.addJSONSchema(resource);
+            projectSource.getMap().addFile(resource, file);
+        }
+    }
+
+    private void parseBWTResource(Project bwProject, InputFile file) {
+        try {
+            LOG.debug("Test file deteected");
+            XmlFile xFile = XmlFile.create(file);
+            List<String> testFiles = parseTest(xFile.getDocument());
+            if (testFiles != null) {
+                for (String process : testFiles) {
+                    Process procObj = bwProject.getProcessByName(process);
+                    if (procObj != null) {
+                        LOG.debug("Process Name recovered by name: " + procObj.getName());
+                        procObj.setHasTest(true);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            LOG.warn("Error parsing BWT resource: " + file.filename());
+        }
+    }
+
+    private static void parseWSDLResource(Project bwProject, ProjectSource projectSource, InputFile file) {
+        try {
+            XmlFile xFile = XmlFile.create(file);
+            WsdlResource resource = bwProject.addWSDL(xFile.getDocument());
+            projectSource.getMap().addFile(resource, xFile.getInputFile());
+            LOG.debug("Added service descriptor to project: " + file.filename());
+        } catch (Exception ex) {
+            LOG.warn("Error parsing WSDL resource: " + file.filename());
+        }
+    }
+
+    private static void parseXSDResource(Project bwProject, ProjectSource projectSource, InputFile file) {
+        try {
+            XmlFile xFile = XmlFile.create(file);
+            XsdResource resource = bwProject.addSchema(xFile.getDocument());
+            projectSource.getMap().addFile(resource, xFile.getInputFile());
+            LOG.debug("Added schema to project: " + file.filename());
+        } catch (Exception ex) {
+            LOG.warn("Error parsing XSD resource: " + file.filename());
+        }
+    }
+
     protected void parseProcesses(List<InputFile> inputFiles, ProjectSource projectSource, Project bwProject) {
         fileSystem.inputFiles(mainFilesPredicate).forEach(inputFiles::add);
 
         LOG.info("Searching for BW Process files");
         inputFiles.forEach(inputFile -> {
-            ProcessSource sourceCode = new ProcessSource(projectSource, inputFile); // TODO:  Handle this better....
+            ProcessSource sourceCode = new ProcessSource(projectSource, inputFile);
             Process process = sourceCode.getProcessModel();
             if(process != null){
                 checkSubprocess(process);
@@ -542,8 +485,7 @@ public class ProcessRuleSensor implements Sensor {
             case SharedResourceMetrics.BWRESOURCES_SQL_FILE_KEY:
                 return SharedResourceMetrics.BWRESOURCES_SQL_FILE;
             default:
-                // TODO: NEED A UNKOWN .....
-                return SharedResourceMetrics.BWRESOURCES_SQL_FILE;
+                return SharedResourceMetrics.BWRESOURCES_UNKNOWN;
         }
     }
 
@@ -610,7 +552,7 @@ public class ProcessRuleSensor implements Sensor {
     private void parseModuleProperties(Project project) {
         LOG.debug("parseModuleProperties - START");
         InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasExtension("bwm"));
-        LOG.debug("Input file: " + inputFile);
+        LOG.debug("Input file for parseModuleProperties: " + inputFile);
         try {
             if (inputFile != null) {
                 LOG.debug("Input filename: " + inputFile.filename());
@@ -630,10 +572,10 @@ public class ProcessRuleSensor implements Sensor {
     private void parseModuleSharedVariables(Project project) {
         LOG.debug("parseModuleSharedVariables - START");
         InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasExtension("msv"));
-        LOG.debug("Input file: " + inputFile);
+        LOG.debug("Input file for parseModuleSharedVariables: " + inputFile);
         try {
             if (inputFile != null) {
-                LOG.debug("Input file: " + inputFile.filename());
+                LOG.debug("Input filename for parseModuleSharedVariables: " + inputFile.filename());
                 XmlFile file = XmlFile.create(inputFile);
                 ModuleSharedVariables moduleprops = new ModuleSharedVariables(file.getDocument());
                 project.setModuleSharedVariables(moduleprops);
@@ -647,10 +589,10 @@ public class ProcessRuleSensor implements Sensor {
     private void parseJobSharedVariables(Project project) {
         LOG.debug("parseJobSharedVariables - START");
         InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasExtension("jsv"));
-        LOG.debug("Input file: " + inputFile);
+        LOG.debug("Input file for parseJobSharedVariables: " + inputFile);
         try {
             if (inputFile != null) {
-                LOG.debug("Input file: " + inputFile.filename());
+                LOG.debug("Input filename for parseJobSharedVariables: " + inputFile.filename());
                 XmlFile file = XmlFile.create(inputFile);
                 JobSharedVariables moduleprops = new JobSharedVariables(file.getDocument());
                 project.setJobSharedVariables(moduleprops);

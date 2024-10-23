@@ -33,11 +33,11 @@ public class Activity extends ProcessNode {
     }
 
     public Element getConfiguration() {
-        return XmlHelper.firstChildElement((Element) getNode(), "config");
+        return XmlHelper.firstChildElement((Element) getNode(), null, "config");
     }
 
     public Element getInputBindings() {
-        return XmlHelper.firstChildElement((Element) getNode(), "inputBindings");
+        return XmlHelper.firstChildElement((Element) getNode(), null, "inputBindings");
     }
 
     public Map<String, String> getProperties() {
