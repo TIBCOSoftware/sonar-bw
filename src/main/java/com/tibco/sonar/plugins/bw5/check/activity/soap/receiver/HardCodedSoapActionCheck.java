@@ -13,13 +13,13 @@ import org.sonar.check.RuleProperty;
 
 import com.tibco.sonar.plugins.bw5.check.AbstractProcessHardCodedCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = HardCodedSoapActionCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_SOAPRECEIVERSOAPACTIONHARDCODED_NAME, description = CheckConstants.RULE_PROCESS_SOAPRECEIVERSOAPACTIONHARDCODED_DESCRIPTION, priority = Priority.MAJOR)
 public class HardCodedSoapActionCheck extends AbstractProcessHardCodedCheck {
 
-    private static final Logger LOG = Loggers.get(HardCodedSoapActionCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HardCodedSoapActionCheck.class);
 	public static final String RULE_KEY = "SOAPReceiverSoapActionHardCoded";
 	
 	protected static final String CONFIG_XPATH_DEFAULT = "//soapAction";

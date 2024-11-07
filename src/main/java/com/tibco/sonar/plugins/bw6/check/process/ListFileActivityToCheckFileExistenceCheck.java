@@ -20,14 +20,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FilenameUtils;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = ListFileActivityToCheckFileExistenceCheck.RULE_KEY, name = "Usage of List File activity to check file existence", priority = Priority.MINOR, description = "Using List File activity to check if a single file exists is less performant than using ReadFile without fileContent check")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class ListFileActivityToCheckFileExistenceCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(ListFileActivityToCheckFileExistenceCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ListFileActivityToCheckFileExistenceCheck.class);
     public static final String RULE_KEY = "ListFileActivityToCheckFileExistence";
     
     @Override

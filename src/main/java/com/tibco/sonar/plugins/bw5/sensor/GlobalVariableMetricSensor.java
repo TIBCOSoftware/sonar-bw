@@ -22,13 +22,13 @@ import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.measures.Metric;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.w3c.dom.Document;
 
 public class GlobalVariableMetricSensor implements Sensor {
 
-    private static final Logger LOG = Loggers.get(GlobalVariableMetricSensor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GlobalVariableMetricSensor.class);
     protected FileSystem fileSystem;
 
     private final FilePredicate mainFilesPredicate;

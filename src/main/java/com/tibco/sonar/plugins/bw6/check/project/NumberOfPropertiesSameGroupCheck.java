@@ -12,8 +12,8 @@ import com.tibco.utils.bw6.model.Project;
 import com.tibco.utils.bw6.model.Property;
 import java.util.List;
 
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -30,7 +30,7 @@ public class NumberOfPropertiesSameGroupCheck extends AbstractProjectCheck {
 
     public static final String RULE_KEY = "NumberOfPropertiesSameGroup";
 
-    private static final Logger LOG = Loggers.get(NumberOfPropertiesSameGroupCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NumberOfPropertiesSameGroupCheck.class);
 
     @RuleProperty(key = "maxProperties", description = "Threshold of properties to be considered excessive for a single group", defaultValue = "10", type = "INTEGER")
     protected int maxProperties;
@@ -73,7 +73,7 @@ public class NumberOfPropertiesSameGroupCheck extends AbstractProjectCheck {
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

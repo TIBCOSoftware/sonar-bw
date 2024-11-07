@@ -18,22 +18,17 @@ import org.apache.commons.io.FileUtils;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import com.tibco.sonar.plugins.bw5.check.AbstractXmlCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
 import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
-import com.tibco.sonar.plugins.bw5.source.XmlBw5Source;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = DeadProcessCheckForSubProcess.RULE_KEY, name = CheckConstants.RULE_PROCESS_DEADPROCESSCHECKFORSUBPROCESS_NAME, description =  CheckConstants.RULE_PROCESS_DEADPROCESSCHECKFORSUBPROCESS_DESCRIPTION, priority = Priority.CRITICAL, tags = { "bug" })
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.CRITICAL)
 public class DeadProcessCheckForSubProcess extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(DeadProcessCheckForSubProcess.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DeadProcessCheckForSubProcess.class);
 	public static final String RULE_KEY = "DeadProcessCheckForSubProcess";
 	public static final String DEAD_CODE_DESCRIPTION = "Dead Code: This sub process is not used any where in the code";
 	public static final String DEAD_CODE_DESCRIPTION_DYNAMIC =

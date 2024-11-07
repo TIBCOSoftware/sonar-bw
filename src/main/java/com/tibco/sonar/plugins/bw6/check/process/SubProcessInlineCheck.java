@@ -12,8 +12,8 @@ import com.tibco.utils.bw6.model.Process;
 import com.tibco.utils.bw6.model.Service;
 
 import java.util.Map;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -23,7 +23,7 @@ import org.sonar.check.Rule;
 public class SubProcessInlineCheck
         extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(SubProcessInlineCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SubProcessInlineCheck.class);
     public static final String RULE_KEY = "SubProcessInlineCheck";
 
     @Override

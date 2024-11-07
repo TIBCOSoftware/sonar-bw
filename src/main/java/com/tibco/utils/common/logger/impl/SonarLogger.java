@@ -13,10 +13,10 @@ import com.tibco.utils.common.logger.Logger;
  */
 public class SonarLogger implements Logger {
     
-    private final org.sonar.api.utils.log.Logger log;
+    private final  org.slf4j.Logger log;
     
     public SonarLogger(Class<?> className){
-        log = org.sonar.api.utils.log.Loggers.get(className);
+        log = org.slf4j.LoggerFactory.getLogger(className);
     }
 
     @Override
@@ -28,5 +28,24 @@ public class SonarLogger implements Logger {
     public void warn(String arg0, Exception arg1) {
         log.warn(arg0, arg1);
     }
-    
+
+    @Override
+    public void warn(String arg0) {
+        log.warn(arg0);
+    }
+
+    @Override
+    public void info(String arg0) {
+        log.info(arg0);
+    }
+
+    @Override
+    public void error(String arg0) {
+        log.error(arg0);
+    }
+
+    @Override
+    public void error(String arg0, Exception arg1) {
+        log.error(arg0, arg1);
+    }
 }

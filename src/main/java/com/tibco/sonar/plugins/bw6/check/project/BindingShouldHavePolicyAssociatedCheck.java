@@ -13,8 +13,8 @@ import com.tibco.utils.bw6.model.Component;
 import com.tibco.utils.bw6.model.Project;
 import com.tibco.utils.bw6.model.Service;
 
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -31,7 +31,7 @@ public class BindingShouldHavePolicyAssociatedCheck extends AbstractProjectCheck
 
     public static final String RULE_KEY = "BindingShouldHavePolicyAssociated";
 
-    private static final Logger LOG = Loggers.get(BindingShouldHavePolicyAssociatedCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BindingShouldHavePolicyAssociatedCheck.class);
 
    
     @Override
@@ -73,7 +73,7 @@ public class BindingShouldHavePolicyAssociatedCheck extends AbstractProjectCheck
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

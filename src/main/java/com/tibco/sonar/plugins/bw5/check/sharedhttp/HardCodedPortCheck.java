@@ -18,14 +18,14 @@ import com.tibco.sonar.plugins.bw5.check.AbstractXmlCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
 import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw5.source.XmlBw5Source;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = HardCodedPortCheck.RULE_KEY, name = CheckConstants.RULE_SHAREDHTTP_SHAREDHTTPHARDCODEDPORT_NAME, description = CheckConstants.RULE_SHAREDHTTP_SHAREDHTTPHARDCODEDPORT_DESCRIPTION, priority = Priority.MAJOR)
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class HardCodedPortCheck extends AbstractXmlCheck {
 
-    private static final Logger LOG = Loggers.get(HardCodedPortCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HardCodedPortCheck.class);
 	public static final String RULE_KEY = "SharedHttpHardCodedPort";
 	public static final String CONFIG_ELEMENT_NAME = "config";
 	public static final String PORT_ELEMENT_NAME = "Port";

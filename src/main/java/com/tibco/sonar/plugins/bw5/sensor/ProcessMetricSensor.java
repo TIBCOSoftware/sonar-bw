@@ -20,17 +20,16 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.measures.Metric;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 public class ProcessMetricSensor implements Sensor {
 
-    private static final Logger LOG = Loggers.get(ProcessMetricSensor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProcessMetricSensor.class);
 
     protected FileSystem fileSystem;
     private final FilePredicate mainFilesPredicate;
     private SensorContext sensorContext;
-    private InputFile processFileResource;
 
     public ProcessMetricSensor(FileSystem fileSystem) {
         LOG.debug("ProcessRuleSensor - START");
@@ -49,14 +48,14 @@ public class ProcessMetricSensor implements Sensor {
         int activitiesProcess = process.countAllActivities();
         int transitionsProcess = process.countAllTransitions();
         int processesProcess = 1;
-        saveMeasure(BusinessWorksMetrics.PROCESSES, processesProcess);
-        saveMeasure(BusinessWorksMetrics.GROUPS, groupsProcess);
-        saveMeasure(BusinessWorksMetrics.ACTIVITIES, activitiesProcess);
-        saveMeasure(BusinessWorksMetrics.TRANSITIONS, transitionsProcess);
+        saveMeasure(BusinessWorksMetrics.PROCESSES, processesProcess, file);
+        saveMeasure(BusinessWorksMetrics.GROUPS, groupsProcess,file);
+        saveMeasure(BusinessWorksMetrics.ACTIVITIES, activitiesProcess,file);
+        saveMeasure(BusinessWorksMetrics.TRANSITIONS, transitionsProcess,file);
 
     }
 
-    private void saveMeasure(Metric metric, double value) {
+    private void saveMeasure(Metric metric, double value, InputFile processFileResource) {
         sensorContext.<Integer>newMeasure()
                 .forMetric(metric)
                 .on(processFileResource)

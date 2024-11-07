@@ -14,9 +14,9 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @author avazquez
  */
-public class Loggers {
+public class LoggerFactory {
 
-    private Loggers(){
+    private LoggerFactory(){
 
     }
 
@@ -26,7 +26,7 @@ public class Loggers {
         loggerImplementationClass =  className;
     }
 
-    public static Logger get(Class<?> className) {
+    public static Logger getLogger(Class<?> className) {
 
         Class<?> c = null;
         Logger logger;

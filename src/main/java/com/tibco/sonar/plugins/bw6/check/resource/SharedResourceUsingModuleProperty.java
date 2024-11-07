@@ -10,8 +10,8 @@ import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.SharedResourceSource;
 import com.tibco.utils.bw6.model.SharedResource;
 import com.tibco.utils.bw6.model.SharedResourceParameter;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
@@ -30,7 +30,7 @@ import java.util.Objects;
 public class SharedResourceUsingModuleProperty extends AbstractResourceCheck {
 
     public static final String RULE_KEY = "BwSharedResourceUsingModuleProperty";
-    private static final Logger LOG = Loggers.get(SharedResourceUsingModuleProperty.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SharedResourceUsingModuleProperty.class);
 
     @Override
     public void validate(SharedResourceSource resourceXml) {
@@ -52,7 +52,7 @@ public class SharedResourceUsingModuleProperty extends AbstractResourceCheck {
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

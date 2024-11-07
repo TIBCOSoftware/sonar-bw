@@ -11,8 +11,8 @@ import com.tibco.sonar.plugins.bw5.source.ProcessSource;
 import com.tibco.utils.bw5.model.Process;
 import com.tibco.utils.bw5.model.Transition;
 import com.tibco.utils.common.helper.XmlHelper;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -25,7 +25,7 @@ import java.util.Map;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class TransitionLabelCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(TransitionLabelCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TransitionLabelCheck.class);
     public static final String RULE_KEY = "TransitionLabels";
 
     @Override

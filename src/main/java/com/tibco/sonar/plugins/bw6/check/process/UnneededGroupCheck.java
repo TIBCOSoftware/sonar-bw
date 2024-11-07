@@ -17,14 +17,14 @@ import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Group;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = UnneededGroupCheck.RULE_KEY, name = "Uneeded Group Check", priority = Priority.MINOR, description = "Some times developers tends to add additional groups where they are not needed.")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class UnneededGroupCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(UnneededGroupCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UnneededGroupCheck.class);
     public static final String RULE_KEY = "UnneededGroup";
 
     @Override

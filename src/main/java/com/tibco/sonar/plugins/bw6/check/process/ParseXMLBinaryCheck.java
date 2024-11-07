@@ -16,14 +16,14 @@ import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
 import java.util.List;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = ParseXMLBinaryCheck.RULE_KEY, name = "ParseXML using Binary", priority = Priority.MINOR, description = "ParseXML should use binary mode for performance assestment ")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class ParseXMLBinaryCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(ParseXMLBinaryCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ParseXMLBinaryCheck.class);
     public static final String RULE_KEY = "ParseXMLBinary";
 
     

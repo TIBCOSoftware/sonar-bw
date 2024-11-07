@@ -18,14 +18,14 @@ import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
 import com.tibco.utils.bw6.model.Transition;
 import java.util.List;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
     
 @Rule(key = NoOtherwiseConditionCheck.RULE_KEY, name = "No Otherwise Condition Check", priority = Priority.MAJOR, description = "This rule checks multiple transition from an activity one for the paths are for no matching condition to handle all posible outcomes of the decision execution")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class NoOtherwiseConditionCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(NoOtherwiseConditionCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NoOtherwiseConditionCheck.class);
     public static final String RULE_KEY = "NoOtherwiseCheck";
 
     @Override

@@ -13,13 +13,13 @@ import org.sonar.check.RuleProperty;
 
 import com.tibco.sonar.plugins.bw5.check.AbstractProcessHardCodedCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = HardCodedTimeoutCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_JMSQUEUEREQUESTORTIMEOUTHARDCODED_NAME, description = CheckConstants.RULE_PROCESS_JMSQUEUEREQUESTORTIMEOUTHARDCODED_DESCRIPTION, priority = Priority.MAJOR,tags={"bug"})
 public class HardCodedTimeoutCheck extends AbstractProcessHardCodedCheck {
 
-    private static final Logger LOG = Loggers.get(HardCodedTimeoutCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HardCodedTimeoutCheck.class);
 	public static final String RULE_KEY = "JMSQueueRequestorTimeoutHardCoded";
 	
 	protected static final String CONFIG_XPATH_DEFAULT = "";

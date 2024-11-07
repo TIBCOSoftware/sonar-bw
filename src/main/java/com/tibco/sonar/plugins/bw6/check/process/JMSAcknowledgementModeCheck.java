@@ -17,14 +17,14 @@ import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.EventSource;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = JMSAcknowledgementModeCheck.RULE_KEY, name = "JMS Acknowledgement Mode Check", priority = Priority.INFO, description = "This rule checks the acknowledgement mode used in JMS activities. Avoid using Auto Acknowledgement to minimize the risk of data loss.")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.INFO)
 public class JMSAcknowledgementModeCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(JMSAcknowledgementModeCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JMSAcknowledgementModeCheck.class);
 
     public static final String RULE_KEY = "JMSAcknowledgementMode";
 

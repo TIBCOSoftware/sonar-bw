@@ -16,14 +16,14 @@ import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = JMSReceiverPlusConfirmCheck.RULE_KEY, name = "Confirm Activity presence Check", priority = Priority.INFO, description = "Confirm activity should cover all OK flows with a JMS Receiver if  CLIENT ACK Mode is Selected.",tags = {"bug"})
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.INFO)
 public class JMSReceiverPlusConfirmCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(JMSReceiverPlusConfirmCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JMSReceiverPlusConfirmCheck.class);
 
     public static final String RULE_KEY = "JMSReceiverPlusConfirm";
 

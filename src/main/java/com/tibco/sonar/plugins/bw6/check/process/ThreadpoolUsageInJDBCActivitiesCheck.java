@@ -16,14 +16,14 @@ import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = ThreadpoolUsageInJDBCActivitiesCheck.RULE_KEY, name = "ThreadPool Resource Usage in JDBC Activities", priority = Priority.MAJOR, description = "This rule check if you are setting up a ThreadPool Resource to your JDBC Activities to handle the increasing number of threads because of JDBC Activities")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class ThreadpoolUsageInJDBCActivitiesCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(ThreadpoolUsageInJDBCActivitiesCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ThreadpoolUsageInJDBCActivitiesCheck.class);
     public static final String RULE_KEY = "ThreadpoolUsageInJDBCActivities";
 
     @Override

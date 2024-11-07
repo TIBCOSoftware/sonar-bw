@@ -6,7 +6,7 @@
 package com.tibco.utils.common.helper;
 
 import com.tibco.utils.common.logger.Logger;
-import com.tibco.utils.common.logger.Loggers;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -19,6 +19,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -33,13 +38,14 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class XmlHelper {
 
-    private static final Logger LOG = Loggers.get(XmlHelper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XmlHelper.class);
 
     public static String getAttributeValue(Element referenceServiceElement, String inline) {
         String value = null;
@@ -313,6 +319,44 @@ public class XmlHelper {
             LOG.warn("Failed on executing XPath expression: " + xPathQuery, ex);
         }
         return null;
+    }
+
+    public static String getInnerXml(Element element) {
+        StringBuilder innerXml = new StringBuilder();
+
+        // Loop through child nodes of the element
+        NodeList children = element.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            Node child = children.item(i);
+            innerXml.append(nodeToString(child));
+        }
+        return innerXml.toString();
+    }
+
+    private static String nodeToString(Node node) {
+        try {
+            StringWriter writer = new StringWriter();
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            transformer.transform(new DOMSource(node), new StreamResult(writer));
+            return writer.toString();
+        } catch (Exception e) {
+            LOG.warn("Failed on transforming XML object to String: ", e);
+            return null;
+        }
+    }
+
+    public static boolean isXML(String content) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            builder.parse(new InputSource(new StringReader(content)));
+            return true;
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            // If an exception is thrown, it's not valid XML
+            return false;
+        }
     }
 
 }

@@ -11,8 +11,8 @@ import com.tibco.sonar.plugins.bw5.source.ProcessSource;
 import com.tibco.utils.bw5.model.Activity;
 import com.tibco.utils.bw5.model.Process;
 import com.tibco.utils.common.helper.XmlHelper;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class RenderXMLPrettyPrintCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(RenderXMLPrettyPrintCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RenderXMLPrettyPrintCheck.class);
     public static final String RULE_KEY = "RenderXmlPrettyPrint";
     
     @Override
@@ -42,7 +42,7 @@ public class RenderXMLPrettyPrintCheck extends AbstractProcessCheck {
     private void checkActivity(Activity activity) {
         LOG.debug("Activty type ["+ activity.getType() + "] - ["+ activity.getName()+"]");
 
-        String expression = activity.getInputBindings().getNodeValue();
+        String expression = XmlHelper.getInnerXml(activity.getInputBindings());
         if(expression != null && expression.contains("\"tib:render-xml(")){
 
             Pattern pat = Pattern.compile(".*(tib\\:render-xml\\([^\\,><]+?\\,[^\\,><]+?\\,([^\\)><]+?)\\)\\)).*",Pattern.DOTALL | Pattern.MULTILINE);

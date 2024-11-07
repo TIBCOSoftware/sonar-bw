@@ -16,6 +16,12 @@ public interface Logger {
     void debug(String msg);
 
     void warn(String string, Exception ex);
-    
-    
+
+    void warn(String string);
+
+    void error(String string);
+
+    void info(String string);
+
+    void error(String string, Exception ex);
 }

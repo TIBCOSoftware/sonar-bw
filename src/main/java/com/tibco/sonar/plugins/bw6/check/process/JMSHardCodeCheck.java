@@ -15,14 +15,14 @@ import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = JMSHardCodeCheck.RULE_KEY, name = "JMS HardCoded Check", priority = Priority.MINOR, description = "This rule checks JMS activities for hardcoded values for fields Timeout, Destinaton, Reply to Destination, Message Selector, Polling Interval. Use Process property or Module property.")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class JMSHardCodeCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(JMSHardCodeCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JMSHardCodeCheck.class);
     public static final String RULE_KEY = "JMSHardCoded";
 
     @Override

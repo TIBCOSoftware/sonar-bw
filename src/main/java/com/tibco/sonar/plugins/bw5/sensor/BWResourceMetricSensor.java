@@ -23,12 +23,12 @@ import org.sonar.api.batch.fs.InputFile;
 
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.measures.Metric;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 public class BWResourceMetricSensor implements Sensor {
 
-    private static final Logger LOG = Loggers.get(BWResourceMetricSensor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BWResourceMetricSensor.class);
 
     protected FileSystem fileSystem;
   

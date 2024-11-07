@@ -18,14 +18,14 @@ import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
 import com.tibco.utils.bw6.model.Transition;
 import java.util.List;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = CheckpointAfterRESTCheck.RULE_KEY, name = "Checkpoint after REST Webservice Call Check", priority = Priority.MAJOR, description = "This rule checks the placement of a Checkpoint activity within a process. Do not place checkpoint after or in a parallel flow of REST webservice call.")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class CheckpointAfterRESTCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(CheckpointAfterRESTCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CheckpointAfterRESTCheck.class);
     public static final String RULE_KEY = "CheckpointProcessREST";
     private boolean onlyOneViolation = true;
 
@@ -47,7 +47,7 @@ public class CheckpointAfterRESTCheck extends AbstractProcessCheck {
     private void checkPreviousActivities(Activity activity) {
         List<Transition> incomingTransitions = activity.getInputTransitions();
 
-        LOG.debug("Incoming transitions: " + incomingTransitions);
+        LOG.debug("Incoming transitions: "+ incomingTransitions);
         incomingTransitions.forEach(t -> {
             if (t.getFromActivity() != null && t.getFromActivity().getType().contains("bw.restjson.Rest")) {
                 if (onlyOneViolation) {

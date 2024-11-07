@@ -16,14 +16,14 @@ import com.tibco.utils.bw6.constants.BwpModelConstants;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = UnneededEmptyActivityCheck.RULE_KEY, name = "Unneeded Empty Activity", priority = Priority.MINOR, description = "This rule checks for empty activities that only have one input transition and output tranistion so they are not providing any value")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class UnneededEmptyActivityCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(UnneededEmptyActivityCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UnneededEmptyActivityCheck.class);
     public static final String RULE_KEY = "UnneededEmptyActivity";
     
     @Override

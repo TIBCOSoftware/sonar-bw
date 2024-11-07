@@ -17,14 +17,14 @@ import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.bw6.model.Process;
 import com.tibco.utils.bw6.model.Transition;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
     
 @Rule(key = TransitionLabelCheck.RULE_KEY, name = "Transition Labels Check", priority = Priority.MINOR, description = "This rule checks whether the transitions with the type 'Success With Condition' (XPath) have a proper label. This will improve code readability")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class TransitionLabelCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(TransitionLabelCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TransitionLabelCheck.class);
     public static final String RULE_KEY = "TransitionLabels";
 
     @Override

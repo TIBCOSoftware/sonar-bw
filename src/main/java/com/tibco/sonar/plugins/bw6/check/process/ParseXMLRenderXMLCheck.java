@@ -18,14 +18,14 @@ import com.tibco.utils.bw6.model.Process;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = ParseXMLRenderXMLCheck.RULE_KEY, name = "Parse XML Activity using RenderXML output as input", priority = Priority.MINOR, description = "This rule checks for inefficiencies on using ParseXML activities using output for RenderXML activity as input when it should rely on Coertion to do same job ")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class ParseXMLRenderXMLCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(ParseXMLRenderXMLCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ParseXMLRenderXMLCheck.class);
     public static final String RULE_KEY = "ParseXMLRenderXMLActivity";
 
     

@@ -6,7 +6,7 @@
 
 package com.tibco.utils.common;
 
-import org.sonar.api.utils.log.*;
+import org.slf4j.*;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,7 +36,7 @@ import javax.xml.stream.XMLInputFactory;
  */
 public final class SaxParser extends AbstractParser {
 
-	private static final Logger LOGGER = Loggers.get(SaxParser.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SaxParser.class);
 
 	
 	

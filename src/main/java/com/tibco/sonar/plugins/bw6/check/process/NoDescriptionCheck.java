@@ -15,14 +15,14 @@ import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Process;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = NoDescriptionCheck.RULE_KEY, name = "No Process Description Check", priority = Priority.MINOR, description = "This rule checks if there is description specified for a process.")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class NoDescriptionCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(NoDescriptionCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NoDescriptionCheck.class);
     public static final String RULE_KEY = "ProcessNoDescription";
     public static final String DESCRIPTION_ELEMENT_NAME = "documentation";
     public static final String DESCRIPTION_ELEMENT_NAMESPACE = "http://docs.oasis-open.org/wsbpel/2.0/process/executable";

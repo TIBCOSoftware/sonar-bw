@@ -7,8 +7,6 @@ package com.tibco.utils.bw6.model;
 
 
 
-import com.tibco.utils.common.logger.Logger;
-import com.tibco.utils.common.logger.Loggers;
 import org.w3c.dom.Document;
 
 public class JobSharedVariables  extends ModuleProperties{

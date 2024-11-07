@@ -25,14 +25,14 @@ import com.tibco.sonar.plugins.bw5.check.AbstractXmlCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
 import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw5.source.XmlBw5Source;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = DeadProcessCheckForStarterProcess.RULE_KEY, name = CheckConstants.RULE_PROCESS_DEADPROCESSCHECKFORSTARTERPROCESS_NAME, description =  CheckConstants.RULE_PROCESS_DEADPROCESSCHECKFORSTARTERPROCESS_DESCRIPTION, priority = Priority.CRITICAL, tags = { "bug" })
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.CRITICAL)
 public class DeadProcessCheckForStarterProcess extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(DeadProcessCheckForStarterProcess.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DeadProcessCheckForStarterProcess.class);
 	public static final String RULE_KEY = "DeadProcessCheckForStarterProcess";
 	public static final String DEAD_CODE_DESCRIPTION = "Dead Code: This Starter process is not used any where in the code";
 

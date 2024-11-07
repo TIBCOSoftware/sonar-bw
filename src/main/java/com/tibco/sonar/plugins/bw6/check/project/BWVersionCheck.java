@@ -10,8 +10,8 @@ import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProjectSource;
 import com.tibco.utils.bw6.model.Project;
 
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -32,7 +32,7 @@ import java.util.jar.Attributes;
 public class BWVersionCheck extends AbstractProjectCheck {
 
     public static final String RULE_KEY = "BWVersionCheck";
-    private static final Logger LOG = Loggers.get(BWVersionCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BWVersionCheck.class);
 
     @RuleProperty(key = "baseline_bwversionpattern", description = "Regular expression for recommended version of BusinessWorks module. BW6 project should be created with version 6.5.x or above. TCI or BWCE project should be created with 2.5.x or above", defaultValue = "^(6.[5-9].*)|(2.[5-9].*)$", type = "TEXT")
     protected String baselineBWversionpattern;
@@ -75,7 +75,7 @@ public class BWVersionCheck extends AbstractProjectCheck {
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 }

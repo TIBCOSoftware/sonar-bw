@@ -17,14 +17,14 @@ import com.tibco.sonar.plugins.bw5.check.AbstractXmlCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
 import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw5.source.XmlBw5Source;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = AdbFileSinkFileCountHardcodingCheck.RULE_KEY, name = CheckConstants.RULE_ADBADAPTER_ADBFILESINKFILECOUNTHARDCODINGCHECK_NAME, description = CheckConstants.RULE_ADBADAPTER_ADBFILESINKFILECOUNTHARDCODINGCHECK_DESCRIPTION, priority = Priority.CRITICAL, tags = { "bug" })
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.CRITICAL)
 public class AdbFileSinkFileCountHardcodingCheck extends AbstractXmlCheck {
 
-    private static final Logger LOG = Loggers.get(AdbFileSinkFileCountHardcodingCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AdbFileSinkFileCountHardcodingCheck.class);
 	public static final String RULE_KEY = "AdbFileSinkFileCountHardcodingCheck";
 	public static final String FILESINK_ELEMENT_NAME = "//*[local-name()='fileSink']";
 	public static final String FILESINK_ELEMENT_NAMESPACE = "http://www.tibco.com/xmlns/aemeta/adapter/2002";

@@ -7,7 +7,7 @@ package com.tibco.utils.bw6.model;
 
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.common.logger.Logger;
-import com.tibco.utils.common.logger.Loggers;
+import com.tibco.utils.common.logger.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +17,7 @@ import org.w3c.dom.NodeList;
 
 public class Group extends Activity {
 
-    private static final Logger LOG = Loggers.get(Group.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Group.class);
 
     protected List<Activity> activities = new ArrayList<>();
     protected List<Group> groups = new ArrayList<>();

@@ -7,11 +7,11 @@ package com.tibco.utils.standalone;
 
 
 import com.tibco.utils.common.logger.Logger;
-import com.tibco.utils.common.logger.Loggers;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 public class DocumentationUtil {
 
-	private static final Logger LOG = Loggers.get(DocumentationUtil.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DocumentationUtil.class);
 
 	public static void main(String[] args) throws Exception {
 		LOG.debug("***** GENERATING DOCUMENTATION *****");

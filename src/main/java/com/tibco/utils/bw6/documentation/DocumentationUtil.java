@@ -13,7 +13,7 @@ import com.tibco.sonar.plugins.bw6.measurecomputer.resources.AbstractResourceTot
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.rulerepository.ProcessRuleDefinition;
 import com.tibco.utils.common.logger.Logger;
-import com.tibco.utils.common.logger.Loggers;
+import com.tibco.utils.common.logger.LoggerFactory;
 import com.tibco.utils.standalone.RulesInfo;
 import com.tibco.utils.standalone.RulesInfo.DocumentationException;
 import org.sonar.check.RuleProperty;
@@ -21,7 +21,7 @@ import org.sonar.check.RuleProperty;
 import java.io.*;
 
 public class DocumentationUtil {
-	private static final Logger LOG = Loggers.get(DocumentationUtil.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DocumentationUtil.class);
 
 	private static final String CODE_START = "**`";
 	private static final String CODE_END = "`**";

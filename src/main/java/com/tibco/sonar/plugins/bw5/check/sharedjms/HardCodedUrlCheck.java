@@ -18,14 +18,14 @@ import com.tibco.sonar.plugins.bw5.check.AbstractXmlCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
 import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw5.source.XmlBw5Source;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = HardCodedUrlCheck.RULE_KEY, name = CheckConstants.RULE_SHAREDJMS_SHAREDJMSHARDCODEDURL_NAME, description =  CheckConstants.RULE_SHAREDJMS_SHAREDJMSHARDCODEDURL_DESCRIPTION, priority = Priority.MAJOR)
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class HardCodedUrlCheck extends AbstractXmlCheck {
 
-    private static final Logger LOG = Loggers.get(HardCodedUrlCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HardCodedUrlCheck.class);
     public static final String RULE_KEY = "SharedJmsHardCodedUrl";
     public static final String CONFIG_ELEMENT_NAME = "config";
 

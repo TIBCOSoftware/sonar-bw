@@ -31,4 +31,25 @@ public class SysOutLogger implements Logger {
         }
     }
 
+    @Override
+    public void error(String arg0, Exception arg1) {
+        if (arg1 != null) {
+            System.err.println(arg0 + ": " + arg1.getMessage());
+        } else {
+            System.err.println(arg0);
+        }
+    }
+
+    public void warn(String arg0) {
+            System.err.println(arg0);
+    }
+
+    public void error(String arg0) {
+        System.err.println(arg0);
+    }
+
+    public void info(String arg0) {
+        System.out.println(arg0);
+    }
+
 }

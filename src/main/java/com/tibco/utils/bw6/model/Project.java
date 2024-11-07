@@ -7,7 +7,7 @@ package com.tibco.utils.bw6.model;
 
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.common.logger.Logger;
-import com.tibco.utils.common.logger.Loggers;
+import com.tibco.utils.common.logger.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -40,7 +40,7 @@ import org.w3c.dom.NodeList;
  */
 public class Project {
 
-    private static final Logger LOG = Loggers.get(Project.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Project.class);
 
     protected File file;
 

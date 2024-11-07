@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import com.tibco.utils.common.helper.XmlHelper;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
@@ -30,8 +32,8 @@ import com.tibco.utils.bw5.model.Process;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.scanner.fs.InputProject;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 /**
  * XmlSensor provides analysis of xml files.
@@ -40,7 +42,7 @@ import org.sonar.api.utils.log.Loggers;
  */
 public class ProcessRuleSensor implements Sensor {
 
-    private static final Logger LOG = Loggers.get(ProcessRuleSensor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProcessRuleSensor.class);
     protected List<Process> processList = new ArrayList<>();
     protected FileSystem fileSystem;
     protected String languageKey;
@@ -87,22 +89,24 @@ public class ProcessRuleSensor implements Sensor {
         Iterable<InputFile> files = fileSystem.inputFiles(fileSystem.predicates().hasType(InputFile.Type.MAIN));
         for (InputFile file : files) {
             try{
-                XmlBw5Source xSource = new XmlBw5Source(file);
+                if(XmlHelper.isXML(file.contents())){
+                    XmlBw5Source xSource = new XmlBw5Source(file);
 
-                for (Iterator<Object> it = checkReturned.all().iterator(); it.hasNext();) {
-                    AbstractCheck check = (AbstractCheck) it.next();
-                    if (check instanceof XPathCheck) {
-                        LOG.debug("## XPathCheck detected: [" + check.getRuleKeyName() + "]");
-                        XPathCheck xmlCheck = (XPathCheck) check;
-                        RuleKey ruleKey = checkReturned.ruleKey(xmlCheck);
-                        xmlCheck.setRuleKey(ruleKey);
-                        xmlCheck.scanFile(sensorContext, ruleKey, xSource);
-                    }else if(check instanceof AbstractXmlCheck) {
-                        LOG.debug("## Abstract XML check detected: [" + check.getRuleKeyName() + "]");
-                        AbstractXmlCheck xmlCheck = (AbstractXmlCheck) check;
-                        RuleKey ruleKey = checkReturned.ruleKey(xmlCheck);
-                        xmlCheck.setRuleKey(ruleKey);
-                        xmlCheck.scanFile(sensorContext, ruleKey, xSource);
+                    for (Iterator<Object> it = checkReturned.all().iterator(); it.hasNext();) {
+                        AbstractCheck check = (AbstractCheck) it.next();
+                        if (check instanceof XPathCheck) {
+                            LOG.debug("## XPathCheck detected: [" + check.getRuleKeyName() + "]");
+                            XPathCheck xmlCheck = (XPathCheck) check;
+                            RuleKey ruleKey = checkReturned.ruleKey(xmlCheck);
+                            xmlCheck.setRuleKey(ruleKey);
+                            xmlCheck.scanFile(sensorContext, ruleKey, xSource);
+                        }else if(check instanceof AbstractXmlCheck) {
+                            LOG.debug("## Abstract XML check detected: [" + check.getRuleKeyName() + "]");
+                            AbstractXmlCheck xmlCheck = (AbstractXmlCheck) check;
+                            RuleKey ruleKey = checkReturned.ruleKey(xmlCheck);
+                            xmlCheck.setRuleKey(ruleKey);
+                            xmlCheck.scanFile(sensorContext, ruleKey, xSource);
+                        }
                     }
                 }
             }catch(Exception ex){

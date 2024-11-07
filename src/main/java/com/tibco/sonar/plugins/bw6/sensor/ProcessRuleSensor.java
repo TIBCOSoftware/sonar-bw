@@ -23,8 +23,8 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.scanner.fs.InputProject;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -73,7 +73,7 @@ import org.w3c.dom.Element;
  */
 public class ProcessRuleSensor implements Sensor {
 
-    private static final Logger LOG = Loggers.get(ProcessRuleSensor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProcessRuleSensor.class);
     protected FileSystem fileSystem;
     protected String languageKey;
     protected SensorContext sensorContext;
@@ -415,15 +415,17 @@ public class ProcessRuleSensor implements Sensor {
         Iterable<InputFile> files = fileSystem.inputFiles(fileSystem.predicates().hasType(InputFile.Type.MAIN));
         for (InputFile file : files) {
             try{
-                XmlSource xSource = new XmlSource(file);
-                for (Iterator<Object> it = checkReturned.all().iterator(); it.hasNext();) {
-                    AbstractCheck check = (AbstractCheck) it.next();
-                    if (check instanceof XPathCheck) {
-                        LOG.debug("## XPathCheck detected: [" + check.getRuleKeyName() + "]");
-                        XPathCheck xmlCheck = (XPathCheck) check;
-                        RuleKey ruleKey = checkReturned.ruleKey(xmlCheck);
-                        xmlCheck.setRuleKey(ruleKey);
-                        xmlCheck.scanFile(sensorContext, ruleKey, xSource);
+                if(XmlHelper.isXML(file.contents())) {
+                    XmlSource xSource = new XmlSource(file);
+                    for (Iterator<Object> it = checkReturned.all().iterator(); it.hasNext();) {
+                        AbstractCheck check = (AbstractCheck) it.next();
+                        if (check instanceof XPathCheck) {
+                            LOG.debug("## XPathCheck detected: [" + check.getRuleKeyName() + "]");
+                            XPathCheck xmlCheck = (XPathCheck) check;
+                            RuleKey ruleKey = checkReturned.ruleKey(xmlCheck);
+                            xmlCheck.setRuleKey(ruleKey);
+                            xmlCheck.scanFile(sensorContext, ruleKey, xSource);
+                        }
                     }
                 }
             }catch(Exception ex){

@@ -18,8 +18,8 @@ import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -36,7 +36,7 @@ public class JKSValidationCheck extends AbstractProjectCheck {
 
     public static final String RULE_KEY = "JKSValidation";
 
-    private static final Logger LOG = Loggers.get(JKSValidationCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JKSValidationCheck.class);
 
    
     @Override
@@ -90,7 +90,7 @@ public class JKSValidationCheck extends AbstractProjectCheck {
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

@@ -13,8 +13,8 @@ import com.tibco.utils.bw5.model.Activity;
 import com.tibco.utils.bw5.model.Process;
 import com.tibco.utils.bw5.model.Transition;
 import com.tibco.utils.common.helper.XmlHelper;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -25,7 +25,7 @@ import java.util.List;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class NoOtherwiseConditionCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(NoOtherwiseConditionCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NoOtherwiseConditionCheck.class);
     public static final String RULE_KEY = "NoOtherwiseCheck";
 
     @Override

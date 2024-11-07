@@ -14,14 +14,14 @@ import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.bw6.model.Process;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = ProcessWithoutTestCheck.RULE_KEY, name = "Process without Unit Test file", priority = Priority.INFO, description = "This rule checks that all processes should have at least one test file")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.INFO)
 public class ProcessWithoutTestCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(ProcessWithoutTestCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProcessWithoutTestCheck.class);
     public static final String RULE_KEY = "ProcessWithoutTest";
 
     @Override

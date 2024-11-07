@@ -19,16 +19,15 @@ import com.tibco.sonar.plugins.bw5.check.AbstractXmlCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
 import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw5.source.XmlBw5Source;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = HardCodedJndiUrlCheck.RULE_KEY, name = CheckConstants.RULE_SHAREDJMS_SHAREDJMSHARDCODEDJNDIURL_NAME, description =  CheckConstants.RULE_SHAREDJMS_SHAREDJMSHARDCODEDJNDIURL_DESCRIPTION, priority = Priority.MAJOR)
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class HardCodedJndiUrlCheck extends AbstractXmlCheck {
 
-    private static final Logger LOG = Loggers.get(HardCodedJndiUrlCheck.class);
-	private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory
-			.getLogger(HardCodedJndiUrlCheck.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(HardCodedJndiUrlCheck.class);
+	private static final Logger LOGGER =LoggerFactory.getLogger(HardCodedJndiUrlCheck.class);
 	
 	public static final String RULE_KEY = "SharedJmsHardCodedJndiUrl";
 	public static final String CONFIG_ELEMENT_NAME = "config";
@@ -61,7 +60,7 @@ public class HardCodedJndiUrlCheck extends AbstractXmlCheck {
 					reportIssueOnFile("Shared JMS connection resource configuration is empty", xmlSource.getLineForNode(config));
 				}
 			} catch (Exception e) {
-				LOGGER.info("context", e);
+				LOGGER.warn("context", e);
 				reportIssueOnFile("No configuration found in shared JMS connection resource");
 
 			}

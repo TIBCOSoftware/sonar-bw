@@ -9,8 +9,8 @@ import com.tibco.sonar.plugins.bw5.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw5.source.ProcessSource;
 import com.tibco.utils.bw5.model.Process;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -20,7 +20,7 @@ import org.sonar.check.RuleProperty;
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class NumberofActivitiesCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(NumberofActivitiesCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NumberofActivitiesCheck.class);
     public static final String RULE_KEY = "NumberOfActivities";
 
     @RuleProperty(key = "maxActivities", description = "Threshold of activities to be considered excessive for a single process", defaultValue = "24", type = "INTEGER")

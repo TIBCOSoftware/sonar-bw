@@ -13,8 +13,8 @@ import java.io.IOException;
 
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -30,7 +30,7 @@ public class SharedResourceNotUsed extends AbstractResourceCheck {
 
     public static final String RULE_KEY = "SharedResourcesNotUsed";
 
-    private static final Logger LOG = Loggers.get(SharedResourceNotUsed.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SharedResourceNotUsed.class);
 
     @Override
     public void validate(SharedResourceSource resourceXml) {
@@ -105,7 +105,7 @@ public class SharedResourceNotUsed extends AbstractResourceCheck {
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

@@ -12,14 +12,14 @@ import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.common.helper.XmlHelper;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = ExceptionHandlingCheck.RULE_KEY, name = "Exception handling check", priority = Priority.MINOR, description = "Check if exceptions are handled in component process.")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class ExceptionHandlingCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(ExceptionHandlingCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExceptionHandlingCheck.class);
     public static final String RULE_KEY = "ExceptionHandlingCheck";
 
     @Override

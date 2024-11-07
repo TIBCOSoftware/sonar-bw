@@ -8,7 +8,7 @@ package com.tibco.utils.bw6.model;
 import org.w3c.dom.Element;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.common.logger.Logger;
-import com.tibco.utils.common.logger.Loggers;
+import com.tibco.utils.common.logger.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
 
 public class Activity extends ProcessNode {
 
-    private static final Logger LOG = Loggers.get(ProcessNode.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Activity.class);
     
     protected Map<String, String> activityConfiguration;
     protected Process process;

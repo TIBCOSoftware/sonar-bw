@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 import org.sonar.api.batch.fs.InputFile;
 
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -36,7 +36,7 @@ public class XMLResourceSameTargetNamespaceCheck extends AbstractProjectCheck {
 
     public static final String RULE_KEY = "XMLResourceSameTargetNamespace";
 
-    private static final Logger LOG = Loggers.get(XMLResourceSameTargetNamespaceCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XMLResourceSameTargetNamespaceCheck.class);
 
     
     @Override
@@ -84,7 +84,7 @@ public class XMLResourceSameTargetNamespaceCheck extends AbstractProjectCheck {
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

@@ -16,14 +16,14 @@ import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
 import java.util.List;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = RenderXMLBinaryCheck.RULE_KEY, name = "RenderXML using Binary", priority = Priority.MINOR, description = "RenderXML should use binary mode for performance assestment ")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class RenderXMLBinaryCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(RenderXMLBinaryCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RenderXMLBinaryCheck.class);
     public static final String RULE_KEY = "RenderXMLBinary";
 
     

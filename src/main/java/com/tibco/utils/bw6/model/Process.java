@@ -8,7 +8,7 @@ package com.tibco.utils.bw6.model;
 import static com.tibco.utils.bw6.constants.BwpModelConstants.*;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.common.logger.Logger;
-import com.tibco.utils.common.logger.Loggers;
+import com.tibco.utils.common.logger.LoggerFactory;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 
 public class Process {
 
-    private static final Logger LOG = Loggers.get(Process.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Process.class);
 
     protected String name;
     protected String description;

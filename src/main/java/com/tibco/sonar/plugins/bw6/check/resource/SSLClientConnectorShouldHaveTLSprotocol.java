@@ -9,8 +9,8 @@ import com.tibco.sonar.plugins.bw6.check.AbstractResourceCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.SharedResourceSource;
 import com.tibco.utils.bw6.model.SharedResource;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -26,7 +26,7 @@ import org.sonar.check.Rule;
 public class SSLClientConnectorShouldHaveTLSprotocol extends AbstractResourceCheck {
 
     public static final String RULE_KEY = "SSLClientConnectorShouldHaveTLSprotocol";
-    private static final Logger LOG = Loggers.get(SSLClientConnectorShouldHaveTLSprotocol.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SSLClientConnectorShouldHaveTLSprotocol.class);
     @Override
     public void validate(SharedResourceSource resourceXml) {
         LOG.debug("Started rule: " + this.getClass());

@@ -16,7 +16,7 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
-import org.sonar.api.utils.log.Logger;
+import com.tibco.utils.common.logger.Logger;
 import com.tibco.sonar.common.SonarMsgConstants;
 
 /**

@@ -21,11 +21,11 @@ import static org.mockito.Mockito.times;
  *
  * @author avazquez
  */
-public class ForEachMappingCheckTest2 {
+public class ForEachMappingCheck2Test {
     
     private static ProcessSource source;
     
-    public ForEachMappingCheckTest2() {
+    public ForEachMappingCheck2Test() {
     }
      
     @BeforeClass

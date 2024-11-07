@@ -10,8 +10,8 @@ import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProjectSource;
 import com.tibco.utils.bw6.model.Project;
 
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -27,7 +27,7 @@ public class IsMavenProjectCheck extends AbstractProjectCheck {
 
     public static final String RULE_KEY = "IsMavenProject";
 
-    private static final Logger LOG = Loggers.get(IsMavenProjectCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IsMavenProjectCheck.class);
 
     
     
@@ -49,7 +49,7 @@ public class IsMavenProjectCheck extends AbstractProjectCheck {
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

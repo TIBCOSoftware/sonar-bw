@@ -18,14 +18,14 @@ import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Transition;
 import java.util.List;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = CheckpointAfterHttpCheck.RULE_KEY, name = "Checkpoint after HTTP Activities Check", priority = Priority.MAJOR, description = "This rule checks the placement of a Checkpoint activity within a process. When placing your checkpoint in a process, be careful with certain types of process starters or incoming events, so that a recovered process instance does not attempt to access resources that no longer exist. For example, consider a process with an HTTP process starter that takes a checkpoint after receiving a request but before sending a response. In this case, when the engine restarts after a crash, the recovered process instance cannot respond to the request since the HTTP socket is already closed. As a best practice, do not place Checkpoint activity right after or in parallel path to HTTP activities.")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class CheckpointAfterHttpCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(CheckpointAfterHttpCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CheckpointAfterHttpCheck.class);
     public static final String RULE_KEY = "CheckpointProcessHTTP";
     private boolean onlyOneViolation = true;
 
@@ -43,7 +43,7 @@ public class CheckpointAfterHttpCheck extends AbstractProcessCheck {
     private void checkPreviousActivities(Activity activity) {
         List<Transition> incomingTransitions = activity.getInputTransitions();
 
-        LOG.debug("Incoming transitions: " + incomingTransitions);
+        LOG.debug("Incoming transitions: "+ incomingTransitions);
         incomingTransitions.forEach(t -> {
             if (t.getFromActivity() != null && t.getFromActivity().getType().contains("bw.http.")) {
                 if (onlyOneViolation) {
