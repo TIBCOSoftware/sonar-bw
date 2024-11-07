@@ -16,8 +16,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.sonar.api.batch.fs.InputFile;
 
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -33,7 +33,7 @@ public class XSDValidationCheck extends AbstractProjectCheck {
 
     public static final String RULE_KEY = "XSDValidation";
 
-    private static final Logger LOG = Loggers.get(XSDValidationCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XSDValidationCheck.class);
 
     @Override
     public void validate(ProjectSource resourceXml) {
@@ -56,11 +56,11 @@ public class XSDValidationCheck extends AbstractProjectCheck {
     }
 
     public static String loadSchema(InputFile file) {
-        Schema schema = null;
+
         try {
             String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
             SchemaFactory factory = SchemaFactory.newInstance(language);
-            schema = factory.newSchema(new StreamSource(file.inputStream()));
+            factory.newSchema(new StreamSource(file.inputStream()));
         } catch (Exception e) {
             return e.toString();
         }
@@ -73,7 +73,7 @@ public class XSDValidationCheck extends AbstractProjectCheck {
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

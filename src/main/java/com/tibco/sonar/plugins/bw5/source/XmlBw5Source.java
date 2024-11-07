@@ -33,21 +33,20 @@ import com.tibco.sonar.plugins.bw.source.XmlSource;
  */
 public class XmlBw5Source extends XmlSource {
 
-        private XmlFile file;
         private SensorContext context;
 
 	/**
 	 * 
 	 * This is some description that we must adhere to. 
 	 * 
-     * @param context TODO: Add description
-	 * @param xmlFile TODO: Add description
+     * @param context 
+	 * @param xmlFile 
 	*/
 	public XmlBw5Source(SensorContext context, XmlFile xmlFile) {
 		super(xmlFile.getInputFile());
         this.context = context;
-		this.file = xmlFile;
 	}
+
 
 	public XmlBw5Source(InputFile file) {
 		super(file);
@@ -57,11 +56,22 @@ public class XmlBw5Source extends XmlSource {
 	 *  
 	 * This needs some description 
 	 * 
-	 * @param node TODO: Add description
-	 * @return TODO: Add description
+	 * @param node 
+	 * @return 
 	 */
 	public int getLineForNode(Node node) {
 		return SaxParser.getLineNumber(node);
+	}
+
+
+	public  String getExtension() {
+		String fileName = file.getInputFile().filename();
+		int dotIndex = fileName.lastIndexOf('.');
+
+		if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
+			return fileName.substring(dotIndex + 1);
+		}
+		return ""; // No extension found
 	}
 
 
@@ -71,9 +81,9 @@ public class XmlBw5Source extends XmlSource {
 	 * 
 	 * This needs some description 
      *
-	 * @param rule TODO: Add description
-	 * @param node TODO: Add description
-	 * @param message TODO: Add description
+	 * @param rule 
+	 * @param node 
+	 * @param message 
      *
 	 */
 	public void getViolationsHardCodedNode(RuleKey rule, Node node, String message){
@@ -91,9 +101,9 @@ public class XmlBw5Source extends XmlSource {
 	 * 
 	 * This needs some description 
 	 *
-	 * @param rule TODO: Add description
-	 * @param node TODO: Add description
-	 * @param elementDescription TODO: Add description
+	 * @param rule 
+	 * @param node 
+	 * @param elementDescription 
 	 */
 	public void findAndValidateHardCodedNode(RuleKey rule, Node node, String elementDescription){
 		getViolationsHardCodedNode(rule, node, elementDescription);			
@@ -112,7 +122,7 @@ public class XmlBw5Source extends XmlSource {
 	public void getViolationsHardCodedChild(RuleKey rule, Element parent, String childName, String message){
 	
 		try{
-			Element elem = XmlHelper.firstChildElement(parent, childName);
+			Element elem = XmlHelper.firstChildElement(parent,  childName);
 			getViolationsHardCodedNode(rule, elem, message);
 		}catch (Exception e) {
 		
@@ -160,74 +170,8 @@ public class XmlBw5Source extends XmlSource {
 		
 	}
 
-	/**
-	 * Add hard coded violations of all elements related to the xPathQuery evaluated on the input context
-	 * 
-	 * @param rule			violated {@link Rule}
-	 * @param context		input context {@link Node}
-	 * @param xPathQuery 	XPath query {@link String}
-	 * @param message		violations message {@link String}
-	 * 
-	 */
-	public void findAndValidateHardCodedXPath(RuleKey rule, Node context, String xPathQuery, String message){
-		getViolationsHardCodedXPath(rule, context, xPathQuery, message);
-		
-	}
 
-	/**
-	 * Return a list of violation if the input mapping context ({@link Node}) is hard coded
-	 * @param rule		violated {@link Rule} 
-	 * @param context	input mapping {@link Node} to validate 
-	 * @param message	violations message {@link String}
-	 * 
-	 */
-	public void getViolationsHardCodedMapping(RuleKey rule, Node context, String message) {
-		// By default no violation
-		boolean violated = false;
-		int line = getLineForNode(context);
-		if(context.getTextContent() != null && !context.getTextContent().trim().isEmpty()){
-			// If forced constant set violated
-			violated = true;
-		}else{
-			// Select value-of child node 
-			Node valueOf = XmlHelper.firstChildElement((Element)context, "http://www.w3.org/1999/XSL/Transform", "value-of");
-			if(valueOf != null){
-				// Select select attribute
-				Node select = valueOf.getAttributes().getNamedItem("select");
-				if(select != null){
-					// Get select content
-					String selectFormula = select.getTextContent();
-					if(selectFormula.startsWith("\"") && selectFormula.endsWith("\"")){
-						// If double quoted string set violated
-						violated = true;
-						line = getLineForNode(select);
-					}else if(selectFormula.startsWith("'") && selectFormula.endsWith("'")){
-						// If simple quoted string set violated
-						violated = true;
-						line = getLineForNode(select);
-					}else if(selectFormula.matches("[0-9]+(.[0-9]*)?")){
-						// If number set violated
-						violated = true;
-						line = getLineForNode(select);
-					}else if("true()".equals(selectFormula)){
-						// If true function set violated
-						violated = true;
-						line = getLineForNode(select);
-					}else if("false()".equals(selectFormula)){
-						// If false function set violated
-						violated = true;
-						line = getLineForNode(select);
-					}
-				}
-			}
-		}
-		if(violated){
-			// If violated add a new violation
-			reportOnIssue(rule, line, message);
-		}		
-	}
-
-    private void reportOnIssue(RuleKey ruleKey, int line, String string) {
+    public void reportOnIssue(RuleKey ruleKey, int line, String string) {
           NewIssue issue = context.newIssue();
 
         NewIssueLocation location = issue.newLocation()

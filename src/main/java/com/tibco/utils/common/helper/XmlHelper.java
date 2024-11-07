@@ -6,19 +6,24 @@
 package com.tibco.utils.common.helper;
 
 import com.tibco.utils.common.logger.Logger;
-import com.tibco.utils.common.logger.Loggers;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import com.tibco.utils.common.logger.LoggerFactory;
+
+import java.io.*;
 import java.nio.charset.Charset;
+import java.util.Iterator;
 import java.util.Stack;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -33,13 +38,14 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class XmlHelper {
 
-    private static final Logger LOG = Loggers.get(XmlHelper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XmlHelper.class);
 
     public static String getAttributeValue(Element referenceServiceElement, String inline) {
         String value = null;
@@ -58,7 +64,7 @@ public class XmlHelper {
     }
 
     public static boolean evaluateXPathAsBoolean(Element document, String expression) {
-        Boolean out = null;
+        Boolean out = false;
         if (document != null) {
             try {
                 XPathExpression tmp = getXPathExpressionForDocument(expression);
@@ -78,90 +84,15 @@ public class XmlHelper {
 
     }
 
-    final static String LINE_NUMBER_KEY_NAME = "lineNumber";
-    final static String exceptionMsg = "Can't create SAX parser / DOM builder.";
+    static final String LINE_NUMBER_KEY_NAME = "lineNumber";
+    static final String EXCEPTION_MSG = "Can't create SAX parser / DOM builder.";
 
 
     public static Document getDocument(File file) {
         try {
-            final Document doc;
-
-            SAXParser parser;
-            try {
-            	SAXParserFactory factory = null;
-            	ClassLoader ocl = Thread.currentThread().getContextClassLoader();
-        		try{
-        			Thread.currentThread().setContextClassLoader(javax.xml.parsers.SAXParserFactory.class.getClassLoader());
-        			factory  = SAXParserFactory.newDefaultInstance();
-                                factory.setNamespaceAware(false);
-	                parser = factory.newSAXParser();
-	                final DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newDefaultInstance();
-
-	                final DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-	                doc = docBuilder.newDocument();
-        		}finally{
-        			Thread.currentThread().setContextClassLoader(ocl);
-        		}
-            } catch (final ParserConfigurationException e) {
-                throw new RuntimeException(exceptionMsg, e);
-            }
-
-            final Stack<Element> elementStack = new Stack<Element>();
-            final StringBuilder textBuffer = new StringBuilder();
-
-            final DefaultHandler handler = new DefaultHandler() {
-                private Locator locator;
-
-                @Override
-                public void setDocumentLocator(final Locator locator) {
-                    this.locator = locator; // Save the locator, so that it can be used later for line tracking when traversing nodes.
-                }
-
-                @Override
-                public void startElement(final String uri, final String localName, final String qName, final Attributes attributes)
-                        throws SAXException {
-                    addTextIfNeeded();
-                    final Element el = doc.createElement(qName);
-                    for (int i = 0; i < attributes.getLength(); i++) {
-                        el.setAttribute(attributes.getQName(i), attributes.getValue(i));
-                    }
-                    el.setAttribute(LINE_NUMBER_KEY_NAME, String.valueOf(this.locator.getLineNumber()));
-                    elementStack.push(el);
-                }
-
-                @Override
-                public void endElement(final String uri, final String localName, final String qName) {
-                    addTextIfNeeded();
-                    final Element closedEl = elementStack.pop();
-                    if (elementStack.isEmpty()) { // Is this the root element?
-                        doc.appendChild(closedEl);
-                    } else {
-                        final Element parentEl = elementStack.peek();
-                        parentEl.appendChild(closedEl);
-                    }
-                }
-
-                @Override
-                public void characters(final char[] ch, final int start, final int length) throws SAXException {
-                    textBuffer.append(ch, start, length);
-                }
-
-                // Outputs text accumulated under the current node
-                private void addTextIfNeeded() {
-                    if (textBuffer.length() > 0) {
-                        final Element el = elementStack.peek();
-                        final Node textNode = doc.createTextNode(textBuffer.toString());
-                        el.appendChild(textNode);
-                        textBuffer.delete(0, textBuffer.length());
-                    }
-                }
-            };
-            parser.parse(file, handler);
-            return doc;
-        } catch (SAXException ex) {
-            //TODO LoggerFactory.getLogger(XmlHelper.class.getName()).error(null, ex);
-        } catch (IOException ex) {
-          //TODO  LoggerFactory.getLogger(XmlHelper.class.getName()).error(null, ex);
+            return getDocument(new FileInputStream(file));
+        }catch(FileNotFoundException ex){
+            LOG.warn(ex.getMessage(),ex);
         }
         return null;
     }
@@ -189,10 +120,10 @@ public class XmlHelper {
         			Thread.currentThread().setContextClassLoader(ocl);
         		}
             } catch (final ParserConfigurationException e) {
-                throw new RuntimeException(exceptionMsg, e);
+                throw new RuntimeException(EXCEPTION_MSG, e);
             }
 
-            final Stack<Element> elementStack = new Stack<Element>();
+            final Stack<Element> elementStack = new Stack<>();
             final StringBuilder textBuffer = new StringBuilder();
 
             final DefaultHandler handler = new DefaultHandler() {
@@ -244,96 +175,14 @@ public class XmlHelper {
             };
             parser.parse(file, handler);
             return doc;
-        } catch (SAXException ex) {
-            //TODO LoggerFactory.getLogger(XmlHelper.class.getName()).error(null, ex);
-        } catch(IOException ex){
+        } catch (SAXException | IOException ex) {
+            LOG.warn(ex.getMessage(), ex);
         }
         return null;
     }
 
     public static Document getDocument(String file) {
-        try {
-            final Document doc;
-
-            SAXParser parser;
-            try {
-            	SAXParserFactory factory = null;
-            	ClassLoader ocl = Thread.currentThread().getContextClassLoader();
-        		try{
-        			Thread.currentThread().setContextClassLoader(javax.xml.parsers.SAXParserFactory.class.getClassLoader());
-        			factory  = SAXParserFactory.newDefaultInstance();
-                                factory.setNamespaceAware(false);
-	                parser = factory.newSAXParser();
-	                final DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newDefaultInstance();
-
-	                final DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-	                doc = docBuilder.newDocument();
-        		}finally{
-        			Thread.currentThread().setContextClassLoader(ocl);
-        		}
-            } catch (final ParserConfigurationException e) {
-                throw new RuntimeException(exceptionMsg, e);
-            }
-
-            final Stack<Element> elementStack = new Stack<Element>();
-            final StringBuilder textBuffer = new StringBuilder();
-
-            final DefaultHandler handler = new DefaultHandler() {
-                private Locator locator;
-
-                @Override
-                public void setDocumentLocator(final Locator locator) {
-                    this.locator = locator; // Save the locator, so that it can be used later for line tracking when traversing nodes.
-                }
-
-                @Override
-                public void startElement(final String uri, final String localName, final String qName, final Attributes attributes)
-                        throws SAXException {
-                    addTextIfNeeded();
-                    final Element el = doc.createElement(qName);
-                    for (int i = 0; i < attributes.getLength(); i++) {
-                        el.setAttribute(attributes.getQName(i), attributes.getValue(i));
-                    }
-                    el.setAttribute(LINE_NUMBER_KEY_NAME, String.valueOf(this.locator.getLineNumber()));
-                    elementStack.push(el);
-                }
-
-                @Override
-                public void endElement(final String uri, final String localName, final String qName) {
-                    addTextIfNeeded();
-                    final Element closedEl = elementStack.pop();
-                    if (elementStack.isEmpty()) { // Is this the root element?
-                        doc.appendChild(closedEl);
-                    } else {
-                        final Element parentEl = elementStack.peek();
-                        parentEl.appendChild(closedEl);
-                    }
-                }
-
-                @Override
-                public void characters(final char[] ch, final int start, final int length) throws SAXException {
-                    textBuffer.append(ch, start, length);
-                }
-
-                // Outputs text accumulated under the current node
-                private void addTextIfNeeded() {
-                    if (textBuffer.length() > 0) {
-                        final Element el = elementStack.peek();
-                        final Node textNode = doc.createTextNode(textBuffer.toString());
-                        el.appendChild(textNode);
-                        textBuffer.delete(0, textBuffer.length());
-                    }
-                }
-            };
-            parser.parse(new ByteArrayInputStream(file.getBytes(Charset.defaultCharset())), handler);
-            return doc;
-        } catch (SAXException ex) {
-            LOG.warn("SAX Exception", ex);
-
-        } catch (IOException ex) {
-            LOG.warn("IO Exception", ex);
-        }
-        return null;
+        return getDocument(new ByteArrayInputStream(file.getBytes(Charset.defaultCharset())));
     }
 
     public static int getLineNumber(Node node) {
@@ -341,7 +190,7 @@ public class XmlHelper {
             NamedNodeMap attributes = node.getAttributes();
             if(attributes != null){
                 for (int i = 0; i < attributes.getLength(); i++) {
-                    String attrName = attributes.item(i).getNodeName();
+                    String attrName = attributes.item(i).getLocalName();
                     if (LINE_NUMBER_KEY_NAME.equals(attrName)) {
                         return Integer.parseInt(attributes.item(i).getTextContent());
                     }
@@ -380,7 +229,7 @@ public class XmlHelper {
         			Thread.currentThread().setContextClassLoader(ocl);
         		}
             } catch (XPathExpressionException ex) {
-
+                LOG.warn(ex.getMessage(),ex);
             }
         }
         return null;
@@ -421,6 +270,23 @@ public class XmlHelper {
             String xPathQuery) {
         try {
             XPath xPath = XPathFactory.newInstance().newXPath();
+            xPath.setNamespaceContext(new NamespaceContext() {
+                @Override
+                public String getNamespaceURI(String prefix) {
+                    // Always return null to ignore the namespace
+                    return null;
+                }
+
+                @Override
+                public String getPrefix(String uri) {
+                    return null;  // Ignore prefixes
+                }
+
+                @Override
+                public Iterator getPrefixes(String uri) {
+                    return null;  // Ignore prefixes
+                }
+            });
             return (Node) xPath.compile(xPathQuery).evaluate(rootNode, XPathConstants.NODE);
         } catch (XPathExpressionException ex) {
             LOG.warn("Failed on executing XPath expression: " + xPathQuery, ex);
@@ -431,11 +297,66 @@ public class XmlHelper {
     public static NodeList evaluateXpathNodeSet(Node rootNode, String xPathQuery) {
         try {
             XPath xPath = XPathFactory.newInstance().newXPath();
+            xPath.setNamespaceContext(new NamespaceContext() {
+                @Override
+                public String getNamespaceURI(String prefix) {
+                    // Always return null to ignore the namespace
+                    return null;
+                }
+
+                @Override
+                public String getPrefix(String uri) {
+                    return null;  // Ignore prefixes
+                }
+
+                @Override
+                public Iterator getPrefixes(String uri) {
+                    return null;  // Ignore prefixes
+                }
+            });
             return (NodeList) xPath.compile(xPathQuery).evaluate(rootNode, XPathConstants.NODESET);
         } catch (XPathExpressionException ex) {
             LOG.warn("Failed on executing XPath expression: " + xPathQuery, ex);
         }
         return null;
+    }
+
+    public static String getInnerXml(Element element) {
+        StringBuilder innerXml = new StringBuilder();
+
+        // Loop through child nodes of the element
+        NodeList children = element.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            Node child = children.item(i);
+            innerXml.append(nodeToString(child));
+        }
+        return innerXml.toString();
+    }
+
+    private static String nodeToString(Node node) {
+        try {
+            StringWriter writer = new StringWriter();
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            transformer.transform(new DOMSource(node), new StreamResult(writer));
+            return writer.toString();
+        } catch (Exception e) {
+            LOG.warn("Failed on transforming XML object to String: ", e);
+            return null;
+        }
+    }
+
+    public static boolean isXML(String content) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            builder.parse(new InputSource(new StringReader(content)));
+            return true;
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            // If an exception is thrown, it's not valid XML
+            return false;
+        }
     }
 
 }

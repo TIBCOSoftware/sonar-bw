@@ -12,23 +12,21 @@ import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.common.helper.XmlHelper;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = ExceptionHandlingCheck.RULE_KEY, name = "Exception handling check", priority = Priority.MINOR, description = "Check if exceptions are handled in component process.")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class ExceptionHandlingCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(ExceptionHandlingCheck.class);
-    public final static String RULE_KEY = "ExceptionHandlingCheck";
+    private static final Logger LOG = LoggerFactory.getLogger(ExceptionHandlingCheck.class);
+    public static final String RULE_KEY = "ExceptionHandlingCheck";
 
     @Override
     protected void validate(ProcessSource processSource) {
         LOG.debug("Start validation for rule: " + RULE_KEY);
-        if (!processSource.getProcessModel().isSubProcess()) {
-            if (processSource.getProcessModel().getCatchcount() == 0) {
-                reportIssueOnFile("Exception is not handled in component process: " + processSource.getProcessModel().getName(),XmlHelper.getLineNumber(processSource.getProcessModel().getNode()));
-            }
+        if (!processSource.getProcessModel().isSubProcess() && processSource.getProcessModel().getCatchcount() == 0) {
+            reportIssueOnFile("Exception is not handled in component process: " + processSource.getProcessModel().getName(),XmlHelper.getLineNumber(processSource.getProcessModel().getNode()));
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
     }

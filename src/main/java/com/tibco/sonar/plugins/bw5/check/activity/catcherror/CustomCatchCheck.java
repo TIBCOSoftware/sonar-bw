@@ -6,7 +6,7 @@
 
 package com.tibco.sonar.plugins.bw5.check.activity.catcherror;
 
-import org.sonar.check.Cardinality;
+
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
@@ -14,13 +14,13 @@ import org.sonar.check.RuleProperty;
 import com.tibco.sonar.plugins.bw5.check.AbstractProcessCatchCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
 import com.tibco.utils.bw5.model.Constants;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = CustomCatchCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_CUSTOMPROCESSCATCH_NAME , description = CheckConstants.RULE_PROCESS_CUSTOMPROCESSCATCH_DESCRIPTION, priority = Priority.MAJOR)
 public class CustomCatchCheck extends AbstractProcessCatchCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CustomCatchCheck.class);
 	public static final String RULE_KEY = "CustomProcessCatch";
 	
 	public static final String CATCH_ALL_CONFIG_ELEMENT = "catchAll";

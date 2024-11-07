@@ -15,7 +15,8 @@
    public enum Child {
      from, 
      to, 
-     conditionType, 
+     conditionType,
+     xpathDescription,
      xpath;
      
      Child() {}
@@ -23,6 +24,7 @@
    
    protected String conditionType;
    protected String xpath;
+   protected String label;
    protected Node node;
    public String getFrom()
    {
@@ -76,7 +78,7 @@
    private void parseChild(Node node) {
      Child child;
      try {
-       child = Child.valueOf(node.getNodeName());
+       child = Child.valueOf(node.getLocalName());
      } catch (Exception e) {
        return;
      }
@@ -93,6 +95,19 @@
      case xpath: 
        setXpath(node.getTextContent());
        break;
+       case xpathDescription:
+         setLabel(node.getTextContent());
+         break;
      }
    }
+
+   public void setLabel(String textContent) {
+     this.label = textContent;
+   }
+
+   public String getLabel(){
+     return label;
+   }
+
+
  }

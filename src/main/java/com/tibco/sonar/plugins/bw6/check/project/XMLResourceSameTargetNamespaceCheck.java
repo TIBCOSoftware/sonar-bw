@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 import org.sonar.api.batch.fs.InputFile;
 
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -36,7 +36,7 @@ public class XMLResourceSameTargetNamespaceCheck extends AbstractProjectCheck {
 
     public static final String RULE_KEY = "XMLResourceSameTargetNamespace";
 
-    private static final Logger LOG = Loggers.get(XMLResourceSameTargetNamespaceCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XMLResourceSameTargetNamespaceCheck.class);
 
     
     @Override
@@ -50,34 +50,30 @@ public class XMLResourceSameTargetNamespaceCheck extends AbstractProjectCheck {
         List<XmlResource> resourceList = new ArrayList<>();
         List<XsdResource> schemaList = project.getSchemas();
         if(schemaList != null){
-            schemaList.forEach((schema) -> {
-                resourceList.add(schema);
-            });
+            schemaList.forEach(resourceList::add);
         }
         
         List<WsdlResource> descriptorList = project.getServiceDescriptor();
         if(descriptorList != null){
-            descriptorList.forEach((schema) -> {
-                resourceList.add(schema);
-            });
+            descriptorList.forEach(resourceList::add);
         }
         
-        if(resourceList != null){
-            Map<String, List<InputFile>> targetNamespaceMap = new HashMap<>();
-            resourceList.forEach((schema) -> {
-                String targetNamespace = schema.getTargetNamespace();
-                LOG.debug("Checking target namespace ["+targetNamespace+"]");
-                List<InputFile> schemas = targetNamespaceMap.get(targetNamespace);
-                if(schemas == null){
-                    schemas = new ArrayList<>();
-                }
-                schemas.add(map.getFile(schema));
-                targetNamespaceMap.put(targetNamespace, schemas);
-                if (schemas.size() > 1) {
-                    reportIssueOnFile("Target namespace ["+targetNamespace+"] is replicated among xsd resources project has", map.getFile(schema) , 1);
-                }
-            });
-        }
+
+        Map<String, List<InputFile>> targetNamespaceMap = new HashMap<>();
+        resourceList.forEach(schema -> {
+            String targetNamespace = schema.getTargetNamespace();
+            LOG.debug("Checking target namespace ["+targetNamespace+"]");
+            List<InputFile> schemas = targetNamespaceMap.get(targetNamespace);
+            if(schemas == null){
+                schemas = new ArrayList<>();
+            }
+            schemas.add(map.getFile(schema));
+            targetNamespaceMap.put(targetNamespace, schemas);
+            if (schemas.size() > 1) {
+                reportIssueOnFile("Target namespace ["+targetNamespace+"] is replicated among xsd resources project has", map.getFile(schema) , 1);
+            }
+        });
+
         }
         
     }
@@ -88,7 +84,7 @@ public class XMLResourceSameTargetNamespaceCheck extends AbstractProjectCheck {
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

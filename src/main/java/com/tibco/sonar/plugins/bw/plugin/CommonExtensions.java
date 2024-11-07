@@ -19,7 +19,6 @@ public final class CommonExtensions {
 	public static List getExtensions() {
 		List builder = new ArrayList();
 		builder.add(BusinessWorksMetrics.class);
-		//builder.add(BusinessWorksProcessColorizerFormat.class);
 		return builder;
 	}
 

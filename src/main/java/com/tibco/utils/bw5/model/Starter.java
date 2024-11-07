@@ -10,7 +10,7 @@
  
  public class Starter extends Activity
  {
-   public Node nodeName;
+   protected Node nodeName;
    
    public Starter()
    {
@@ -22,7 +22,7 @@
      this.nodeName = node;
    }
    
-   public Node getNodeName() {
+   public Node getLocalName() {
      return this.nodeName;
    }
  }

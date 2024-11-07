@@ -17,14 +17,14 @@ import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.bw6.model.Process;
 import com.tibco.utils.bw6.model.Transition;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
     
 @Rule(key = TransitionLabelCheck.RULE_KEY, name = "Transition Labels Check", priority = Priority.MINOR, description = "This rule checks whether the transitions with the type 'Success With Condition' (XPath) have a proper label. This will improve code readability")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class TransitionLabelCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(TransitionLabelCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TransitionLabelCheck.class);
     public static final String RULE_KEY = "TransitionLabels";
 
     @Override
@@ -38,12 +38,6 @@ public class TransitionLabelCheck extends AbstractProcessCheck {
             Transition transition = pair.getValue();
             LOG.debug("Checking transition [" + transition.getName() + "] with condition type [" + transition.getConditionType() + "] and label [" + transition.getLabel() + "]");
             if (transition.getConditionType() != null && transition.getConditionType().equals("SUCCESSWITHCONDITION") &&  transition.getLabel() == null) {
-                if (transition.getFrom() == null) {
-                    String name = transition.getName();
-                }
-                if (transition.getTo() == null) {
-                    String name = transition.getName();                    
-                }
                 reportIssueOnFile("The transition from " + transition.getFrom() + " to " + transition.getTo() + " doesn't have a proper label", transition.getLineNumber());
             }
         }

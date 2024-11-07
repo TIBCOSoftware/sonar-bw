@@ -11,8 +11,8 @@ import com.tibco.sonar.plugins.bw.source.XmlSource;
 import com.tibco.utils.common.helper.XmlHelper;
 import java.util.Collections;
 import org.sonar.api.utils.WildcardPattern;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
@@ -39,7 +39,7 @@ public class XPathCheck extends AbstractCheck {
             defaultValue = "The XPath expression matches this piece of code")
     private String message;
 
-    private static final Logger LOG = Loggers.get(XPathCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XPathCheck.class);
 
     public static final String RULE_KEY = "XPathCheck";
 
@@ -103,8 +103,8 @@ public class XPathCheck extends AbstractCheck {
     }
 
     private boolean isFileIncluded(XmlFile file) {
-        LOG.debug("Checking file name ["+file.getInputFile().absolutePath()+"] against file pattern ["+filePattern+"]");
-        return filePattern == null || WildcardPattern.create(filePattern).match(file.getInputFile().absolutePath());
+        LOG.debug("Checking file name ["+file.getInputFile().filename()+"] against file pattern ["+filePattern+"]");
+        return filePattern == null || WildcardPattern.create(filePattern).match(file.getInputFile().filename());
     }
 
 }

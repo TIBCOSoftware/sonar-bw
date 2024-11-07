@@ -17,14 +17,14 @@ import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.EventSource;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = JMSAcknowledgementModeCheck.RULE_KEY, name = "JMS Acknowledgement Mode Check", priority = Priority.INFO, description = "This rule checks the acknowledgement mode used in JMS activities. Avoid using Auto Acknowledgement to minimize the risk of data loss.")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.INFO)
 public class JMSAcknowledgementModeCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(JMSAcknowledgementModeCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JMSAcknowledgementModeCheck.class);
 
     public static final String RULE_KEY = "JMSAcknowledgementMode";
 
@@ -32,7 +32,7 @@ public class JMSAcknowledgementModeCheck extends AbstractProcessCheck {
     protected void validate(ProcessSource processSource) {
         LOG.debug("Start validation for rule: " + RULE_KEY);
         List<Activity> activities = processSource.getProcessModel().getActivities();
-        activities.forEach((activity) -> {
+        activities.forEach(activity -> {
             if (activity.getType() != null && activity.getType().contains("bw.jms.getmsg")) {
                 LOG.debug("JMS Get Message activity detected");
                 if(!activity.hasProperty("ackMode")){
@@ -42,11 +42,9 @@ public class JMSAcknowledgementModeCheck extends AbstractProcessCheck {
         });
         
         List<EventSource> eventSources = processSource.getProcessModel().getEventSources();
-        eventSources.forEach((eventSource) -> {
-            if (eventSource.getType() != null && (eventSource.getType().contains("bw.jms.signalin") || eventSource.getType().contains("bw.jms.receive"))) {
-                if(!eventSource.hasProperty("ackMode")){
-                    reportIssueOnFile("Auto Acknowledgement mode is set in the JMS activity " + eventSource.getName() + ".  Avoid using Auto Acknowledgement to minimize the risk of data loss.",XmlHelper.getLineNumber(eventSource.getNode()));
-                }
+        eventSources.forEach(eventSource -> {
+            if (eventSource.getType() != null && (eventSource.getType().contains("bw.jms.signalin") || eventSource.getType().contains("bw.jms.receive")) && !eventSource.hasProperty("ackMode")) {
+                reportIssueOnFile("Auto Acknowledgement mode is set in the JMS activity " + eventSource.getName() + ".  Avoid using Auto Acknowledgement to minimize the risk of data loss.",XmlHelper.getLineNumber(eventSource.getNode()));
             }
         });
         LOG.debug("Validation ended for rule: " + RULE_KEY);

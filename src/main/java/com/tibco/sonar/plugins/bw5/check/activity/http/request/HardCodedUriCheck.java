@@ -6,21 +6,20 @@
 
 package com.tibco.sonar.plugins.bw5.check.activity.http.request;
 
-import org.sonar.check.Cardinality;
+
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 
 import com.tibco.sonar.plugins.bw5.check.AbstractProcessHardCodedCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
-import com.tibco.sonar.plugins.bw5.check.activity.catcherror.CatchAllCheck;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
-@Rule(key = HardCodedUriCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_HTTPREQUESTURIHARDCODED_NAME, description = CheckConstants.RULE_PROCESS_HTTPREQUESTURIHARDCODED_DESCRIPTION, priority = Priority.MAJOR, cardinality = Cardinality.SINGLE)
+@Rule(key = HardCodedUriCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_HTTPREQUESTURIHARDCODED_NAME, description = CheckConstants.RULE_PROCESS_HTTPREQUESTURIHARDCODED_DESCRIPTION, priority = Priority.MAJOR)
 public class HardCodedUriCheck extends AbstractProcessHardCodedCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HardCodedUriCheck.class);
 	public static final String RULE_KEY = "HTTPRequestUriHardCoded";
 	
 	protected static final String CONFIG_XPATH_DEFAULT = "";

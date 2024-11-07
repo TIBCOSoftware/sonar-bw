@@ -20,15 +20,15 @@ import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.batch.rule.CheckFactory;
+
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.measures.Metric;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 public class BWResourceMetricSensor implements Sensor {
 
-    private final static Logger LOG = Loggers.get(BWResourceMetricSensor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BWResourceMetricSensor.class);
 
     protected FileSystem fileSystem;
   
@@ -36,11 +36,10 @@ public class BWResourceMetricSensor implements Sensor {
     private final List<SimpleEntry<String, Metric>> resourceLanguageKeys = new ArrayList<>();
 
     
-    private org.sonar.api.batch.sensor.SensorContext sensorContext;    
+
     private final FilePredicate mainFilesPredicate;
 
-    public BWResourceMetricSensor(FileSystem fileSystem,
-            CheckFactory checkFactory) {
+    public BWResourceMetricSensor(FileSystem fileSystem) {
         LOG.debug("ProcessRuleSensor - START");
         resourceLanguageKeys.add(new SimpleEntry<>(SharedHttp.KEY, BusinessWorksMetrics.BWRESOURCES_HTTP_CONNECTION));
         resourceLanguageKeys.add(new SimpleEntry<>(SharedJms.KEY, BusinessWorksMetrics.BWRESOURCES_JMS_CONNECTION));
@@ -52,22 +51,19 @@ public class BWResourceMetricSensor implements Sensor {
         LOG.debug("ProcessRuleSensor - END");
     }
 
-    /*public boolean shouldExecuteOnProject(Project project) {
-        return fileSystem.inputFiles(mainFilesPredicate).iterator().hasNext();
-    }*/
 
     @Override
     public void describe(SensorDescriptor descriptor) {
-       
+        descriptor.onlyOnLanguage(BusinessWorks5Language.KEY);
     }
 
     @Override
     public void execute(org.sonar.api.batch.sensor.SensorContext context) {
-        this.sensorContext = context;
+
         try{
-        resourceLanguageKeys.forEach((entry) -> {
+        resourceLanguageKeys.forEach(entry -> {
             for (InputFile file : fileSystem.inputFiles(mainFilesPredicate)) {
-                sensorContext.<Integer>newMeasure()
+                context.<Integer>newMeasure()
                         .forMetric(entry.getValue())
                         .on(file)
                         .withValue(1)

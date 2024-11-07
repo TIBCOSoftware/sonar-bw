@@ -13,6 +13,10 @@ package com.tibco.sonar.plugins.bw5.language;
  */
 public class SharedJms {
 
+	private SharedJms(){
+
+	}
+
 	/** The process language key. */
 	public static final String KEY = "sharedjms";
 }

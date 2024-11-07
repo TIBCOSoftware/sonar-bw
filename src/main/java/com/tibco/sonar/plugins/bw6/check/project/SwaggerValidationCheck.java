@@ -11,11 +11,10 @@ import com.tibco.sonar.plugins.bw6.source.ProjectSource;
 import com.tibco.utils.bw6.model.JSONResource;
 import com.tibco.utils.bw6.model.Project;
 import io.swagger.parser.SwaggerParser;
-import io.swagger.models.Swagger;
 import org.sonar.api.batch.fs.InputFile;
 
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -31,7 +30,7 @@ public class SwaggerValidationCheck extends AbstractProjectCheck {
 
     public static final String RULE_KEY = "SwaggerValidation";
 
-    private static final Logger LOG = Loggers.get(SwaggerValidationCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SwaggerValidationCheck.class);
 
     private final SwaggerParser parser = new SwaggerParser();
 
@@ -59,7 +58,7 @@ public class SwaggerValidationCheck extends AbstractProjectCheck {
         String response = null;
 
         try {
-            Swagger result = parser.read(file.absolutePath(), null, null);
+            parser.parse(file.contents());
         } catch (Exception ex) {
             response = ex.getMessage() + "\n";
         }
@@ -72,7 +71,7 @@ public class SwaggerValidationCheck extends AbstractProjectCheck {
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

@@ -12,8 +12,8 @@ import com.tibco.utils.bw6.model.Project;
 import com.tibco.utils.bw6.model.Property;
 import java.util.List;
 
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -30,7 +30,7 @@ public class NumberOfPropertiesSameGroupCheck extends AbstractProjectCheck {
 
     public static final String RULE_KEY = "NumberOfPropertiesSameGroup";
 
-    private static final Logger LOG = Loggers.get(NumberOfPropertiesSameGroupCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NumberOfPropertiesSameGroupCheck.class);
 
     @RuleProperty(key = "maxProperties", description = "Threshold of properties to be considered excessive for a single group", defaultValue = "10", type = "INTEGER")
     protected int maxProperties;
@@ -47,20 +47,24 @@ public class NumberOfPropertiesSameGroupCheck extends AbstractProjectCheck {
             if(propertyPathList != null){
                 LOG.debug("Properties path list: "+propertyPathList.size());
                 for(String propertyPath : propertyPathList){
-                    LOG.debug("Checking Path: "+propertyPath);
-                    List<Property> propertyList = project.getProperties().getPropertyByPath(propertyPath);
-                    if(propertyList != null){
-                        LOG.debug("Number of properties that belong to path: "+propertyPath + " - " + propertyList.size()) ;
-                        if(propertyList.size() > maxProperties){
-                            reportIssueOnFile("Module Property group ["+propertyPath+"] has more properties  ("+propertyList.size()+") that allowed ("+maxProperties+") ");
-                        }
-                    }
-                    
+                    checkProperties(propertyPath, project);
+
                     LOG.debug("Checking Path: "+propertyPath + " DONE");
                 }
             }
         }
         
+    }
+
+    private void checkProperties(String propertyPath, Project project) {
+        LOG.debug("Checking Path: "+ propertyPath);
+        List<Property> propertyList = project.getProperties().getPropertyByPath(propertyPath);
+        if(propertyList != null){
+            LOG.debug("Number of properties that belong to path: "+ propertyPath + " - " + propertyList.size()) ;
+            if(propertyList.size() > maxProperties){
+                reportIssueOnFile("Module Property group ["+ propertyPath +"] has more properties  ("+propertyList.size()+") that allowed ("+maxProperties+") ");
+            }
+        }
     }
 
     @Override
@@ -69,7 +73,7 @@ public class NumberOfPropertiesSameGroupCheck extends AbstractProjectCheck {
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

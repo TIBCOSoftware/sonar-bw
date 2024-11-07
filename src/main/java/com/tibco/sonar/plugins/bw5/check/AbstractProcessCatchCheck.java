@@ -47,56 +47,58 @@ public abstract class AbstractProcessCatchCheck extends AbstractProcessCheck {
 		List<Activity> activitiesCatch = process
 				.getActivitiesByType(getCatchActivityType());
 		// If no catch activity found raise a violation
-		if (activitiesCatch.size() < 1) {			
-                        reportIssueOnFile(getNoCatchMessage());
+		if (activitiesCatch.isEmpty()) {
+			reportIssueOnFile(getNoCatchMessage());
 		// Else parse catch activities
 		} else {
 			boolean catchFound = false;
-			boolean catchAllFound = false;
 			// For each catch activity found
 			for (Activity activity : activitiesCatch) {
-				// try to retrieve catchAll element in configuration
-				try{
-					Element catchAllConfigElement = XmlHelper.firstChildElement(
-                            activity.getConfiguration(),getCatchAllElementName());
-					// if catchAll found and value equal to activation value
-					if (catchAllConfigElement.getTextContent().equals(getCatchAllElementValue())) {
-						// then catch all found
-						catchAllFound = true;
-					}
-				}catch(NoSuchElementException e){
-					// else catch all not found
-					catchAllFound = false;					
-				}
-				// if catch all found
-				if(catchAllFound){
-					// and no specifi fault element defined
-					if(getCatchFaultElementValue() == null || getCatchFaultElementValue().isEmpty()){				
-						// Then we found requiere catch (eg. catchAll)
-						catchFound = catchAllFound;
-						break;
-					}
-				// but if catch all not found
-				}else{
-					// if the catch activity is configured to catch a specific fault 
-					if(getCatchFaultElementValue() != null && !getCatchFaultElementValue().isEmpty()){	
-						// check if this specific fault is the rule's one 
-						catchFound = findFaultCatch(activity);
-						if(catchFound){
-							// stop the loop if found
-							break;
-						}
-					}					
-				}
+				catchFound = checkCatch(activity) || catchFound;
 			}
+
 			// if rule's catch not found raise a violation
 			if (!catchFound) {
-                            
-				
-                                reportIssueOnFile(getNotFoundMessage());
+				reportIssueOnFile(getNotFoundMessage());
 			}
+
 		}
 	}
+
+	private boolean checkCatch(Activity activity){
+			// try to retrieve catchAll element in configuration
+		boolean catchAllFound = false;
+		try{
+				Element catchAllConfigElement = XmlHelper.firstChildElement(
+						activity.getConfiguration(),getCatchAllElementName());
+				// if catchAll found and value equal to activation value
+				if (catchAllConfigElement.getTextContent().equals(getCatchAllElementValue())) {
+					// then catch all found
+					catchAllFound = true;
+				}
+			}catch(NoSuchElementException e){
+				// else catch all not found
+				catchAllFound = false;
+			}
+			// if catch all found
+			if(catchAllFound){
+				// and no specifi fault element defined
+				if(getCatchFaultElementValue() == null || getCatchFaultElementValue().isEmpty()){
+					return catchAllFound;
+				}
+				// but if catch all not found
+			}else{
+				// if the catch activity is configured to catch a specific fault
+				if(getCatchFaultElementValue() != null && !getCatchFaultElementValue().isEmpty()){
+					// check if this specific fault is the rule's one
+					return findFaultCatch(activity);
+				}
+			}
+
+		return false;
+		}
+
+
 	
 	private boolean findFaultCatch(Activity activity){
 		// init catch not found

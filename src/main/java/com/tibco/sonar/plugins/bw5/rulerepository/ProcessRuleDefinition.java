@@ -20,14 +20,17 @@ import com.tibco.sonar.plugins.bw5.check.sharedjms.HardCodedJndiUrlCheck;
 import com.tibco.sonar.plugins.bw5.check.sharedjms.HardCodedJndiUserCheck;
 import com.tibco.sonar.plugins.bw5.language.BusinessWorks5Language;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinitionAnnotationLoader;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+
 
 /**
  * Replacement for org.sonar.plugins.squid.SquidRuleRepository
@@ -38,10 +41,6 @@ public class ProcessRuleDefinition implements RulesDefinition {
     protected static final String REPOSITORY_NAME = "SonarQube";
     protected static final List<String> LANGUAGE_KEYS = Arrays.asList(BusinessWorks5Language.KEY);
 
-    private static List<Class> checkRules;
-
-    public ProcessRuleDefinition() {
-    }
 
     private void defineRulesForLanguage(Context context, String repositoryKey, String repositoryName, String languageKey) {
         NewRepository repository = context.createRepository(repositoryKey, languageKey).setName(repositoryName);
@@ -65,43 +64,36 @@ public class ProcessRuleDefinition implements RulesDefinition {
         String htmlPath = "/org/sonar/l10n/bw5/rules/" + rule.key() + ".html";
         String description = "<p></p>";
         try {
-            description = Files.readString(Paths.get(this.getClass().getResource(htmlPath).toExternalForm()),UTF_8);
+            description = new BufferedReader(
+                    new InputStreamReader(this.getClass().getResourceAsStream(htmlPath), StandardCharsets.UTF_8))
+                    .lines().collect(Collectors.joining("\n"));
         } catch (Exception e) {
             description= "<p>Description not available</p>";
         }
         rule.setHtmlDescription(description);
     }
 
-    public static String getRepositoryKeyForLanguage(String languageKey) {
-        return REPOSITORY_KEY;
-    }
-
-    public static String getRepositoryNameForLanguage(String languageName) {
-        return REPOSITORY_NAME;
-    }
-
     @Override
     public void define(Context context) {
-        LANGUAGE_KEYS.forEach((languageKey) -> {
-            defineRulesForLanguage(context, ProcessRuleDefinition.REPOSITORY_KEY, ProcessRuleDefinition.REPOSITORY_NAME,
-                    languageKey);
-        });
+        LANGUAGE_KEYS.forEach(languageKey -> defineRulesForLanguage(context, ProcessRuleDefinition.REPOSITORY_KEY, ProcessRuleDefinition.REPOSITORY_NAME, languageKey));
     }
 
-    public static List<Class> getChecks() {
+    public static List<Class<?>> getChecks() {
         return Arrays.asList(new Class[]{
             //Custom
             com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForStarterProcess.class,
             com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForSubProcess.class,
-            com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForDynamicSubProcess.class,
-            com.tibco.sonar.plugins.bw5.check.process.LogLevelMappingCheck.class,
-            com.tibco.sonar.plugins.bw5.check.process.ApplicationJsonRuleCheck.class,
             // Common
             com.tibco.sonar.plugins.bw5.check.process.NoDescriptionCheck.class,
+            com.tibco.sonar.plugins.bw5.check.process.NoOtherwiseConditionCheck.class,
+            com.tibco.sonar.plugins.bw5.check.process.NumberofActivitiesCheck.class,
+            com.tibco.sonar.plugins.bw5.check.process.OnlyOneOtherwiseConditionCheck.class,
+            com.tibco.sonar.plugins.bw5.check.process.TransitionLabelCheck.class,
+            com.tibco.sonar.plugins.bw5.check.process.ProcessNamingConventionCheck.class,
+            com.tibco.sonar.plugins.bw5.check.process.RenderXMLPrettyPrintCheck.class,
             // Catch activities
             com.tibco.sonar.plugins.bw5.check.activity.catcherror.CustomCatchCheck.class,
             com.tibco.sonar.plugins.bw5.check.activity.catcherror.CatchAllCheck.class,
-            com.tibco.sonar.plugins.bw5.check.activity.catcherror.CatchBWExceptionCheck.class,
             // Generic Reusable Rule for Hard Coded Values
             com.tibco.sonar.plugins.bw5.check.activity.CustomHardCodedCheck.class,
             // HTTP Request Activity
@@ -145,15 +137,17 @@ public class ProcessRuleDefinition implements RulesDefinition {
         return Arrays.asList(//Custom
                 new com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForStarterProcess(),
                 new com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForSubProcess(),
-                new com.tibco.sonar.plugins.bw5.check.process.DeadProcessCheckForDynamicSubProcess(),
-                new com.tibco.sonar.plugins.bw5.check.process.LogLevelMappingCheck(),
-                new com.tibco.sonar.plugins.bw5.check.process.ApplicationJsonRuleCheck(),
                 // Common
                 new com.tibco.sonar.plugins.bw5.check.process.NoDescriptionCheck(),
+                new com.tibco.sonar.plugins.bw5.check.process.NoOtherwiseConditionCheck(),
+                new com.tibco.sonar.plugins.bw5.check.process.NumberofActivitiesCheck(),
+                new com.tibco.sonar.plugins.bw5.check.process.OnlyOneOtherwiseConditionCheck(),
+                new com.tibco.sonar.plugins.bw5.check.process.TransitionLabelCheck(),
+                new com.tibco.sonar.plugins.bw5.check.process.ProcessNamingConventionCheck(),
+                new com.tibco.sonar.plugins.bw5.check.process.RenderXMLPrettyPrintCheck(),
                 // Catch activities
                 new com.tibco.sonar.plugins.bw5.check.activity.catcherror.CustomCatchCheck(),
                 new com.tibco.sonar.plugins.bw5.check.activity.catcherror.CatchAllCheck(),
-                new com.tibco.sonar.plugins.bw5.check.activity.catcherror.CatchBWExceptionCheck(),
                 // Generic Reusable Rule for Hard Coded Values
                 new com.tibco.sonar.plugins.bw5.check.activity.CustomHardCodedCheck(),
                 // HTTP Request Activity

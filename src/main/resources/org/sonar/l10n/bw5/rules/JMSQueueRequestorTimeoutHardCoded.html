@@ -7,13 +7,13 @@
 
 <h3>Basic Description</h3>
 
-<p>Check if timeout (JMSExpiration) is hard coded in JMS Queue Requestor activities</p>
+<p>Check if timeout  is hard coded in JMS Queue Requestor activities</p>
 
 <h3>Why this is important?</h3>
 
-<p>
-TBD
+<p>Timeout hardcoded as part of the JMS Queue Requestor reduce its portability when you deploy in different environments and break the externalization of the configuration of teh application
 </p>
 
 <h3>How to fix it?</h3>
-<p>TBD</p>
+<p>Externalize the property by using a Global Variable for that purpose</p>
+

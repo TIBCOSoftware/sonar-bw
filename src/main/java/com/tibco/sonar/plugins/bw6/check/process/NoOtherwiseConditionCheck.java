@@ -5,9 +5,8 @@
 */
 package com.tibco.sonar.plugins.bw6.check.process;
 
-import java.util.Iterator;
-import java.util.Map;
 
+import com.tibco.utils.common.helper.XmlHelper;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -19,14 +18,14 @@ import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
 import com.tibco.utils.bw6.model.Transition;
 import java.util.List;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
     
 @Rule(key = NoOtherwiseConditionCheck.RULE_KEY, name = "No Otherwise Condition Check", priority = Priority.MAJOR, description = "This rule checks multiple transition from an activity one for the paths are for no matching condition to handle all posible outcomes of the decision execution")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class NoOtherwiseConditionCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(NoOtherwiseConditionCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NoOtherwiseConditionCheck.class);
     public static final String RULE_KEY = "NoOtherwiseCheck";
 
     @Override
@@ -35,27 +34,30 @@ public class NoOtherwiseConditionCheck extends AbstractProcessCheck {
         Process process = processSource.getProcessModel();
         if(process != null){
             for(Activity activity : process.getActivities()){
-                boolean shouldHaveOtherwise = false;
-                boolean haveOtherwise = false;
-                List<Transition> outcomingTransitionList = activity.getOutputTransitions();
-                if(outcomingTransitionList != null){
-                    for(Transition tr : outcomingTransitionList){
-                        if(tr != null){
-                            LOG.debug("Checking transition ["+tr.getFrom()+"] --- "+  tr.getConditionType() + "  ----> ["+tr.getTo()+"]");
-                            if("SUCCESSWITHCONDITION".equals(tr.getConditionType())){
-                                shouldHaveOtherwise = true;
-                            }else if("SUCCESSWITHNOCONDITION".equals(tr.getConditionType())){
-                                haveOtherwise = true;
-                            }
-                        }
+                checkTransitionsFromActivity(activity);
+            }
+        }
+    }
+
+    private void checkTransitionsFromActivity(Activity activity) {
+        boolean shouldHaveOtherwise = false;
+        boolean haveOtherwise = false;
+        List<Transition> outcomingTransitionList = activity.getOutputTransitions();
+        if(outcomingTransitionList != null){
+            for(Transition tr : outcomingTransitionList){
+                if(tr != null){
+                    LOG.debug("Checking transition ["+tr.getFrom()+"] --- "+  tr.getConditionType() + "  ----> ["+tr.getTo()+"]");
+                    if("SUCCESSWITHCONDITION".equals(tr.getConditionType())){
+                        shouldHaveOtherwise = true;
+                    }else if("SUCCESSWITHNOCONDITION".equals(tr.getConditionType())){
+                        haveOtherwise = true;
                     }
                 }
-                 LOG.debug("Checking transition for activity ["+activity.getName()+"]");
-                if(shouldHaveOtherwise && !haveOtherwise){
-                    //TODO Add line number
-                     reportIssueOnFile("The transition from activity "+activity.getName() +" doesn't have an 'Sucess with no matching' transition to be able to handle all possible outcomes",1);
-                }
             }
+        }
+        LOG.debug("Checking transition for activity ["+ activity.getName()+"]");
+        if(shouldHaveOtherwise && !haveOtherwise){
+             reportIssueOnFile("The transition from activity "+ activity.getName() +" doesn't have an 'Sucess with no matching' transition to be able to handle all possible outcomes", XmlHelper.getLineNumber(activity.getNode()));
         }
     }
 

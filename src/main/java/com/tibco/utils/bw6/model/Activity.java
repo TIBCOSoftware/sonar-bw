@@ -8,7 +8,7 @@ package com.tibco.utils.bw6.model;
 import org.w3c.dom.Element;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.common.logger.Logger;
-import com.tibco.utils.common.logger.Loggers;
+import com.tibco.utils.common.logger.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
 
 public class Activity extends ProcessNode {
 
-    private static final Logger LOG = Loggers.get(ProcessNode.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Activity.class);
     
     protected Map<String, String> activityConfiguration;
     protected Process process;
@@ -28,16 +28,16 @@ public class Activity extends ProcessNode {
 
     public Activity(Process process) {
         this.process = process;
-        inputTransitions = new ArrayList<Transition>();
-        outputTransitions = new ArrayList<Transition>();
+        inputTransitions = new ArrayList<>();
+        outputTransitions = new ArrayList<>();
     }
 
     public Element getConfiguration() {
-        return XmlHelper.firstChildElement((Element) getNode(), "config");
+        return XmlHelper.firstChildElement((Element) getNode(), null, "config");
     }
 
     public Element getInputBindings() {
-        return XmlHelper.firstChildElement((Element) getNode(), "inputBindings");
+        return XmlHelper.firstChildElement((Element) getNode(), null, "inputBindings");
     }
 
     public Map<String, String> getProperties() {
@@ -171,16 +171,14 @@ public class Activity extends ProcessNode {
     }
 
     public boolean hasParallelFlow() {
-       if(outputTransitions != null){
-           if(outputTransitions.size() > 1){
-               int out = 0;
-               for(Transition tr : outputTransitions){
-                   if(!"SUCCESSWITHNOCONDITION".equals(tr.getConditionType())){
-                       out++;
-                   }
+       if(outputTransitions != null && outputTransitions.size() > 1){
+           int out = 0;
+           for(Transition tr : outputTransitions){
+               if(!"SUCCESSWITHNOCONDITION".equals(tr.getConditionType())){
+                   out++;
                }
-               return out > 1;
            }
+           return out > 1;
        }
        return false;
     }

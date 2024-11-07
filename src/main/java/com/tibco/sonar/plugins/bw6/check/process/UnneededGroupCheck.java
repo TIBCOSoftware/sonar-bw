@@ -17,14 +17,14 @@ import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Group;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = UnneededGroupCheck.RULE_KEY, name = "Uneeded Group Check", priority = Priority.MINOR, description = "Some times developers tends to add additional groups where they are not needed.")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class UnneededGroupCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(UnneededGroupCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UnneededGroupCheck.class);
     public static final String RULE_KEY = "UnneededGroup";
 
     @Override
@@ -52,15 +52,12 @@ public class UnneededGroupCheck extends AbstractProcessCheck {
     }
 
     private void checkGroupInside(Group group) {
-        if(group != null){
-            //Start, End and another Group
-            if(group.getActivities().size() == 1){
-                for(Activity activity : group.getActivities()){
-                    if(activity instanceof Group){
-                        Group gTmp = (Group)activity;
-                        if(group.getType() != null && group.getType().equals(gTmp.getType())){
-                            reportIssueOnFile("Uneeded group has been detected ["+gTmp.getName()+"] ",XmlHelper.getLineNumber(gTmp.getNode()));
-                        }
+        if(group != null && group.getActivities().size() == 1){
+            for(Activity activity : group.getActivities()){
+                if(activity instanceof Group){
+                    Group gTmp = (Group)activity;
+                    if(group.getType() != null && group.getType().equals(gTmp.getType())){
+                        reportIssueOnFile("Uneeded group has been detected ["+gTmp.getName()+"] ",XmlHelper.getLineNumber(gTmp.getNode()));
                     }
                 }
             }

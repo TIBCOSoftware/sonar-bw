@@ -12,9 +12,8 @@ import org.sonar.check.RuleProperty;
 
 import com.tibco.sonar.plugins.bw5.check.AbstractProcessHardCodedCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
-import com.tibco.sonar.plugins.bw5.check.activity.catcherror.CatchAllCheck;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = HardCodedPortCheck.RULE_KEY, 
 	  name = CheckConstants.RULE_PROCESS_HTTPREQUESTPORTHARDCODED_NAME,
@@ -23,7 +22,7 @@ import org.sonar.api.utils.log.Loggers;
 
 public class HardCodedPortCheck extends AbstractProcessHardCodedCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HardCodedPortCheck.class);
 	public static final String RULE_KEY = "HTTPRequestPortHardCoded";
 	
 	protected static final String CONFIG_XPATH_DEFAULT = "//serverport";

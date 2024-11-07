@@ -16,8 +16,26 @@
  public class Process
  {
    protected String name;
-   
-   public enum ElementsName
+
+   public List<Transition> getOutputTransitions(Activity activity) {
+     List<Transition> out = new ArrayList<>();
+     if(activity != null){
+
+       String tName = activity.getName();
+       for (Transition t : transitions){
+         if(tName.equals(t.getFrom())){
+           out.add(t);
+         }
+       }
+     }
+     return out;
+   }
+
+     public boolean isSubprocess() {
+        return starter.getNode() == null;
+     }
+
+     public enum ElementsName
    {
      group, 
      activity, 
@@ -35,9 +53,9 @@
    
    protected Starter starter = new Starter();
    protected Ender ender = new Ender();
-   protected List<Activity> activities = new ArrayList();
-   protected List<Group> groups = new ArrayList();
-   protected List<Transition> transitions = new ArrayList();
+   protected List<Activity> activities = new ArrayList<>();
+   protected List<Group> groups = new ArrayList<>();
+   protected List<Transition> transitions = new ArrayList<>();
    
  
    protected Document processXmlDocument;
@@ -95,7 +113,7 @@
    }
    
    public List<Activity> getActivitiesByType(String activityType) {
-     List<Activity> result = new ArrayList();
+     List<Activity> result = new ArrayList<>();
      for (Activity activity : this.activities) {
        if (activity.getType().equals(activityType)) {
          result.add(activity);
@@ -150,7 +168,7 @@
    private void parseChild(Node node) {
      ElementsName element;
      try {
-       element = ElementsName.valueOf(node.getNodeName());
+       element = ElementsName.valueOf(node.getLocalName());
      } catch (Exception e) {
        return;
      }

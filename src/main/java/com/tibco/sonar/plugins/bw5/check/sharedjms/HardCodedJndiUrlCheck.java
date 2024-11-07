@@ -7,6 +7,7 @@
 
 package com.tibco.sonar.plugins.bw5.check.sharedjms;
 
+import com.tibco.sonar.plugins.bw5.language.SharedJms;
 import com.tibco.utils.common.helper.XmlHelper;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
@@ -18,16 +19,15 @@ import com.tibco.sonar.plugins.bw5.check.AbstractXmlCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
 import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw5.source.XmlBw5Source;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = HardCodedJndiUrlCheck.RULE_KEY, name = CheckConstants.RULE_SHAREDJMS_SHAREDJMSHARDCODEDJNDIURL_NAME, description =  CheckConstants.RULE_SHAREDJMS_SHAREDJMSHARDCODEDJNDIURL_DESCRIPTION, priority = Priority.MAJOR)
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class HardCodedJndiUrlCheck extends AbstractXmlCheck {
 
-    private static final Logger LOG = Loggers.get(HardCodedJndiUrlCheck.class);
-	private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory
-			.getLogger(HardCodedJndiUrlCheck.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(HardCodedJndiUrlCheck.class);
+	private static final Logger LOGGER =LoggerFactory.getLogger(HardCodedJndiUrlCheck.class);
 	
 	public static final String RULE_KEY = "SharedJmsHardCodedJndiUrl";
 	public static final String CONFIG_ELEMENT_NAME = "config";
@@ -39,29 +39,31 @@ public class HardCodedJndiUrlCheck extends AbstractXmlCheck {
 	
 
 	@Override
-	protected void validate(XmlBw5Source xmlSource) {
-		Document document = xmlSource.getDocument(false);
-		try{
-			Element config = XmlHelper.firstChildElement(document.getDocumentElement(), CONFIG_ELEMENT_NAME);
-			if(config.hasChildNodes()){
-				Element namingEnvironment = XmlHelper.firstChildElement(config, NAMING_SECTION_ELEMENT_NAME);
-				if(config.hasChildNodes()){
-					Element useJNDI = XmlHelper.firstChildElement(namingEnvironment, JNDI_FLAG_ELEMENT_NAME);
-					if(useJNDI.getTextContent() != null && "true".equals(useJNDI.getTextContent())){
-						xmlSource.findAndValidateHardCodedChild(getRuleKey(), namingEnvironment, JNDI_URL_ELEMENT_NAME, JNDI_URL_ELEMENT_DESC);
-					}					
-				}else{
-					
-                                        reportIssueOnFile("Shared JMS connection resource naming environment is empty", xmlSource.getLineForNode(namingEnvironment));
-				}				
-			}else{
-				
-                                reportIssueOnFile("Shared JMS connection resource configuration is empty", xmlSource.getLineForNode(config));
+	protected void validateXml(XmlBw5Source xmlSource) {
+		if(SharedJms.KEY.equals(xmlSource.getExtension())) {
+			Document document = xmlSource.getDocument(false);
+			try {
+				Element config = XmlHelper.firstChildElement(document.getDocumentElement(), CONFIG_ELEMENT_NAME);
+				if (config.hasChildNodes()) {
+					Element namingEnvironment = XmlHelper.firstChildElement(config, NAMING_SECTION_ELEMENT_NAME);
+					if (config.hasChildNodes()) {
+						Element useJNDI = XmlHelper.firstChildElement(namingEnvironment, JNDI_FLAG_ELEMENT_NAME);
+						if (useJNDI.getTextContent() != null && "true".equals(useJNDI.getTextContent())) {
+							xmlSource.findAndValidateHardCodedChild(getRuleKey(), namingEnvironment, JNDI_URL_ELEMENT_NAME, JNDI_URL_ELEMENT_DESC);
+						}
+					} else {
+
+						reportIssueOnFile("Shared JMS connection resource naming environment is empty", xmlSource.getLineForNode(namingEnvironment));
+					}
+				} else {
+
+					reportIssueOnFile("Shared JMS connection resource configuration is empty", xmlSource.getLineForNode(config));
+				}
+			} catch (Exception e) {
+				LOGGER.warn("context", e);
+				reportIssueOnFile("No configuration found in shared JMS connection resource");
+
 			}
-		}catch (Exception e) {
-			LOGGER.info("context", e);
-			                 reportIssueOnFile("No configuration found in shared JMS connection resource");
-			
 		}
 	}
         

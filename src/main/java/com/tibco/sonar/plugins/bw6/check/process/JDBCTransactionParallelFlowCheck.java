@@ -17,14 +17,14 @@ import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Group;
 import com.tibco.utils.bw6.model.Process;
 import java.util.List;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = JDBCTransactionParallelFlowCheck.RULE_KEY, name = "JDBC Transaction Parallel Flow ", priority = Priority.MAJOR, description = "This rule checks if there is no parallel flows with JDBC activities inside a Transaction Group", tags = {"bug"})
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class JDBCTransactionParallelFlowCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(JDBCTransactionParallelFlowCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JDBCTransactionParallelFlowCheck.class);
     public static final String RULE_KEY = "JDBCTransactionParallelFlow";
     
     @Override
@@ -35,38 +35,45 @@ public class JDBCTransactionParallelFlowCheck extends AbstractProcessCheck {
             for(Group group : process.getGroups()){
                 LOG.debug("Group type ["+group.getType() + "] - ["+group.getName()+"]");
                 if("localTX".equals(group.getType())){
-                    LOG.debug("Local Transaction detected: ["+ group.getActivities() + "]");                
-                    for(Activity activity : group.getActivities()){
-                        LOG.debug("Activity name ["+activity.getName()+"]");
-                        if(activity.hasParallelFlow()){
-                            List<List<Activity>> flows = activity.checkFlowArray(false);
-                            int flowJDBC = 0;
-                            for(List<Activity> flow : flows){
-                                boolean usingJDBC = false;
-                                String flowString  = "";
-                                for(Activity item : flow){
-                                    flowString += item.getName() + " --> ";
-                                    if(!usingJDBC && item.getType().contains("jdbc")){
-                                        flowJDBC++;
-                                        usingJDBC = true;
-                                    }
-                                   
-                                }
-                                LOG.debug("Flow ["+flowString+"]");
-                            }
-                            if(flowJDBC > 1){
-                                reportIssueOnFile("JDBC Parallel flow inside a transaction group is not supported. So unexpected behavior in runtime will be generated",XmlHelper.getLineNumber(activity.getNode()));
-                            }
-                        }
-                    }
-                        
-                        
-                        
-                    
+                    checkParallelInTransaction(group);
+
+
                 }
             }
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
+    }
+
+    private void checkParallelInTransaction(Group group) {
+        LOG.debug("Local Transaction detected: ["+ group.getActivities() + "]");
+        for(Activity activity : group.getActivities()){
+            LOG.debug("Activity name ["+activity.getName()+"]");
+            if(activity.hasParallelFlow()){
+                List<List<Activity>> flows = activity.checkFlowArray(false);
+                int flowJDBC = 0;
+                flowJDBC = checkJDBCFlowActivities(flows, flowJDBC);
+                if(flowJDBC > 1){
+                    reportIssueOnFile("JDBC Parallel flow inside a transaction group is not supported. So unexpected behavior in runtime will be generated",XmlHelper.getLineNumber(activity.getNode()));
+                }
+            }
+        }
+    }
+
+    private static int checkJDBCFlowActivities(List<List<Activity>> flows, int flowJDBC) {
+        for(List<Activity> flow : flows){
+            boolean usingJDBC = false;
+            StringBuilder flowString  = new StringBuilder();
+            for(Activity item : flow){
+                flowString.append(item.getName()).append(" --> ");
+                if(!usingJDBC && item.getType().contains("jdbc")){
+                    flowJDBC++;
+                    usingJDBC = true;
+                }
+
+            }
+            LOG.debug("Flow ["+flowString.toString()+"]");
+        }
+        return flowJDBC;
     }
 
     @Override

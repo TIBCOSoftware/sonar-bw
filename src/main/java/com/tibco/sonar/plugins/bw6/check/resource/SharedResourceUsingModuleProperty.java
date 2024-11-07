@@ -10,12 +10,14 @@ import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.SharedResourceSource;
 import com.tibco.utils.bw6.model.SharedResource;
 import com.tibco.utils.bw6.model.SharedResourceParameter;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
+
+import java.util.Objects;
 
 @Rule(
         key = SharedResourceUsingModuleProperty.RULE_KEY,
@@ -28,7 +30,7 @@ import org.sonar.check.Rule;
 public class SharedResourceUsingModuleProperty extends AbstractResourceCheck {
 
     public static final String RULE_KEY = "BwSharedResourceUsingModuleProperty";
-    private static final Logger LOG = Loggers.get(SharedResourceUsingModuleProperty.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SharedResourceUsingModuleProperty.class);
 
     @Override
     public void validate(SharedResourceSource resourceXml) {
@@ -38,9 +40,8 @@ public class SharedResourceUsingModuleProperty extends AbstractResourceCheck {
         for (SharedResourceParameter prop : resource.getProperties()) {
             LOG.debug("Parameter name : [" + prop.getName() + "] value: [" + prop.getValue() + "]" + " Global Variable [" + prop.isGlobalVariable() + "] isBinding [" + prop.isBinding() + "] isRequired [" + prop.isRequired() + "]");
         }
-        resource.getProperties().stream().filter((parameter) -> (parameter != null)).filter((parameter) -> (parameter.isRequired() && !parameter.isGlobalVariable())).forEachOrdered((parameter) -> {
-            reportIssueOnFile(String.format("Parameter [" + parameter.getName() + "] should be defined using module property and it is not"));
-        });
+
+        resource.getProperties().stream().filter(Objects::nonNull).filter(parameter -> (parameter.isRequired() && !parameter.isGlobalVariable())).forEachOrdered(parameter ->  reportIssueOnFile(String.format("Parameter [ %s ] should be defined using module property and it is not",parameter.getName())));
 
         LOG.debug("Finished rule: " + this.getClass());
     }
@@ -51,7 +52,7 @@ public class SharedResourceUsingModuleProperty extends AbstractResourceCheck {
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

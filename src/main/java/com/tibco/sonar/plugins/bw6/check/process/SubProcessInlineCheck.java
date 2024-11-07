@@ -12,8 +12,8 @@ import com.tibco.utils.bw6.model.Process;
 import com.tibco.utils.bw6.model.Service;
 
 import java.util.Map;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -23,7 +23,7 @@ import org.sonar.check.Rule;
 public class SubProcessInlineCheck
         extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(SubProcessInlineCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SubProcessInlineCheck.class);
     public static final String RULE_KEY = "SubProcessInlineCheck";
 
     @Override
@@ -36,14 +36,7 @@ public class SubProcessInlineCheck
             for (String referenceService : referenceServices.keySet()) {
                 if (referenceServices.get(referenceService) != null && "true".equals(referenceServices.get(referenceService).getInline())) {
                     Service service = referenceServices.get(referenceService);
-                    if (service != null) {
-                        String proc = service.getImplementationProcess();
-                        if (proc != null && proc.lastIndexOf(".") > 0) {
-                            proc = proc.substring(proc.lastIndexOf(".") + 1).concat(".bwp");
-                            String parentprocess = process.getBasename();
-                            reportIssueOnFile("For performance reasons it is highly recommended to use Job Shared Variable instead of passing a large set of data when invoking Inline SubProcess " + proc + " from parent process " + parentprocess);
-                        }
-                    }
+                    checkService(service, process);
 
                 }
             }
@@ -52,6 +45,17 @@ public class SubProcessInlineCheck
 
 
         LOG.debug("Validation ended for rule: " + RULE_KEY);
+    }
+
+    private void checkService(Service service, Process process) {
+        if (service != null) {
+            String proc = service.getImplementationProcess();
+            if (proc != null && proc.lastIndexOf(".") > 0) {
+                proc = proc.substring(proc.lastIndexOf(".") + 1).concat(".bwp");
+                String parentprocess = process.getBasename();
+                reportIssueOnFile("For performance reasons it is highly recommended to use Job Shared Variable instead of passing a large set of data when invoking Inline SubProcess " + proc + " from parent process " + parentprocess);
+            }
+        }
     }
 
     @Override

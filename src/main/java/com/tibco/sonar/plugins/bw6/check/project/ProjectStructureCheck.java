@@ -15,8 +15,8 @@ import com.tibco.utils.bw6.model.Project;
 import java.io.File;
 
 
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -33,7 +33,7 @@ public class ProjectStructureCheck extends AbstractProjectCheck {
 
     public static final String RULE_KEY = "ProjectStructure";
 
-    private static final Logger LOG = Loggers.get(ProjectStructureCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProjectStructureCheck.class);
 
     @RuleProperty(key = "jsonTemplate", description = "JSON Template that defines the valid structure", defaultValue = "{\n"
             + "    \"name\" : \"\",\n"
@@ -79,7 +79,7 @@ public class ProjectStructureCheck extends AbstractProjectCheck {
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 
@@ -93,16 +93,7 @@ public class ProjectStructureCheck extends AbstractProjectCheck {
                 JsonObject structure = structureArray.get(i).getAsJsonObject();
 
                 if (structure != null) {
-                    String namePattern = structure.get("namePattern").getAsString();
-                    String type = structure.get("type").getAsString();
-                    if (type != null && (("file".equals(type) && childItem.isFile()) || ("folder".equals(type) && childItem.isDirectory()))) {
-                        if (child.getName().matches(namePattern)) {
-                            valid = true;
-                            if (childItem.isDirectory()) {
-                                check(childItem, structure);
-                            }
-                        }
-                    }
+                    valid = checkJSONStructure(child, childItem, structure, valid);
                 }
             }
             
@@ -110,6 +101,20 @@ public class ProjectStructureCheck extends AbstractProjectCheck {
                 reportIssueOnFile("File ["+childItem.getAbsolutePath()+"] is not allowed here");
             }
         }
+    }
+
+    private boolean checkJSONStructure(File child, File childItem, JsonObject structure, boolean valid) {
+        String namePattern = structure.get("namePattern").getAsString();
+        String type = structure.get("type").getAsString();
+        if (child.getName().matches(namePattern) && type != null && (("file".equals(type) && childItem.isFile()) || ("folder".equals(type) && childItem.isDirectory()))) {
+
+            valid = true;
+            if (childItem.isDirectory()) {
+                check(childItem, structure);
+            }
+
+        }
+        return valid;
     }
 
 }

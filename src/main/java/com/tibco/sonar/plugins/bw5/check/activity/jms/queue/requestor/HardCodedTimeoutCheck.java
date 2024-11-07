@@ -6,25 +6,24 @@
 
 package com.tibco.sonar.plugins.bw5.check.activity.jms.queue.requestor;
 
-import org.sonar.check.Cardinality;
+
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 
 import com.tibco.sonar.plugins.bw5.check.AbstractProcessHardCodedCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
-import com.tibco.sonar.plugins.bw5.check.activity.catcherror.CatchAllCheck;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
-@Rule(key = HardCodedTimeoutCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_JMSQUEUEREQUESTORTIMEOUTHARDCODED_NAME, description = CheckConstants.RULE_PROCESS_JMSQUEUEREQUESTORTIMEOUTHARDCODED_DESCRIPTION, priority = Priority.MAJOR,tags={"bug"}, cardinality = Cardinality.SINGLE)
+@Rule(key = HardCodedTimeoutCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_JMSQUEUEREQUESTORTIMEOUTHARDCODED_NAME, description = CheckConstants.RULE_PROCESS_JMSQUEUEREQUESTORTIMEOUTHARDCODED_DESCRIPTION, priority = Priority.MAJOR,tags={"bug"})
 public class HardCodedTimeoutCheck extends AbstractProcessHardCodedCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HardCodedTimeoutCheck.class);
 	public static final String RULE_KEY = "JMSQueueRequestorTimeoutHardCoded";
 	
-	protected static final String CONFIG_XPATH_DEFAULT = "//ConfigurableHeaders/JMSExpiration";
-	protected static final String INPUTBINDING_XPATH_DEFAULT = "//*[local-name()='ActivityInput']/JMSExpiration";
+	protected static final String CONFIG_XPATH_DEFAULT = "";
+	protected static final String INPUTBINDING_XPATH_DEFAULT = "//*[local-name()='ActivityInput']/requestTimeout";
 	protected static final String ACTIVITY_TYPE_DEFAULT = "com.tibco.plugin.jms.JMSQueueRequestReplyActivity";
 	protected static final String MESSAGE_DEFAULT = "Timeout hard coded in JMS Queue Requestor activity";
 	

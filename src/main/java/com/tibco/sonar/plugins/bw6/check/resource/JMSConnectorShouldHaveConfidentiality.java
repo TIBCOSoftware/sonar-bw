@@ -9,14 +9,12 @@ import com.tibco.sonar.plugins.bw6.check.AbstractResourceCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.SharedResourceSource;
 import com.tibco.utils.bw6.model.SharedResource;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 
 @Rule(
         key = JMSConnectorShouldHaveConfidentiality.RULE_KEY,
@@ -29,7 +27,7 @@ import java.util.Iterator;
 public class JMSConnectorShouldHaveConfidentiality extends AbstractResourceCheck {
 
     public static final String RULE_KEY = "JMSConnectorShouldHaveConfidentiality";
-    private static final Logger LOG = Loggers.get(JMSConnectorShouldHaveConfidentiality.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JMSConnectorShouldHaveConfidentiality.class);
 
     @Override
     public void validate(SharedResourceSource resourceXml) {
@@ -57,7 +55,7 @@ public class JMSConnectorShouldHaveConfidentiality extends AbstractResourceCheck
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

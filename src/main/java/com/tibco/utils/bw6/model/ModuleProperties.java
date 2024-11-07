@@ -6,7 +6,7 @@
 package com.tibco.utils.bw6.model;
 
 import com.tibco.utils.common.logger.Logger;
-import com.tibco.utils.common.logger.Loggers;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
 
 public class ModuleProperties {
 
-    private static final Logger LOG = Loggers.get(ModuleProperties.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ModuleProperties.class);
 
     protected Document document;
 

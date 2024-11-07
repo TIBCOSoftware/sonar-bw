@@ -17,13 +17,11 @@
  {
    public Element getConfiguration()
    {
-     Element element = XmlHelper.firstChildElement((Element)getNode(), "config");
-     return element;
+     return XmlHelper.firstChildElement((Element)getNode(), "*","config");
    }
    
    public Element getInputBindings() {
-     Element element = XmlHelper.firstChildElement((Element)getNode(), "inputBindings");
-     return element;
+     return XmlHelper.firstChildElement((Element)getNode(), "*","inputBindings");
    }
    
  
@@ -44,23 +42,23 @@
  
    public List<String> getJavaScriptModelAsLine(String parentName)
    {
-     ArrayList<String> result = new ArrayList();
+     ArrayList<String> result = new ArrayList<>();
      StringBuilder line = new StringBuilder();
      
      line.append("{");
      
-     line.append("name: \"" + getName() + "\",");
+     line.append("name: \"").append(getName()).append("\",");
      
-     line.append("type: \"" + getType() + "\",");
+     line.append("type: \"").append(getType()).append("\",");
      
-     line.append("class: \"" + getClass().getSimpleName() + "\",");
+     line.append("class: \"").append(getClass().getSimpleName()).append("\",");
      
-     if ((parentName != null) && (parentName != "")) {
-       line.append("parent: \"" + parentName + "\",");
+     if ((parentName != null) && (!parentName.isEmpty())) {
+       line.append("parent: \"").append(parentName).append("\",");
      }
-     line.append("x: " + getX() + ",");
+     line.append("x: ").append(getX()).append(",");
      
-     line.append("y: " + getY());
+     line.append("y: ").append(getY());
      
      line.append("}");
      result.add(line.toString());

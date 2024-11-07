@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.xml.xpath.XPathExpressionException;
 
+import com.tibco.utils.bw5.helper.GvHelper;
 import com.tibco.utils.common.helper.XmlHelper;
 import org.w3c.dom.Node;
 
@@ -59,32 +60,50 @@ public abstract class AbstractProcessHardCodedCheck extends
         
         // For each activity found
         for (Activity activity : activities) {
-            // By default prepare to check activity configuration
-            Boolean checkConfig = true;
-            // If input binding xpath is defined in order
-            // to retrieve a configuration node to check	
-            if (getInputBindingXPath() != null && !getInputBindingXPath().isEmpty()) {
-                // Retrieve target node
-                Node targetedMappedConfig;
-                try {
-                    targetedMappedConfig = XmlHelper.evaluateXpathNode(activity.getInputBindings(), getInputBindingXPath());
-                    if (targetedMappedConfig != null) {
-                        reportIssueOnFile(getMessage());
-                        checkConfig = false;
-                    } else {
-                        checkConfig = true;
-                    }
-                } catch (Exception e) {
-                    // Cannot evaluate XPath query to retrieve the mapping 
-                    // element then check directly in the configuration
-                    checkConfig = true;
-                }
-            }
-            // if check config is possible
-            if (checkConfig && getConfigXPath() != null && !getConfigXPath().isEmpty()) {                
-                reportIssueOnFile(getMessage());
-            }
+            checkActivity(activity);
         }        
     }
-    
+
+    private void checkActivity(Activity activity) {
+        // By default prepare to check activity configuration
+        boolean checkConfig = true;
+        // If input binding xpath is defined in order
+        // to retrieve a configuration node to check
+        if (getInputBindingXPath() != null && !getInputBindingXPath().isEmpty()) {
+            // Retrieve target node
+            Node targetedMappedConfig;
+            try {
+                targetedMappedConfig = XmlHelper.evaluateXpathNode(activity.getInputBindings(), getInputBindingXPath());
+                if (targetedMappedConfig != null)  {
+                    checkHardocdedValueAndReport(targetedMappedConfig);
+                    checkConfig = false;
+                } else {
+                    checkConfig = true;
+                }
+            } catch (Exception e) {
+                // Cannot evaluate XPath query to retrieve the mapping
+                // element then check directly in the configuration
+                checkConfig = true;
+            }
+        }
+        // if check config is possible
+        if (checkConfig && getConfigXPath() != null && !getConfigXPath().isEmpty()) {
+            Node targetedMappedConfig = XmlHelper.evaluateXpathNode(activity.getConfiguration(), getConfigXPath());
+            if(targetedMappedConfig != null && !GvHelper.isGVReference(targetedMappedConfig.getTextContent())){
+                reportIssueOnFile(getMessage());
+            }
+
+        }
+    }
+
+    private void checkHardocdedValueAndReport(Node targetedMappedConfig) {
+        Node valueOf = XmlHelper.evaluateXpathNode(targetedMappedConfig,"//*[local-name()='value-of']/@select");
+        if(valueOf != null){
+            String value = valueOf.getNodeValue();
+            if(value != null && !(value.contains("$") || value.contains("("))){
+                reportIssueOnFile(getMessage());
+            }
+        }
+    }
+
 }

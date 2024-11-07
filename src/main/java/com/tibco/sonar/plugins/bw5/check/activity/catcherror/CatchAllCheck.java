@@ -14,14 +14,14 @@ import com.tibco.sonar.plugins.bw5.check.AbstractProcessCatchCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
 import com.tibco.utils.bw5.model.Constants;
 import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = CatchAllCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_PROCESSCATCHALL_NAME, description = CheckConstants.RULE_PROCESS_PROCESSCATCHALL_DESCRIPTION, priority = Priority.MAJOR)
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class CatchAllCheck extends AbstractProcessCatchCheck {
 
-    private static final Logger LOG = Loggers.get(CatchAllCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CatchAllCheck.class);
 	public static final String RULE_KEY = "ProcessCatchAll";
 	public static final String CATCH_ACTIVITY_TYPE = Constants.ACTIVITY_TYPES.CORE_CATCH.getName();
 	public static final String CATCH_ALL_CONFIG_ELEMENT = "catchAll";

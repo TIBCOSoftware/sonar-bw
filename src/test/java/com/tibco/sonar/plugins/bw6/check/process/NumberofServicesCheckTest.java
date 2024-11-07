@@ -17,7 +17,7 @@ import org.mockito.Mockito;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
-import org.sonar.api.utils.log.Logger;
+import com.tibco.utils.common.logger.Logger;
 
 /**
  *

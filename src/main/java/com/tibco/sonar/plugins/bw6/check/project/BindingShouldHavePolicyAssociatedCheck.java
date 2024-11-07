@@ -13,8 +13,8 @@ import com.tibco.utils.bw6.model.Component;
 import com.tibco.utils.bw6.model.Project;
 import com.tibco.utils.bw6.model.Service;
 
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -31,7 +31,7 @@ public class BindingShouldHavePolicyAssociatedCheck extends AbstractProjectCheck
 
     public static final String RULE_KEY = "BindingShouldHavePolicyAssociated";
 
-    private static final Logger LOG = Loggers.get(BindingShouldHavePolicyAssociatedCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BindingShouldHavePolicyAssociatedCheck.class);
 
    
     @Override
@@ -45,16 +45,7 @@ public class BindingShouldHavePolicyAssociatedCheck extends AbstractProjectCheck
                 if(comp.getServices() != null){
                     LOG.debug("Services are not null");
                 for(Service service : comp.getServices()){
-                    if(service != null){
-                        LOG.debug("Service is not null");
-                        Binding binding = service.getBinding();
-                        if(binding != null){
-                            LOG.debug("Binding is not null");
-                            if("HTTP".equals(binding.getTransportBindingType()) && binding.getProperty("policySets") == null){
-                                reportIssueOnFile("HTTP Binding of this component ["+comp.getName()+"] should have a policy associated");
-                            }
-                        }                   
-                    }
+                    checkService(comp, service);
                 }
                 }
             }
@@ -63,13 +54,26 @@ public class BindingShouldHavePolicyAssociatedCheck extends AbstractProjectCheck
         
     }
 
+    private void checkService(Component comp, Service service) {
+        if(service != null){
+            LOG.debug("Service is not null");
+            Binding binding = service.getBinding();
+            if(binding != null){
+                LOG.debug("Binding is not null");
+                if("HTTP".equals(binding.getTransportBindingType()) && binding.getProperty("policySets") == null){
+                    reportIssueOnFile("HTTP Binding of this component ["+ comp.getName()+"] should have a policy associated");
+                }
+            }
+        }
+    }
+
     @Override
     public String getRuleKeyName() {
         return RULE_KEY;
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

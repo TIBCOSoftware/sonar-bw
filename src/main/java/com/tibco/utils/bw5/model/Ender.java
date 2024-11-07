@@ -10,7 +10,7 @@
  
  public class Ender extends Activity
  {
-   public Node nodeName;
+   protected Node nodeName;
    
    public Ender()
    {
@@ -22,7 +22,7 @@
      this.nodeName = node;
    }
    
-   public Node getNodeName() {
+   public Node getLocalName() {
      return this.nodeName;
    }
  }

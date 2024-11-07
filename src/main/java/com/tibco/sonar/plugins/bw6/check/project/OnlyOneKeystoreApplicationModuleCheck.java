@@ -14,8 +14,8 @@ import com.tibco.utils.bw6.model.SharedResource;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -31,7 +31,7 @@ public class OnlyOneKeystoreApplicationModuleCheck extends AbstractProjectCheck 
 
     public static final String RULE_KEY = "OnlyOneKeystoreApplicationModule";
 
-    private static final Logger LOG = Loggers.get(OnlyOneKeystoreApplicationModuleCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OnlyOneKeystoreApplicationModuleCheck.class);
 
     @Override
     public void validate(ProjectSource resourceXml) {
@@ -49,11 +49,8 @@ public class OnlyOneKeystoreApplicationModuleCheck extends AbstractProjectCheck 
 
             }
 
-            if (keystoreNames.size() > 0) {
-                String keyStoreNames = "";
-                for (String kName : keystoreNames) {
-                    keyStoreNames += " " + kName;
-                }
+            if (!keystoreNames.isEmpty()) {
+                String keyStoreNames = String.join(" ",keystoreNames);
                 reportIssueOnFile("Application Module has more than one keystore inside [" + keyStoreNames + "]");
             }
         }
@@ -66,7 +63,7 @@ public class OnlyOneKeystoreApplicationModuleCheck extends AbstractProjectCheck 
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

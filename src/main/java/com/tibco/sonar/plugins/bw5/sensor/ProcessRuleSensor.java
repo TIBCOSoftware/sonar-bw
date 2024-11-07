@@ -8,6 +8,7 @@ package com.tibco.sonar.plugins.bw5.sensor;
 
 import com.tibco.sonar.plugins.bw.check.AbstractCheck;
 import com.tibco.sonar.plugins.bw5.check.AbstractProcessCheck;
+import com.tibco.sonar.plugins.bw5.check.AbstractXmlCheck;
 import com.tibco.sonar.plugins.bw5.check.XPathCheck;
 import com.tibco.sonar.plugins.bw5.language.BusinessWorks5Language;
 import com.tibco.sonar.plugins.bw5.rulerepository.ProcessRuleDefinition;
@@ -18,21 +19,21 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import com.tibco.utils.common.helper.XmlHelper;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.batch.fs.InputModule;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import com.tibco.utils.bw5.model.Process;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-
-//import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.sonar.api.scanner.fs.InputProject;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 /**
  * XmlSensor provides analysis of xml files.
@@ -41,13 +42,11 @@ import org.sonar.api.utils.log.Loggers;
  */
 public class ProcessRuleSensor implements Sensor {
 
-    private final static Logger LOG = Loggers.get(ProcessRuleSensor.class);
-    private final Map<String, Process> servicetoprocess = new HashMap<>();
+    private static final Logger LOG = LoggerFactory.getLogger(ProcessRuleSensor.class);
     protected List<Process> processList = new ArrayList<>();
-    private final String processname = null;
     protected FileSystem fileSystem;
     protected String languageKey;
-    protected InputModule project;
+    protected InputProject project;
     protected SensorContext sensorContext;
     protected CheckFactory checkFactory;
     private final FilePredicate mainFilesPredicate;
@@ -57,7 +56,6 @@ public class ProcessRuleSensor implements Sensor {
     public ProcessRuleSensor(FileSystem fileSystem,
             CheckFactory checkFactory) {
         LOG.debug("ProcessRuleSensor - START");
-
         this.fileSystem = fileSystem;
         checkReturned = checkFactory.create(ProcessRuleDefinition.REPOSITORY_KEY).addAnnotatedChecks(ProcessRuleDefinition.getChecks());
         this.mainFilesPredicate = fileSystem.predicates().and(
@@ -68,7 +66,8 @@ public class ProcessRuleSensor implements Sensor {
   protected void analyseFile(InputFile file) {
         LOG.debug("analyseFile - START");
         if (file != null) {
-            ProcessSource sourceCode = new ProcessSource(file); // TODO:  Handle this better....
+            ProcessSource sourceCode = new ProcessSource(file);
+            sourceCode.setBaseDir(fileSystem.baseDir());
             com.tibco.utils.bw5.model.Process process = sourceCode.getProcessModel();         
             processList.add(process);
 
@@ -82,7 +81,6 @@ public class ProcessRuleSensor implements Sensor {
             }
         }
         LOG.debug("analyseFile - END");
-
     }
  
   
@@ -91,15 +89,24 @@ public class ProcessRuleSensor implements Sensor {
         Iterable<InputFile> files = fileSystem.inputFiles(fileSystem.predicates().hasType(InputFile.Type.MAIN));
         for (InputFile file : files) {
             try{
-                XmlBw5Source xSource = new XmlBw5Source(file);
-                for (Iterator<Object> it = checkReturned.all().iterator(); it.hasNext();) {
-                    AbstractCheck check = (AbstractCheck) it.next();
-                    if (check instanceof XPathCheck) {
-                        LOG.debug("## XPathCheck detected: [" + check.getRuleKeyName() + "]");
-                        XPathCheck xmlCheck = (XPathCheck) check;
-                        RuleKey ruleKey = checkReturned.ruleKey(xmlCheck);
-                        xmlCheck.setRuleKey(ruleKey);
-                        xmlCheck.scanFile(sensorContext, ruleKey, xSource);
+                if(XmlHelper.isXML(file.contents())){
+                    XmlBw5Source xSource = new XmlBw5Source(file);
+
+                    for (Iterator<Object> it = checkReturned.all().iterator(); it.hasNext();) {
+                        AbstractCheck check = (AbstractCheck) it.next();
+                        if (check instanceof XPathCheck) {
+                            LOG.debug("## XPathCheck detected: [" + check.getRuleKeyName() + "]");
+                            XPathCheck xmlCheck = (XPathCheck) check;
+                            RuleKey ruleKey = checkReturned.ruleKey(xmlCheck);
+                            xmlCheck.setRuleKey(ruleKey);
+                            xmlCheck.scanFile(sensorContext, ruleKey, xSource);
+                        }else if(check instanceof AbstractXmlCheck) {
+                            LOG.debug("## Abstract XML check detected: [" + check.getRuleKeyName() + "]");
+                            AbstractXmlCheck xmlCheck = (AbstractXmlCheck) check;
+                            RuleKey ruleKey = checkReturned.ruleKey(xmlCheck);
+                            xmlCheck.setRuleKey(ruleKey);
+                            xmlCheck.scanFile(sensorContext, ruleKey, xSource);
+                        }
                     }
                 }
             }catch(Exception ex){
@@ -131,18 +138,15 @@ public class ProcessRuleSensor implements Sensor {
 
         LOG.info("Searching for BW5 PrcoessFiles");
         inputFiles.forEach(this::analyseFile);
-        LOG.info("Completed Search of BW5 Resources");        
+        LOG.info("Completed Search of BW5 Process Files");
         checkCustom();
         LOG.debug("execute - END");
     }
 
-    /*public boolean shouldExecuteOnProject(Project prjct) {
-        return fileSystem.inputFiles(fileSystem.predicates().hasLanguage(languageKey)).iterator().hasNext();
-    }*/
 
     @Override
     public void describe(SensorDescriptor descriptor) {
-     
+        descriptor.onlyOnLanguage(BusinessWorks5Language.KEY);
     }
 
 }

@@ -16,14 +16,14 @@ import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = ForEachMappingCheck.RULE_KEY, name = "For-Each Mapping Check", priority = Priority.INFO, description = "This rule checks the Input mappings of activities. In activity Input mapping for performance reasons, it is recommended ato use Copy-Of instead of For-Each whenever possible.")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.INFO)
 public class ForEachMappingCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(ForEachMappingCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ForEachMappingCheck.class);
     public static final String RULE_KEY = "ForEachMapping";
 
     @Override
@@ -36,12 +36,11 @@ public class ForEachMappingCheck extends AbstractProcessCheck {
             
             boolean foundOld = node.getAttributes().getNamedItem("expression") != null && node.getAttributes().getNamedItem("expression").getTextContent().contains("xsl:for-each");
             boolean foundNew = activity.getExpression() != null && activity.getExpression().contains("xsl:for-each");
-            
-            if (foundOld || foundNew) {
-            	if (!isRuleDisabled(activity)) {
-            		reportIssueOnFile("For-Each is used in the Input mapping of activity " + activity.getName() + ". For performance reasons it is recommended to use Copy-Of instead of For-Each in the Input mapping whenever possible. ",XmlHelper.getLineNumber(activity.getNode()));
-            	}
+
+            if ((foundOld || foundNew) && !isRuleDisabled(activity)) {
+                reportIssueOnFile("For-Each is used in the Input mapping of activity " + activity.getName() + ". For performance reasons it is recommended to use Copy-Of instead of For-Each in the Input mapping whenever possible. ",XmlHelper.getLineNumber(activity.getNode()));
             }
+
         }
 
         LOG.debug("Validation ended for rule: " + RULE_KEY);

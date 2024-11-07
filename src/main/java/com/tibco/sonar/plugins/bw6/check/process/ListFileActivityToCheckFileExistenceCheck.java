@@ -13,10 +13,6 @@ import org.sonar.check.Rule;
 import com.tibco.sonar.plugins.bw6.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProcessSource;
-import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSEXIT;
-import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSREPLY;
-import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSRETHROW;
-import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSTHROW;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
@@ -24,14 +20,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FilenameUtils;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = ListFileActivityToCheckFileExistenceCheck.RULE_KEY, name = "Usage of List File activity to check file existence", priority = Priority.MINOR, description = "Using List File activity to check if a single file exists is less performant than using ReadFile without fileContent check")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
 public class ListFileActivityToCheckFileExistenceCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(ListFileActivityToCheckFileExistenceCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ListFileActivityToCheckFileExistenceCheck.class);
     public static final String RULE_KEY = "ListFileActivityToCheckFileExistence";
     
     @Override
@@ -42,30 +38,34 @@ public class ListFileActivityToCheckFileExistenceCheck extends AbstractProcessCh
             List<Activity> fileListActivities = process.getActivitiesByType("bw.file.list");
             if(fileListActivities != null){
                 for(Activity act : fileListActivities ){
-                    
-                    String expression = act.getExpression();
-                     String fileTest = null;
-                    if(expression != null){
-                        Pattern pat = Pattern.compile("<fileName><xsl:value-of select=\"([^\"]+)\"/></fileName>");
-                        Matcher m = pat.matcher(expression);
-                        if(m != null && m.find()){
-                            fileTest = m.group(1);
-                            fileTest = fileTest.replaceAll(Pattern.quote("&quot;"), "");
-                        }
-                    }
-                   if(fileTest == null){
-                        fileTest = act.getProperty("fileName"); 
-                   }
-                    
-                    if(fileTest != null){
-                        if(FilenameUtils.getExtension(fileTest) != null && !"".equals(FilenameUtils.getExtension(fileTest))){
-                            reportIssueOnFile("ListFiles Activity with name ["+act.getName()+"] is being used for check for a single file existence. This should be replaced for a ReadFile activity with no check content",XmlHelper.getLineNumber(act.getNode()));
-                        }
-                    }
+
+                    checkFileActivity(act);
+
                 }
             }
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
+    }
+
+    private void checkFileActivity(Activity act) {
+        String expression = act.getExpression();
+        String fileTest = null;
+        if(expression != null){
+            Pattern pat = Pattern.compile("<fileName><xsl:value-of select=\"([^\"]+)\"/></fileName>");
+            Matcher m = pat.matcher(expression);
+            if(m != null && m.find()){
+                fileTest = m.group(1);
+                fileTest = fileTest.replaceAll(Pattern.quote("&quot;"), "");
+            }
+        }
+        if(fileTest == null){
+             fileTest = act.getProperty("fileName");
+        }
+
+
+        if(fileTest != null && FilenameUtils.getExtension(fileTest) != null && !"".equals(FilenameUtils.getExtension(fileTest))){
+            reportIssueOnFile("ListFiles Activity with name ["+ act.getName()+"] is being used for check for a single file existence. This should be replaced for a ReadFile activity with no check content",XmlHelper.getLineNumber(act.getNode()));
+        }
     }
 
     @Override
@@ -78,7 +78,5 @@ public class ListFileActivityToCheckFileExistenceCheck extends AbstractProcessCh
         return LOG;
     }
 
-    private boolean isActivityEnd(String type) {
-        return type != null && (type.equals(BPWSRETHROW) || type.equals(BPWSREPLY) || type.equals(BPWSEXIT) || type.equals(BPWSTHROW));
-    }
+
 }

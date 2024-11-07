@@ -8,7 +8,6 @@ package com.tibco.sonar.plugins.bw6.metric;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.measures.Metrics;
-import static java.util.Arrays.asList;
 import java.util.List;
 
 public class BusinessWorksMetrics implements Metrics {

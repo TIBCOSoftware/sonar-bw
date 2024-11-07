@@ -11,8 +11,8 @@ import com.tibco.utils.bw6.model.SharedResource;
 import java.io.IOException;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonarsource.analyzer.commons.xml.XmlFile;
 
 /**
@@ -23,7 +23,7 @@ import org.sonarsource.analyzer.commons.xml.XmlFile;
  */
 public class SharedResourceSource extends AbstractSource {
 
-    private static final Logger LOG = Loggers.get(SharedResourceSource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SharedResourceSource.class);
     
     private SharedResource resource;
 

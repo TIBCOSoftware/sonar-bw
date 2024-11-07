@@ -14,8 +14,8 @@ import com.tibco.utils.bw6.model.Policy;
 import com.tibco.utils.bw6.model.Project;
 import com.tibco.utils.bw6.model.Service;
 
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -32,7 +32,8 @@ public class BindingShouldNotHaveHTTPBasicPolicyAssociatedCheck extends Abstract
 
     public static final String RULE_KEY = "BindingShouldNotHaveHTTPBasicPolicyAssociated";
 
-    private static final Logger LOG = Loggers.get(BindingShouldNotHaveHTTPBasicPolicyAssociatedCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BindingShouldNotHaveHTTPBasicPolicyAssociatedCheck.class);
+    public static final String POLICY_SETS = "policySets";
 
     @Override
     public void validate(ProjectSource resourceXml) {
@@ -44,26 +45,29 @@ public class BindingShouldNotHaveHTTPBasicPolicyAssociatedCheck extends Abstract
             for (Component comp : project.getComponents()) {
                 if (comp.getServices() != null) {
                     for (Service service : comp.getServices()) {
-                        if (service != null) {
-                            Binding binding = service.getBinding();
-                            if (binding != null) {
-                                LOG.debug("Binding Transport Binding Type: [" + binding.getTransportBindingType() + "] and Policies Sets: " + binding.getProperty("policySets"));
-                                if ("HTTP".equals(binding.getTransportBindingType()) && binding.getProperty("policySets") != null) {
-                                    String policyName = binding.getProperty("policySets");
-                                    LOG.debug("Detected policy name: " + policyName);
-                                    Policy p = project.getPolicyByName(policyName);
-                                    if (p != null) {
-                                        LOG.debug("Retrieved policy data from policy name: " + p.getName());
-                                        if ("template_2010:BasicAuthentication".equals(p.getType())) {
-                                            reportIssueOnFile("HTTP Binding of this component [" + comp.getName() + "] should not use HTTP Basic Authentication as their authentication method");
-                                        }
-                                    }
-
-                                }
-                            }
-                        }
+                        checkService(comp, service, project);
                     }
                 }
+            }
+        }
+
+    }
+
+    private void checkService(Component comp, Service service, Project project) {
+        if (service != null && service.getBinding() != null) {
+            Binding binding = service.getBinding();
+            LOG.debug("Binding Transport Binding Type: [" + binding.getTransportBindingType() + "] and Policies Sets: " + binding.getProperty(POLICY_SETS));
+            if ("HTTP".equals(binding.getTransportBindingType()) && binding.getProperty(POLICY_SETS) != null) {
+                String policyName = binding.getProperty(POLICY_SETS);
+                LOG.debug("Detected policy name: " + policyName);
+                Policy p = project.getPolicyByName(policyName);
+                if (p != null) {
+                    LOG.debug("Retrieved policy data from policy name: " + p.getName());
+                    if ("template_2010:BasicAuthentication".equals(p.getType())) {
+                        reportIssueOnFile("HTTP Binding of this component [" + comp.getName() + "] should not use HTTP Basic Authentication as their authentication method");
+                    }
+                }
+
             }
         }
 
@@ -75,7 +79,7 @@ public class BindingShouldNotHaveHTTPBasicPolicyAssociatedCheck extends Abstract
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

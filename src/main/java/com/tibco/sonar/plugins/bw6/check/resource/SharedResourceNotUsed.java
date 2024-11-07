@@ -13,8 +13,8 @@ import java.io.IOException;
 
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -30,7 +30,7 @@ public class SharedResourceNotUsed extends AbstractResourceCheck {
 
     public static final String RULE_KEY = "SharedResourcesNotUsed";
 
-    private static final Logger LOG = Loggers.get(SharedResourceNotUsed.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SharedResourceNotUsed.class);
 
     @Override
     public void validate(SharedResourceSource resourceXml) {
@@ -43,19 +43,7 @@ public class SharedResourceNotUsed extends AbstractResourceCheck {
             if (files != null) {
                 boolean found = false;
                 for (InputFile file : files) {
-                    LOG.debug("Analyzing file: " + file.filename());
-                    if (!isDefinitionFile(resource, file)) {
-                        try {
-                            LOG.debug("Checking file contents: "+file.filename() + " ...");
-                            if (file.contents().contains(resource.getName())) {
-                                found = true;
-                            }
-                        } catch (IOException ex) {
-                            LOG.warn("File not found", ex);
-                        } catch (NullPointerException ex) {
-                            LOG.warn("Catching NullPointerException", ex);
-                        }
-                    }
+                    found = checkFile(file, resource, found);
                 }
 
                 if (!found) {
@@ -67,6 +55,23 @@ public class SharedResourceNotUsed extends AbstractResourceCheck {
         }
 
         LOG.debug("Finished rule: " + this.getClass());
+    }
+
+    private boolean checkFile(InputFile file, SharedResource resource, boolean found) {
+        LOG.debug("Analyzing file: " + file.filename());
+        if (!isDefinitionFile(resource, file)) {
+            try {
+                LOG.debug("Checking file contents: "+ file.filename() + " ...");
+                if (resource != null && file.contents().contains(resource.getName())) {
+                    found = true;
+                }
+            } catch (IOException ex) {
+                LOG.warn("File not found", ex);
+            } catch (NullPointerException ex) {
+                LOG.warn("Catching NullPointerException", ex);
+            }
+        }
+        return found;
     }
 
     private boolean isDefinitionFile(SharedResource resource, InputFile file) {
@@ -100,7 +105,7 @@ public class SharedResourceNotUsed extends AbstractResourceCheck {
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

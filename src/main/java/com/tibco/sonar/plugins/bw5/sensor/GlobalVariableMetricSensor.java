@@ -6,6 +6,7 @@
 
 package com.tibco.sonar.plugins.bw5.sensor;
 
+import com.tibco.sonar.plugins.bw5.language.BusinessWorks5Language;
 import com.tibco.sonar.plugins.bw5.settings.BW5LanguageFileSuffixProperty;
 import com.tibco.sonar.plugins.bw5.metric.BusinessWorksMetrics;
 import com.tibco.utils.common.SaxParser;
@@ -17,24 +18,22 @@ import java.util.logging.Level;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.measures.Metric;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.w3c.dom.Document;
 
 public class GlobalVariableMetricSensor implements Sensor {
 
-    private final static Logger LOG = Loggers.get(GlobalVariableMetricSensor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GlobalVariableMetricSensor.class);
     protected FileSystem fileSystem;
 
     private final FilePredicate mainFilesPredicate;
 
-    public GlobalVariableMetricSensor(FileSystem fileSystem,
-            CheckFactory checkFactory) {
+    public GlobalVariableMetricSensor(FileSystem fileSystem) {
         LOG.debug("ProcessRuleSensor - START");
 
         this.fileSystem = fileSystem;
@@ -71,7 +70,7 @@ public class GlobalVariableMetricSensor implements Sensor {
 
     @Override
     public void describe(SensorDescriptor descriptor) {
-        
+        descriptor.onlyOnLanguage(BusinessWorks5Language.KEY);
     }
 
     @Override

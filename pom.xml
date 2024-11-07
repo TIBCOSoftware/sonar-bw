@@ -8,10 +8,46 @@
     <name>Extension for SonarQube for use with TIBCO BusinessWorks</name>
     <description>Extension for SonarQube for use with TIBCO BusinessWorks</description>
 
+    <url>https://github.com/TIBCOSoftware/sonar-bw</url>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <organization>
+        <name>Cloud Software Group - TIBCO BU</name>
+        <url>http://www.tibco.com</url>
+    </organization>
+    <issueManagement>
+        <url>https://github.com/TIBCOSoftware/sonar-bw</url>
+    </issueManagement>
+    <developers>
+        <developer>
+            <name>Alexandre Vazquez</name>
+            <email>alexandre.vazquez@cloud.com</email>
+            <organization>Cloud Software Group - TIBCO BU</organization>
+            <organizationUrl>http://www.tibco.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Mark Bloomfield</name>
+            <email>mark.bloomfield@cloud.com</email>
+            <organization>Cloud Software Group - TIBCO BU</organization>
+            <organizationUrl>http://www.tibco.com</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git://github.com/TIBCOSoftware/sonar-bw
+        </connection>
+        <developerConnection>scm:git:ssh://github.com:TIBCOSoftware/sonar-bw
+        </developerConnection>
+        <url>http://github.com/TIBCOSoftware/sonar-bw</url>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.versionSuffix>-SNAPSHOT</project.versionSuffix>
-        <sonar.apiVersion>9.9.0.229</sonar.apiVersion>
+        <sonar.apiVersion>9.17.0.587</sonar.apiVersion>
         <jdk.min.version>11</jdk.min.version>
         <sonar.version>9.0</sonar.version>
         <sonar.sources>src/main/java</sonar.sources>
@@ -19,18 +55,17 @@
         <sonar.analyzerCommons.version>2.9.0.2753</sonar.analyzerCommons.version>
         <sonar.testingHarnessVersion>9.9.5.90363</sonar.testingHarnessVersion>
         <jacoco.version>0.8.12</jacoco.version>
-        <bw6.utils.version>1.3.10${project.versionSuffix}</bw6.utils.version>
     </properties>
 
 
     <distributionManagement>
         <repository>
             <id>github</id>
-            <url>https://maven.pkg.github.com/tibcofield/sonar-bw6</url>
+            <url>https://maven.pkg.github.com/tibco/sonar-bw</url>
         </repository>
         <snapshotRepository>
             <id>github</id>
-            <url>https://maven.pkg.github.com/tibcofield/sonar-bw6</url>
+            <url>https://maven.pkg.github.com/tibco/sonar-bw</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -87,19 +122,6 @@
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
             <version>2.12.2</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>2.3.3</version>
-        </dependency>
-        <!-- JAXB Implementation -->
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>2.3.3</version>
         </dependency>
 
         <dependency>
@@ -268,6 +290,7 @@
                         <version>10.0.3</version>
                         <executions>
                             <execution>
+                                <phase>none</phase>
                                 <goals>
                                     <goal>check</goal>
                                 </goals>

@@ -20,7 +20,7 @@ import org.sonarsource.analyzer.commons.xml.XmlFile;
  */
 public class XmlSource extends AbstractSource {
 
-    private XmlFile file;
+    protected XmlFile file;
 
     public XmlSource(InputFile file) {
         try {

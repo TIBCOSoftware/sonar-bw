@@ -15,8 +15,8 @@ import com.tibco.utils.bw6.model.Process;
 import java.util.Arrays;
 
 import java.util.List;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -26,7 +26,7 @@ import org.sonar.check.Rule;
 public class CriticalSectionCheck
         extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(CriticalSectionCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CriticalSectionCheck.class);
     public static final String RULE_KEY = "CriticalSection";
     protected static final List<String> CONSTANTS = Arrays.asList("bw.http.waitForHTTPRequest", "bw.file.wait", "bw.generalactivities.sleep", "bw.jms.signalin", "bw.rv.waitforRVMessage", "bw.tcp.waitfortcp", "bw.http.sendHTTPRequest", "bw.ftl.requestreply", "bw.jms.requestreply", "bw.rv.sendRVRequest","bw.generalactivities.sleep");
 
@@ -38,9 +38,7 @@ public class CriticalSectionCheck
         for (final Group group : groups) {
             
             if (group.getType().equals("critical")) {
-                group.getActivities().stream().filter((activity) -> (activity.getType() != null && CriticalSectionCheck.CONSTANTS.contains(activity.getType()))).forEachOrdered((Activity activity) -> {
-                    reportIssueOnFile("The activity " + activity.getName() + " in process " + process.getBasename() + " should not be used within Critical Section group.",XmlHelper.getLineNumber(activity.getNode()));
-                });
+                group.getActivities().stream().filter(activity -> (activity.getType() != null && CriticalSectionCheck.CONSTANTS.contains(activity.getType()))).forEachOrdered((Activity activity) -> reportIssueOnFile("The activity " + activity.getName() + " in process " + process.getBasename() + " should not be used within Critical Section group.",XmlHelper.getLineNumber(activity.getNode())) );
             }
         }        
         LOG.debug("Validation ended for rule: " + RULE_KEY);

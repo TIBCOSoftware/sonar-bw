@@ -21,14 +21,14 @@ import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Group;
 import com.tibco.utils.bw6.model.Process;
 import com.tibco.utils.bw6.model.Transition;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = CheckpointInTransation.RULE_KEY, name = "Checkpoint inside Transaction Group Check", priority = Priority.MAJOR, description = "This rule checks the placement of a Checkpoint activity within a process. Do not place checkpoint within or in parallel to a Transaction Group or a Critical Section Group. Checkpoint activities should be placed at points that are guaranteed to be reached before or after the transaction group is reached.")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class CheckpointInTransation extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(CheckpointInTransation.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CheckpointInTransation.class);
     public static final String RULE_KEY = "CheckpointProcessTransaction";
 
     @Override
@@ -44,31 +44,35 @@ public class CheckpointInTransation extends AbstractProcessCheck {
             }
         }
 
-        if (groups.size() > 0 && runvalidationflag) {
+        if (!groups.isEmpty() && runvalidationflag) {
             for (Activity activity : process.getActivities()) {
                 if (activity.getType() != null && activity.getType().equals("bw.internal.checkpoint")) {
-                    NodeList nodes = activity.getNode().getChildNodes();
-                    for (int i = 0; i < nodes.getLength(); i++) {
-                        if (nodes.item(i).getNodeName().equals("bpws:targets")) {
-                            NodeList transitions_To = nodes.item(i).getChildNodes();
-                            for (int j = 0; j < transitions_To.getLength(); j++) {
-                                if (transitions_To.item(j).getNodeName().equals("bpws:target")) {
-                                    String transitionName = transitions_To.item(j).getAttributes().getNamedItem("linkName").getTextContent();
-                                    if (process.getTransitions().get(transitionName) == null) {
-                                        Map<String, String> groupMapping = process.getSynonymsGroupMapping();
-                                        transitionName = groupMapping.get(transitionName);
-                                    }
-                                    Transition transition = process.getTransitions().get(transitionName);
-                                    String from = transition.getFrom();
-                                    findViolation(from, process, processSource);
-                                }
-                            }
-                        }
-                    }
+                    checkActivities(processSource, activity, process);
                 }
             }
         }
         LOG.debug("Validation ended for rule: " + RULE_KEY);
+    }
+
+    private void checkActivities(ProcessSource processSource, Activity activity, Process process) {
+        NodeList nodes = activity.getNode().getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            if (nodes.item(i).getNodeName().equals("bpws:targets")) {
+                NodeList transitionsTo = nodes.item(i).getChildNodes();
+                for (int j = 0; j < transitionsTo.getLength(); j++) {
+                    if (transitionsTo.item(j).getNodeName().equals("bpws:target")) {
+                        String transitionName = transitionsTo.item(j).getAttributes().getNamedItem("linkName").getTextContent();
+                        if (process.getTransitions().get(transitionName) == null) {
+                            Map<String, String> groupMapping = process.getSynonymsGroupMapping();
+                            transitionName = groupMapping.get(transitionName);
+                        }
+                        Transition transition = process.getTransitions().get(transitionName);
+                        String from = transition.getFrom();
+                        findViolation(from, process, processSource);
+                    }
+                }
+            }
+        }
     }
 
     public void findViolation(String from, Process process, ProcessSource processSource) {
@@ -77,7 +81,7 @@ public class CheckpointInTransation extends AbstractProcessCheck {
             String activityType = activity.getType();
             if (activityType != null) {
                 Map<String, Transition> transition123 = process.getTransitions();
-                transition123.keySet().forEach((key) -> {
+                transition123.keySet().forEach(key -> {
                     int index = key.indexOf("To");
                     String toActivity = key.substring(index + 2);
                     if (toActivity.equals(activity.getName())) {
@@ -87,15 +91,14 @@ public class CheckpointInTransation extends AbstractProcessCheck {
                 });
             }
         } else {
-            if (process.getEventSourceByName(from) == null) {
-                if (process.getGroupByName(from) != null) {
+            if (process.getEventSourceByName(from) == null && process.getGroupByName(from) != null) {
                     if (process.getGroupByName(from).getType().equals("localTX")) {
                         reportIssueOnFile("The Checkpoint activity in the process [" + process.getBasename() + "] is placed within a Transaction group. Checkpoint should not be placed within or in parallel flow to a transaction.",XmlHelper.getLineNumber(process.getGroupByName(from).getNode()));
                     } else if (process.getGroupByName(from).getType().equals("critical")) {
                         reportIssueOnFile("The Checkpoint activity in the process [" + process.getBasename() + "] is placed within a Critical Section group. Checkpoint should not be placed within a Critical Section group.",XmlHelper.getLineNumber(process.getGroupByName(from).getNode()));
                     }
                 }
-            }
+
         }
     }
 

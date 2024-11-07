@@ -18,14 +18,14 @@ import com.tibco.sonar.plugins.bw5.check.CheckConstants;
 import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw5.source.ProcessSource;
 import com.tibco.utils.bw5.model.Process;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = NoDescriptionCheck.RULE_KEY, name = CheckConstants.RULE_PROCESS_PROCESSNODESCRIPTION_NAME, description = CheckConstants.RULE_PROCESS_PROCESSNODESCRIPTION_DESCRIPTION, priority = Priority.MAJOR)
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MAJOR)
 public class NoDescriptionCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(NoDescriptionCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NoDescriptionCheck.class);
     public static final String RULE_KEY = "ProcessNoDescription";
     public static final String DESCRIPTION_ELEMENT_NAME = "description";
     public static final String DESCRIPTION_ELEMENT_NAMESPACE = "http://xmlns.tibco.com/bw/process/2003";

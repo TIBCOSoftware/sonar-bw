@@ -6,15 +6,17 @@
 package com.tibco.sonar.plugins.bw6.rulerepository;
 
 import com.tibco.sonar.plugins.bw.check.AbstractCheck;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinitionAnnotationLoader;
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.stream.Collectors;
 
 public final class ProcessRuleDefinition implements RulesDefinition {
 
@@ -25,9 +27,9 @@ public final class ProcessRuleDefinition implements RulesDefinition {
     private static final String REPOSITORY_NAME = "SonarQube";
     private static final List<String> LANGUAGE_KEYS = Arrays.asList(BWProcessLanguage.KEY);
 
-    private static List<Class> checkRules;
 
-    private static final Class[] check = {
+
+    private static final Class<?>[] check = {
         com.tibco.sonar.plugins.bw6.check.process.NoDescriptionCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.NumberofActivitiesCheck.class,
         com.tibco.sonar.plugins.bw6.check.process.TransitionLabelCheck.class,
@@ -87,7 +89,6 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         com.tibco.sonar.plugins.bw6.check.project.PomXmlVersionsHarcodedCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.ProjectStructureCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.SwaggerValidationCheck.class,
-     //TODO Disabling it until dependencies are managed com.tibco.sonar.plugins.bw6.check.project.XSDValidationCheck.class, 
         com.tibco.sonar.plugins.bw6.check.project.BindingShouldHavePolicyAssociatedCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.BindingShouldNotHaveHTTPBasicPolicyAssociatedCheck.class,
         com.tibco.sonar.plugins.bw6.check.project.JKSValidationCheck.class
@@ -153,24 +154,19 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         new com.tibco.sonar.plugins.bw6.check.project.PomXmlVersionsHarcodedCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.ProjectStructureCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.SwaggerValidationCheck(),
-//TODO Disabling it until dependencies are managed         new com.tibco.sonar.plugins.bw6.check.project.XSDValidationCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.BindingShouldHavePolicyAssociatedCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.BindingShouldNotHaveHTTPBasicPolicyAssociatedCheck(),
         new com.tibco.sonar.plugins.bw6.check.project.JKSValidationCheck()
     };
 
-    private String rulesDefinitionFilePath() {
-        return "/rules.xml";
-    }
-
-    public ProcessRuleDefinition() {
-    }
 
     private void setDescriptionFromHtml(NewRule rule) {
         String htmlPath = "/org/sonar/l10n/bw6/rules/" + rule.key() + ".html";
         String description = "<p></p>";
         try {
-            description = Files.readString(Paths.get(this.getClass().getResource(htmlPath).toExternalForm()),UTF_8);
+            description = new BufferedReader(
+                    new InputStreamReader(this.getClass().getResourceAsStream(htmlPath), StandardCharsets.UTF_8))
+                    .lines().collect(Collectors.joining("\n"));
         } catch (Exception e) {
             description= "<p>Description not available</p>";
         }
@@ -195,13 +191,6 @@ public final class ProcessRuleDefinition implements RulesDefinition {
 
     }
 
-    public static String getRepositoryKeyForLanguage(String languageKey) {
-        return REPOSITORY_KEY;
-    }
-
-    public static String getRepositoryNameForLanguage(String languageName) {
-        return REPOSITORY_NAME;
-    }
 
     @Override
     public void define(Context context) {
@@ -211,9 +200,8 @@ public final class ProcessRuleDefinition implements RulesDefinition {
         }
     }
 
-    public static List<Class> getChecks() {
-        checkRules = Arrays.asList(check);
-        return checkRules;
+    public static List<Class<?>> getChecks() {
+        return Arrays.asList(check);
     }
 
     public static List<AbstractCheck> getCheckList() {

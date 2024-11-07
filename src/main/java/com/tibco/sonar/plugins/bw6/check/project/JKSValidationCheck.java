@@ -8,10 +8,8 @@ package com.tibco.sonar.plugins.bw6.check.project;
 import com.tibco.sonar.plugins.bw6.check.AbstractProjectCheck;
 import com.tibco.sonar.plugins.bw6.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw6.source.ProjectSource;
-import com.tibco.utils.bw6.model.Binding;
-import com.tibco.utils.bw6.model.Component;
 import com.tibco.utils.bw6.model.Project;
-import com.tibco.utils.bw6.model.Service;
+
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.Certificate;
@@ -20,8 +18,8 @@ import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -38,7 +36,7 @@ public class JKSValidationCheck extends AbstractProjectCheck {
 
     public static final String RULE_KEY = "JKSValidation";
 
-    private static final Logger LOG = Loggers.get(JKSValidationCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JKSValidationCheck.class);
 
    
     @Override
@@ -56,21 +54,10 @@ public class JKSValidationCheck extends AbstractProjectCheck {
                         String alias = aliases.nextElement();
                         LOG.debug("Checking certificate alias: "+alias);
                         Certificate cert = keystore.getCertificate(alias);
-                        if(cert != null && cert instanceof X509Certificate){
+                        if(cert instanceof X509Certificate){
                             X509Certificate x509cert = (X509Certificate)cert;
-                            try {
-                                x509cert.checkValidity();
-                            } catch (CertificateExpiredException ex) {
-                                reportIssueOnFile("Certificate alias ["+alias+"] is expired:  " + ex.getMessage());
-                            } catch (CertificateNotYetValidException ex) {
-                                reportIssueOnFile("Certificate alias ["+alias+"] is not valid:  " + ex.getMessage());
-                            }
-                            String subjectDN = x509cert.getSubjectDN() == null? "" : x509cert.getSubjectDN().getName();
-                            String issuerDN = x509cert.getIssuerDN()  == null? "" : x509cert.getIssuerDN().getName();
-                            if(subjectDN.equals(issuerDN)){
-                                    reportIssueOnFile("Certificate ["+alias+"] is autosigned");
-                            }
-                            
+                            validateCertAndReportIssue(x509cert, alias);
+
                         }
                     }
                 } catch (KeyStoreException ex) {
@@ -82,13 +69,28 @@ public class JKSValidationCheck extends AbstractProjectCheck {
         
     }
 
+    private void validateCertAndReportIssue(X509Certificate x509cert, String alias) {
+        try {
+            x509cert.checkValidity();
+        } catch (CertificateExpiredException ex) {
+            reportIssueOnFile("Certificate alias ["+ alias +"] is expired:  " + ex.getMessage());
+        } catch (CertificateNotYetValidException ex) {
+            reportIssueOnFile("Certificate alias ["+ alias +"] is not valid:  " + ex.getMessage());
+        }
+        String subjectDN = x509cert.getSubjectX500Principal() == null? "" : x509cert.getSubjectX500Principal().getName();
+        String issuerDN = x509cert.getIssuerX500Principal()  == null? "" : x509cert.getIssuerX500Principal().getName();
+        if(subjectDN.equals(issuerDN)){
+                reportIssueOnFile("Certificate ["+ alias +"] is autosigned");
+        }
+    }
+
     @Override
     public String getRuleKeyName() {
         return RULE_KEY;
     }
 
     @Override
-    public org.sonar.api.utils.log.Logger getLogger() {
+    public Logger getLogger() {
         return LOG;
     }
 

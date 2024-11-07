@@ -7,10 +7,9 @@ package com.tibco.utils.bw6.model;
 
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.common.logger.Logger;
-import com.tibco.utils.common.logger.Loggers;
+import com.tibco.utils.common.logger.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -24,7 +23,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
@@ -42,7 +40,7 @@ import org.w3c.dom.NodeList;
  */
 public class Project {
 
-    protected static Logger LOG = Loggers.get(Project.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Project.class);
 
     protected File file;
 
@@ -355,10 +353,8 @@ public class Project {
                     kstore.load(new FileInputStream(f) , null);
                     LOG.debug("Keystore loaded");
                     this.keystores.add(kstore);
-                } catch (KeyStoreException ex) {
+                } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException ex) {
                    LOG.warn(" ",ex);
-                } catch (IOException | NoSuchAlgorithmException | CertificateException ex) {
-                   LOG.warn(" ", ex);
                 }
             }
                 
@@ -374,38 +370,7 @@ public class Project {
             NodeList temporalNodeComponentList = bwmDocument.getElementsByTagName("sca:component");
             if (temporalNodeComponentList != null) {
                 for (int i = 0; i < temporalNodeComponentList.getLength(); i++) {
-                    Element componentNode = (Element) temporalNodeComponentList.item(i);
-                    LOG.debug("Component found : " + componentNode);
-                    Component cmp = new Component(componentNode, bwmDocument);
-                    cmp.setName(XmlHelper.getAttributeValue(componentNode, "name"));
-                    LOG.debug("Component name : " + cmp.getName());
-                    components.add(cmp);
-                    Element implementation = XmlHelper.firstChildElement(componentNode, "scaext:implementation");
-                    LOG.debug("Implementation element:" + implementation);
-                    if (implementation != null) {
-                        String processName = implementation.getAttribute("processName");
-                        LOG.debug("Implementation process name: " + processName);
-                        Process process = getProcessByName(processName);
-                        cmp.setProcess(process);
-                    }
-                    Element serviceNode = XmlHelper.firstChildElement(componentNode, "sca:service");
-                    LOG.debug("Service node: " + serviceNode);
-                    if (serviceNode != null) {
-                        String serviceName = XmlHelper.getAttributeValue(serviceNode, "name");
-                        LOG.debug("Service name: " + serviceName);
-                        Service service = getServiceByName(serviceName);
-                        cmp.addService(service);
-                        LOG.debug("Adding service to component");
-                    }
-                    Element referenceNode = XmlHelper.firstChildElement(componentNode, "sca:reference");
-                    LOG.debug("Reference node: " + referenceNode);
-                    if (referenceNode != null) {
-                        String serviceName = XmlHelper.getAttributeValue(referenceNode, "name");
-                        LOG.debug("BwService name: " + serviceName);
-                        Service service = getServiceByName(serviceName);
-                        cmp.addService(service);
-                        LOG.debug("Adding service to component");
-                    }
+                    parseComponent(temporalNodeComponentList, i);
                 }
             }
             temporalNodeComponentList = bwmDocument.getElementsByTagName("sca:service");
@@ -419,6 +384,53 @@ public class Project {
 
         }
         LOG.debug("Parsing bindings..DONE");
+    }
+
+    private void parseComponent(NodeList temporalNodeComponentList, int i) {
+        Element componentNode = (Element) temporalNodeComponentList.item(i);
+        LOG.debug("Component found : " + componentNode);
+        Component cmp = new Component(componentNode, bwmDocument);
+        cmp.setName(XmlHelper.getAttributeValue(componentNode, "name"));
+        LOG.debug("Component name : " + cmp.getName());
+        components.add(cmp);
+        Element implementation = XmlHelper.firstChildElement(componentNode, null,"scaext:implementation");
+        LOG.debug("Implementation element:" + implementation);
+        parseComponentImplementation(implementation, cmp);
+        Element serviceNode = XmlHelper.firstChildElement(componentNode, null, "sca:service");
+        LOG.debug("Service node: " + serviceNode);
+        parseComponentService(serviceNode, cmp);
+        Element referenceNode = XmlHelper.firstChildElement(componentNode, null,"sca:reference");
+        LOG.debug("Reference node: " + referenceNode);
+        parseComponentReference(referenceNode, cmp);
+    }
+
+    private void parseComponentReference(Element referenceNode, Component cmp) {
+        if (referenceNode != null) {
+            String serviceName = XmlHelper.getAttributeValue(referenceNode, "name");
+            LOG.debug("BwService name: " + serviceName);
+            Service service = getServiceByName(serviceName);
+            cmp.addService(service);
+            LOG.debug("Adding service to component");
+        }
+    }
+
+    private void parseComponentService(Element serviceNode, Component cmp) {
+        if (serviceNode != null) {
+            String serviceName = XmlHelper.getAttributeValue(serviceNode, "name");
+            LOG.debug("Service name: " + serviceName);
+            Service service = getServiceByName(serviceName);
+            cmp.addService(service);
+            LOG.debug("Adding service to component");
+        }
+    }
+
+    private void parseComponentImplementation(Element implementation, Component cmp) {
+        if (implementation != null) {
+            String processName = implementation.getAttribute("processName");
+            LOG.debug("Implementation process name: " + processName);
+            Process process = getProcessByName(processName);
+            cmp.setProcess(process);
+        }
     }
 
     private void handleBinding(NodeList temporalNodeComponentList) {
@@ -441,64 +453,72 @@ public class Project {
     public static void handleBindingObject(Element serviceBindingNode,
             Service service) {
         if (service != null) {
-            Element bindingNode = XmlHelper.firstChildElement(serviceBindingNode, "scaext:binding");
+            Element bindingNode = XmlHelper.firstChildElement(serviceBindingNode, null, "scaext:binding");
             if (bindingNode != null) {
 
-                LOG.debug("Binding Element: " + bindingNode);
-                Binding binding = new Binding();
-                for (int i = 0; i < bindingNode.getAttributes().getLength(); i++) {
-                    Node attribute = bindingNode.getAttributes().item(i);
-                    binding.addProperty(attribute.getNodeName(), attribute.getNodeValue());
-                }
-                Element inboundConfigurationNode = XmlHelper.firstChildElement(bindingNode, "inboundConfiguration");
-                if (inboundConfigurationNode != null) {
-                    LOG.debug("Inbound configuration node: " + inboundConfigurationNode);
-                    for (int i = 0; i < inboundConfigurationNode.getAttributes().getLength(); i++) {
-                        Node attribute = inboundConfigurationNode.getAttributes().item(i);
-                        binding.addProperty(attribute.getNodeName(), attribute.getNodeValue());
-                    }
-                }
-                Element outboundConfigurationNode = XmlHelper.firstChildElement(bindingNode, "outboundConfiguration");
-                if (outboundConfigurationNode != null) {
-                    LOG.debug("Inbound configuration node: " + outboundConfigurationNode);
-                    for (int i = 0; i < outboundConfigurationNode.getAttributes().getLength(); i++) {
-                        Node attribute = outboundConfigurationNode.getAttributes().item(i);
-                        binding.addProperty(attribute.getNodeName(), attribute.getNodeValue());
-                    }
-                }
-
-                service.setBinding(binding);
+                parseBindingObject(service, bindingNode);
             }
 
-            Element bindingAdjuntNode = XmlHelper.firstChildElement(serviceBindingNode, "scact:bindingAdjunct");
+            Element bindingAdjuntNode = XmlHelper.firstChildElement(serviceBindingNode, null, "scact:bindingAdjunct");
             LOG.debug("Binding Adjunct: " + bindingAdjuntNode);
             if (bindingAdjuntNode != null) {
 
-                String bindingName = XmlHelper.getAttributeValue(bindingAdjuntNode, "bindingName");
-                LOG.debug("Binding Name: " + bindingName);
-                Binding binding = service.getBinding();
-                NodeList bindingAdjuntPropertyList = bindingAdjuntNode.getElementsByTagName("sca:property");
-                if (bindingAdjuntPropertyList != null) {
-                    LOG.debug("Property list for binding: " + bindingAdjuntPropertyList.getLength());
-                    for (int j = 0; j < bindingAdjuntPropertyList.getLength(); j++) {
-                        Element bindingAdjuntProperty = (Element) bindingAdjuntPropertyList.item(j);
-                        if (bindingAdjuntProperty != null) {
-                            LOG.debug("Property: " + bindingAdjuntProperty);
-                            String name = XmlHelper.getAttributeValue(bindingAdjuntProperty, "name");
-                            LOG.debug("Property name: " + name);
-                            String simpleValue = XmlHelper.getAttributeValue(bindingAdjuntProperty, "scaext:simpleValue");
-                            LOG.debug("Property simple value: " + simpleValue);
-                            binding.addProperty(name, simpleValue);
-                            if (name.equals("endpointURI")) {
-                                binding.setIsPropertyURI(true);
-                                LOG.debug("Set binding URI is set by property: " + binding.isIsPropertyURI());
-                                binding.setUri(simpleValue);
-                            }
-                        }
+                parseBindingAdjuntObject(service, bindingAdjuntNode);
+            }
+        }
+    }
+
+    private static void parseBindingAdjuntObject(Service service, Element bindingAdjuntNode) {
+        String bindingName = XmlHelper.getAttributeValue(bindingAdjuntNode, "bindingName");
+        LOG.debug("Binding Name: " + bindingName);
+        Binding binding = service.getBinding();
+        NodeList bindingAdjuntPropertyList = bindingAdjuntNode.getElementsByTagName("sca:property");
+        if (bindingAdjuntPropertyList != null) {
+            LOG.debug("Property list for binding: " + bindingAdjuntPropertyList.getLength());
+            for (int j = 0; j < bindingAdjuntPropertyList.getLength(); j++) {
+                Element bindingAdjuntProperty = (Element) bindingAdjuntPropertyList.item(j);
+                if (bindingAdjuntProperty != null) {
+                    LOG.debug("Property: " + bindingAdjuntProperty);
+                    String name = XmlHelper.getAttributeValue(bindingAdjuntProperty, "name");
+                    LOG.debug("Property name: " + name);
+                    String simpleValue = XmlHelper.getAttributeValue(bindingAdjuntProperty, "scaext:simpleValue");
+                    LOG.debug("Property simple value: " + simpleValue);
+                    binding.addProperty(name, simpleValue);
+                    if (name.equals("endpointURI")) {
+                        binding.setIsPropertyURI(true);
+                        LOG.debug("Set binding URI is set by property: " + binding.isIsPropertyURI());
+                        binding.setUri(simpleValue);
                     }
                 }
             }
         }
+    }
+
+    private static void parseBindingObject(Service service, Element bindingNode) {
+        LOG.debug("Binding Element: " + bindingNode);
+        Binding binding = new Binding();
+        for (int i = 0; i < bindingNode.getAttributes().getLength(); i++) {
+            Node attribute = bindingNode.getAttributes().item(i);
+            binding.addProperty(attribute.getNodeName(), attribute.getNodeValue());
+        }
+        Element inboundConfigurationNode = XmlHelper.firstChildElement(bindingNode, null, "inboundConfiguration");
+        if (inboundConfigurationNode != null) {
+            LOG.debug("Inbound configuration node: " + inboundConfigurationNode);
+            for (int i = 0; i < inboundConfigurationNode.getAttributes().getLength(); i++) {
+                Node attribute = inboundConfigurationNode.getAttributes().item(i);
+                binding.addProperty(attribute.getNodeName(), attribute.getNodeValue());
+            }
+        }
+        Element outboundConfigurationNode = XmlHelper.firstChildElement(bindingNode, null, "outboundConfiguration");
+        if (outboundConfigurationNode != null) {
+            LOG.debug("Inbound configuration node: " + outboundConfigurationNode);
+            for (int i = 0; i < outboundConfigurationNode.getAttributes().getLength(); i++) {
+                Node attribute = outboundConfigurationNode.getAttributes().item(i);
+                binding.addProperty(attribute.getNodeName(), attribute.getNodeValue());
+            }
+        }
+
+        service.setBinding(binding);
     }
 
     public Process getProcessByName(String processName) {
@@ -543,10 +563,8 @@ public class Project {
         if (promote != null) {
             for (Component comp : components) {
                 for (Service service : comp.getServices()) {
-                    if (service != null) {
-                        if (promote.equals(comp.getName() + "/" + service.getName())) {
-                            return service;
-                        }
+                    if (service != null && promote.equals(comp.getName() + "/" + service.getName())) {
+                        return service;
                     }
                 }
             }
@@ -640,9 +658,9 @@ public class Project {
 
     private void checkManifest(File next) {
         try {
-            Manifest manifest = new Manifest(new FileInputStream(next));
+            Manifest manifestObj = new Manifest(new FileInputStream(next));
 
-                Attributes attr = manifest.getMainAttributes();
+                Attributes attr = manifestObj.getMainAttributes();
                 if(attr != null){
                     String appModule = attr.getValue("TIBCO-BW-ApplicationModule");
                     if(appModule != null && !"".equals(appModule)){
@@ -652,25 +670,9 @@ public class Project {
             
             
             
-        } catch (FileNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
+           LOG.warn(null, ex);
         }
-    }
-
-    /**
-     * @return the LOG
-     */
-    public static Logger getLOG() {
-        return LOG;
-    }
-
-    /**
-     * @param aLOG the LOG to set
-     */
-    public static void setLOG(Logger aLOG) {
-        LOG = aLOG;
     }
 
     /**

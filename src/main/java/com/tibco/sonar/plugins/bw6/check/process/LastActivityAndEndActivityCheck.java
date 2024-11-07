@@ -19,14 +19,14 @@ import static com.tibco.utils.bw6.constants.BwpModelConstants.BPWSTHROW;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Process;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import com.tibco.utils.common.logger.Logger;
+import com.tibco.utils.common.logger.LoggerFactory;
 
 @Rule(key = LastActivityAndEndActivityCheck.RULE_KEY, name = "Last activity Is An end activity", priority = Priority.INFO, description = "This rule checks all flows are finished properly using an end activity")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.INFO)
 public class LastActivityAndEndActivityCheck extends AbstractProcessCheck {
 
-    private static final Logger LOG = Loggers.get(LastActivityAndEndActivityCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LastActivityAndEndActivityCheck.class);
     public static final String RULE_KEY = "LastActivityAndEndActivity";
     
     @Override
@@ -37,11 +37,11 @@ public class LastActivityAndEndActivityCheck extends AbstractProcessCheck {
   
             
             for(Activity activity : process.getActivities()){
-                if(activity.getOutputTransitions().isEmpty() && !process.belongActivityToGroup(activity)){
-                    if(activity.getType() == null || !isActivityEnd(activity.getType())){
-                        reportIssueOnFile("End activity ["+activity.getName()+"] shouldn't be the last activity of the flow, as this should end with an End activity",XmlHelper.getLineNumber(activity.getNode()));                      
-                    }
+
+                if((activity.getOutputTransitions().isEmpty() && !process.belongActivityToGroup(activity)) && (activity.getType() == null || !isActivityEnd(activity.getType()))){
+                    reportIssueOnFile("End activity ["+activity.getName()+"] shouldn't be the last activity of the flow, as this should end with an End activity",XmlHelper.getLineNumber(activity.getNode()));
                 }
+
             }
            
         }

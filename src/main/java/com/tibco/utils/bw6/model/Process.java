@@ -8,7 +8,7 @@ package com.tibco.utils.bw6.model;
 import static com.tibco.utils.bw6.constants.BwpModelConstants.*;
 import com.tibco.utils.common.helper.XmlHelper;
 import com.tibco.utils.common.logger.Logger;
-import com.tibco.utils.common.logger.Loggers;
+import com.tibco.utils.common.logger.LoggerFactory;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 
 public class Process {
 
-    private static final Logger LOG = Loggers.get(Process.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Process.class);
 
     protected String name;
     protected String description;
@@ -471,27 +471,32 @@ public class Process {
     private void parseTransitionSource(NodeList transitions, Node parent) {
         for (int j = 0; j < transitions.getLength(); j++) {
             if (transitions.item(j).getNodeName().equals(BPWSSOURCE)) {
-                String grouptransition = transitions.item(j).getAttributes().getNamedItem(LINK_NAME).getNodeValue();
-                String grouptransition2 = synonymsGroupMapping.get(grouptransition);
-                if (grouptransition.contains(GROUP_START1)) {
-                    Transition transition = transitionMap.get(grouptransition2);
-                    if(transition != null && grouptransition2.indexOf("To") >= 0){
-                        grouptransition2 = grouptransition2.substring(0, grouptransition2.indexOf("To"));
-                        setTransitionActivity(transition, grouptransition2, true,true);
-                    }
+                Node tNode = transitions.item(j);
+                parseTransitionSourceDetails(parent, tNode);
+            }
+        }
+    }
 
-                } else if (grouptransition.contains(GROUP_END1)) {
-                    Transition transition = transitionMap.get(grouptransition2);
-                    if(transition != null && grouptransition2.indexOf("To") >= 0){
-                        grouptransition2 = grouptransition2.substring(grouptransition2.indexOf("To") + 2);
-                        setTransitionActivity(transition, grouptransition2, false,true);
-                    }
-                } else {
-                    Transition transition = transitionMap.get(transitions.item(j).getAttributes().getNamedItem(LINK_NAME).getNodeValue());
-                    if(transition != null){
-                        setTransitionActivity(transition, parent.getAttributes().getNamedItem("name").getTextContent(), true,false);
-                    }
-                }
+    private void parseTransitionSourceDetails(Node parent, Node tNode) {
+        String grouptransition = tNode.getAttributes().getNamedItem(LINK_NAME).getNodeValue();
+        String grouptransition2 = synonymsGroupMapping.get(grouptransition);
+        if (grouptransition.contains(GROUP_START1)) {
+            Transition transition = transitionMap.get(grouptransition2);
+            if(transition != null && grouptransition2.indexOf("To") >= 0){
+                grouptransition2 = grouptransition2.substring(0, grouptransition2.indexOf("To"));
+                setTransitionActivity(transition, grouptransition2, true,true);
+            }
+
+        } else if (grouptransition.contains(GROUP_END1)) {
+            Transition transition = transitionMap.get(grouptransition2);
+            if(transition != null && grouptransition2.indexOf("To") >= 0){
+                grouptransition2 = grouptransition2.substring(grouptransition2.indexOf("To") + 2);
+                setTransitionActivity(transition, grouptransition2, false,true);
+            }
+        } else {
+            Transition transition = transitionMap.get(tNode.getAttributes().getNamedItem(LINK_NAME).getNodeValue());
+            if(transition != null){
+                setTransitionActivity(transition, parent.getAttributes().getNamedItem("name").getTextContent(), true,false);
             }
         }
     }
@@ -516,26 +521,28 @@ public class Process {
 
     private void parseTransitionTarget(NodeList transitions, Node parent) {
         for (int j = 0; j < transitions.getLength(); j++) {
-            if (transitions.item(j).getNodeName().equals(BPWSTARGET)) {
-                String grouptransition = transitions.item(j).getAttributes().getNamedItem(LINK_NAME).getNodeValue();
-                String grouptransition2 = synonymsGroupMapping.get(grouptransition);
-                if (grouptransition.contains(GROUP_END1)) {
-                    Transition transition = transitionMap.get(grouptransition2);
-                    if(transition != null && grouptransition2.indexOf("To") >= 0){
-                        grouptransition2 = grouptransition2.substring(grouptransition2.indexOf("To") + 2);
-                        setTransitionActivity(transition, grouptransition2, false,true);
-                    }
-                } else if (grouptransition.contains(GROUP_START1)) {
-                    Transition transition = transitionMap.get(grouptransition2);
-                    if(transition != null && grouptransition2.indexOf("To") >= 0){
-                        grouptransition2 = grouptransition2.substring(0, grouptransition2.indexOf("To"));
-                        setTransitionActivity(transition, grouptransition2, true,true);
-                    }
-                } else {
-                    Transition transition = transitionMap.get(transitions.item(j).getAttributes().getNamedItem(LINK_NAME).getNodeValue());
-                    if(transition != null ){
-                        setTransitionActivity(transition, parent.getAttributes().getNamedItem("name").getTextContent(), false,true);
-                    }
+            Node tNode = transitions.item(j);
+            parseTransitionTargetDetails(parent, tNode);
+        }
+    }
+
+    private void parseTransitionTargetDetails(Node parent, Node tNode) {
+        if (tNode.getNodeName().equals(BPWSTARGET)) {
+            String grouptransition = tNode.getAttributes().getNamedItem(LINK_NAME).getNodeValue();
+            String grouptransition2 = synonymsGroupMapping.get(grouptransition);
+            Transition transition = transitionMap.get(grouptransition2);
+            if (grouptransition.contains(GROUP_END1) && transition != null && grouptransition2.indexOf("To") >= 0) {
+                    grouptransition2 = grouptransition2.substring(grouptransition2.indexOf("To") + 2);
+                    setTransitionActivity(transition, grouptransition2, false,true);
+
+            } else if (grouptransition.contains(GROUP_START1) && transition != null && grouptransition2.indexOf("To") >= 0) {
+                    grouptransition2 = grouptransition2.substring(0, grouptransition2.indexOf("To"));
+                    setTransitionActivity(transition, grouptransition2, true,true);
+
+            } else if(!(grouptransition.contains(GROUP_START1) || (grouptransition.contains(GROUP_END1)))) {
+                transition = transitionMap.get(grouptransition);
+                if(transition != null ){
+                    setTransitionActivity(transition, parent.getAttributes().getNamedItem("name").getTextContent(), false,true);
                 }
             }
         }
@@ -558,102 +565,129 @@ public class Process {
             String transitionName = XmlHelper.getAttributeValue((Element) sibling, "name");
            
             if (transitionName.contains(GROUP_START1)) {
-                String synonymsKey = transitionName;
-                if(transitionName.indexOf("To") >= 0){
-                transitionName = transitionName.substring(transitionName.indexOf("To") + 2);
-                 if(groupsstack1 != null && groupsstack1.peekLast() != null){
-                String from = groupsstack1.peekLast().getName();
-                setTransitionActivity(transition, from, true,true);
-                setTransitionActivity(transition, transitionName, false,true);
-                transitionName = from + "To" + transitionName;
-                 }
-                synonymsGroupMapping.put(synonymsKey, transitionName);
-                }
-                 
+                transitionName = setTransitionStart(groupsstack1, transitionName, transition);
+
             }
             if (transitionName.contains(GROUP_END1)) {
-                String synonymsKey = transitionName;
-                if(transitionName.indexOf("To") >= 0){
-                    transitionName = transitionName.substring(0, transitionName.indexOf("To"));
-                     if(groupsstack1 != null && groupsstack1.peekLast() != null){
-                    String to = groupsstack1.peekLast().getName();
-                    setTransitionActivity(transition, transitionName, true,true);
-                    setTransitionActivity(transition, to, false,true);
-                    transitionName = transitionName + "To" + to;
-                     }
-                    synonymsGroupMapping.put(synonymsKey, transitionName);
-                }
-                
+                transitionName = setTransitionEnd(groupsstack1, transitionName, transition);
+
             }
-            String label = XmlHelper.getAttributeValue((Element) sibling, "tibex:label");
-            if (label != null) {
-                transition.setLabel(label);
-            }
-            String linkType = XmlHelper.getAttributeValue((Element) sibling, "tibex:linkType");
-            if (linkType != null) {
-                transition.setConditionType(linkType);
-            }
+            setTransitionLabel((Element) sibling, transition);
+            setTransitionLinkType((Element) sibling, transition);
             transition.setName(transitionName);
             transitionMap.put(transitionName, transition);
         
         }
     }
 
+    private static void setTransitionLinkType(Element sibling, Transition transition) {
+        String linkType = XmlHelper.getAttributeValue(sibling, "tibex:linkType");
+        if (linkType != null) {
+            transition.setConditionType(linkType);
+        }
+    }
+
+    private static void setTransitionLabel(Element sibling, Transition transition) {
+        String label = XmlHelper.getAttributeValue(sibling, "tibex:label");
+        if (label != null) {
+            transition.setLabel(label);
+        }
+    }
+
+    private String setTransitionEnd(Deque<Group> groupsstack1, String transitionName, Transition transition) {
+        String synonymsKey = transitionName;
+        if(transitionName.indexOf("To") >= 0){
+            transitionName = transitionName.substring(0, transitionName.indexOf("To"));
+             if(groupsstack1 != null && groupsstack1.peekLast() != null){
+            String to = groupsstack1.peekLast().getName();
+            setTransitionActivity(transition, transitionName, true,true);
+            setTransitionActivity(transition, to, false,true);
+            transitionName = transitionName + "To" + to;
+             }
+            synonymsGroupMapping.put(synonymsKey, transitionName);
+        }
+        return transitionName;
+    }
+
+    private String setTransitionStart(Deque<Group> groupsstack1, String transitionName, Transition transition) {
+        String synonymsKey = transitionName;
+        if(transitionName.indexOf("To") >= 0){
+        transitionName = transitionName.substring(transitionName.indexOf("To") + 2);
+         if(groupsstack1 != null && groupsstack1.peekLast() != null){
+        String from = groupsstack1.peekLast().getName();
+        setTransitionActivity(transition, from, true,true);
+        setTransitionActivity(transition, transitionName, false,true);
+        transitionName = from + "To" + transitionName;
+         }
+        synonymsGroupMapping.put(synonymsKey, transitionName);
+        }
+        return transitionName;
+    }
+
     public void parseActivities(Group group, Node parent) {
 
-        System.out.println("Group: " + group + "Node: " + parent);
-
         if (parent.getNodeName().equals(BPWSRECEIVE)) {
-            parseServiceDefinition(parent);
-            Activity activity = new Activity(this);
-            activities.add(activity);
-            if (group != null) {
-                group.getActivities().add(activity);
-            }
-            activity.setNode(parent);
-            activity.setName(parent.getAttributes().getNamedItem("name").getTextContent());
-            activity.parseActivityConfiguration(transitionMap, synonymsGroupMapping);
-            activity.parseProperties();
-            activity.parseTransitions();
-                        if(activity.getType() == null){
-                activity.setType(BPWSRECEIVE);
-            }
+            parseReceiveActivity(group, parent);
         } else {
             if (parent.getChildNodes().item(0) != null) {
                 Node children = parent.getChildNodes().item(0).getNextSibling();
                 if (children.getNodeName().equals("tibex:receiveEvent")) {
                     parseProcessStarterActivity(children);
                 } else if (children.getNodeName().equals("tibex:activityExtension") || children.getNodeName().equals("tibex:extActivity")) {
-                    Activity activity = new Activity(this);
-                    activities.add(activity);
-                    if (group != null) {
-                        group.getActivities().add(activity);
-                    }
-                    activity.setNode(children);
-                    activity.parseActivityConfiguration(transitionMap, synonymsGroupMapping);
-                    activity.parseProperties();
-                    activity.parseTransitions();                                
-
+                    parseActivityExtension(group, children);
                 } else if (parent.getNodeName().equals(BPWSRETHROW) || parent.getNodeName().equals(BPWSCOMPENSATE) || parent.getNodeName().equals(BPWSTHROW) || parent.getNodeName().equals(BPWSEXIT) || parent.getNodeName().equals(BPWSREPLY) || parent.getNodeName().equals(BPWSINVOKE) || (parent.getNodeName().equals(BPWSEMPTY) && parent.getAttributes().getNamedItem(TIBEXGROUP) == null)) {
-                    Activity activity = new Activity(this);
-                    activities.add(activity);
-                    if (group != null) {
-                        group.getActivities().add(activity);
-                    }
-                    activity.setNode(parent);
-                    activity.setName(parent.getAttributes().getNamedItem("name").getTextContent());
-                    activity.parseActivityConfiguration(transitionMap, synonymsGroupMapping);
-                    activity.parseProperties();
-                    activity.parseTransitions();
-                                if(activity.getType() == null){
-                activity.setType(parent.getNodeName());
-            }
+                    parseThrowCompensateActivities(group, parent);
                 } else if (parent.getNodeName().equals(BPWSEMPTY) && parent.getAttributes().getNamedItem(TIBEXGROUP) != null) {
                     parseTranstionFromToGroups(parent);
                 }
             }
         }
 
+    }
+
+    private void parseReceiveActivity(Group group, Node parent) {
+        parseServiceDefinition(parent);
+        Activity activity = new Activity(this);
+        activities.add(activity);
+        if (group != null) {
+            group.getActivities().add(activity);
+        }
+        activity.setNode(parent);
+        activity.setName(parent.getAttributes().getNamedItem("name").getTextContent());
+        activity.parseActivityConfiguration(transitionMap, synonymsGroupMapping);
+        activity.parseProperties();
+        activity.parseTransitions();
+        if(activity.getType() == null){
+activity.setType(BPWSRECEIVE);
+}
+    }
+
+    private void parseThrowCompensateActivities(Group group, Node parent) {
+        Activity activity = new Activity(this);
+        activities.add(activity);
+        if (group != null) {
+            group.getActivities().add(activity);
+        }
+        activity.setNode(parent);
+        activity.setName(parent.getAttributes().getNamedItem("name").getTextContent());
+        activity.parseActivityConfiguration(transitionMap, synonymsGroupMapping);
+        activity.parseProperties();
+        activity.parseTransitions();
+        if(activity.getType() == null){
+activity.setType(parent.getNodeName());
+}
+    }
+
+    private void parseActivityExtension(Group group, Node children) {
+        Activity activity = new Activity(this);
+        activities.add(activity);
+        if (group != null) {
+            group.getActivities().add(activity);
+        }
+        activity.setNode(children);
+        activity.parseActivityConfiguration(transitionMap, synonymsGroupMapping);
+        activity.parseProperties();
+        activity.parseTransitions();
     }
 
     public void parseProcessStarterActivity(Node processStarter) {
@@ -711,25 +745,25 @@ public class Process {
         NodeList transitionNodeList = XmlHelper.evaluateXPath(processXmlDocument.getDocumentElement(), "/process/variables/variable");
         if (transitionNodeList != null) {
             for (int j = 0; j < transitionNodeList.getLength(); j++) {
-                Variable var = new Variable();
-                String name = XmlHelper.getAttributeValue((Element) transitionNodeList.item(j), "name");
+                Variable procVar = new Variable();
+                String nameElement = XmlHelper.getAttributeValue((Element) transitionNodeList.item(j), "name");
                 String internal = XmlHelper.getAttributeValue((Element) transitionNodeList.item(j), "sca-bpel:internal");
                 String privateProperty = XmlHelper.getAttributeValue((Element) transitionNodeList.item(j), "sca-bpel:privateProperty");
                 String source = XmlHelper.getAttributeValue((Element) transitionNodeList.item(j), "tibex:propertySource");
-                var.setName(name);
-                var.setInternal(Boolean.parseBoolean(internal));
-                var.setProperty(Boolean.parseBoolean(privateProperty));
+                procVar.setName(nameElement);
+                procVar.setInternal(Boolean.parseBoolean(internal));
+                procVar.setProperty(Boolean.parseBoolean(privateProperty));
                 if (source != null && !source.isEmpty()) {
-                    var.setSource(true);
-                    var.setValue(source);
+                    procVar.setSource(true);
+                    procVar.setValue(source);
                 } else {
                     Element result = XmlHelper.evalueXPathSingleElement((Element) transitionNodeList.item(j), "from/literal");
                     if (result != null) {
-                        var.setValue(result.getTextContent());
+                        procVar.setValue(result.getTextContent());
                     }
                 }
-                LOG.debug("Variable name: " + var.getName() + " and value: " + var.getValue() + " source: " + var.isSource());
-                variables.add(var);
+                LOG.debug("Variable name: " + procVar.getName() + " and value: " + procVar.getValue() + " source: " + procVar.isSource());
+                variables.add(procVar);
             }
         }
     }
