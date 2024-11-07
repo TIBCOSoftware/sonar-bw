@@ -8,7 +8,6 @@ on:
     branches:
       - '*'
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -41,39 +40,12 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
 
-      - name: Determine Version
-        id: version
-        run: |
-          if [ "${GITHUB_REF_NAME}" == "main" ]; then
-            echo "VERSION_SUFFIX=" >> $GITHUB_ENV
-          else
-            echo "VERSION_SUFFIX=-SNAPSHOT" >> $GITHUB_ENV
-          fi
-
       - name: Build with Maven
-        run: mvn $MAVEN_CLI_OPTS -Dproject.versionSuffix=${{ env.VERSION_SUFFIX }} clean initialize package
+        run: mvn $MAVEN_CLI_OPTS clean initialize package
         env:
           MAVEN_OPTS: ${{ secrets.MAVEN_OPTS }}
 
-      - name: Vulnerability Check
-        id: check
-        run: |
-          if [ "${GITHUB_REF_NAME}" == "main" ] || [ "${GITHUB_REF_NAME}" == "develop" ]; then
-            mvn $MAVEN_CLI_OPTS -Dproject.versionSuffix=${{ env.VERSION_SUFFIX }} org.owasp:dependency-check-maven:10.0.3:check
-          fi
-        env:
-          MAVEN_OPTS: ${{ secrets.MAVEN_OPTS }}
 
-      - name: Deploy with maven with Maven
-        run: mvn $MAVEN_CLI_OPTS -Dproject.versionSuffix=${{ env.VERSION_SUFFIX }} deploy
-        env:
-          MAVEN_OPTS: ${{ secrets.MAVEN_OPTS }}
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: sonar-bw
-          path: ./target
 
   test:
     runs-on: ubuntu-latest
@@ -106,6 +78,59 @@ jobs:
           name: jacoco-report
           path: target/site/jacoco/jacoco.xml
 
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    env:
+      MAVEN_CLI_OPTS: "-s ci_settings.xml"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache Maven local repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+          
+      - name: Extract Maven project version
+        run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+        id: project
+
+      - name: Determine Version
+        id: version
+        run: |
+          if [ "${GITHUB_REF_NAME}" == "main" ]; then
+            echo "Keeping version as is"
+          else
+            mvn $MAVEN_CLI_OPTS versions:set -DgenerateBackupPoms=false -DnewVersion=${{ steps.project.outputs.version }}-SNAPSHOT
+          fi
+      - name: Vulnerability Check
+        id: check
+        run: |
+          if [ "${GITHUB_REF_NAME}" == "main" ] || [ "${GITHUB_REF_NAME}" == "develop" ]; then
+            mvn $MAVEN_CLI_OPTS org.owasp:dependency-check-maven:10.0.3:check
+          fi
+        env:
+          MAVEN_OPTS: ${{ secrets.MAVEN_OPTS }}
+
+      - name: Deploy with maven with Maven
+        run: mvn $MAVEN_CLI_OPTS deploy
+        env:
+          MAVEN_OPTS: ${{ secrets.MAVEN_OPTS }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonar-bw
+          path: ./target
   visualize:
     runs-on: ubuntu-latest
     needs: test
