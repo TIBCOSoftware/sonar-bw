@@ -3,10 +3,14 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - '*'
+      - 'main'
+      - 'develop'
+      - 'release/**'
   pull_request:
     branches:
-      - '*'
+      - 'main'
+      - 'develop'
+      - 'release/**'
 
 jobs:
   build:
@@ -45,6 +49,11 @@ jobs:
         env:
           MAVEN_OPTS: ${{ secrets.MAVEN_OPTS }}
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonar-bw
+          path: ./target
 
 
   test:
@@ -117,7 +126,7 @@ jobs:
       - name: Vulnerability Check
         id: check
         run: |
-          if [ "${GITHUB_REF_NAME}" == "main" ] || [ "${GITHUB_REF_NAME}" == "release*" ]; then
+          if [[ "${GITHUB_REF_NAME}" == "main" ]] || [[ "${GITHUB_REF_NAME}" =~ "release/" ]]; then
             mvn $MAVEN_CLI_OPTS org.owasp:dependency-check-maven:10.0.3:check
           fi
         env:
@@ -125,17 +134,13 @@ jobs:
 
       - name: Deploy with maven with Maven
         run: |
-          if [ "${GITHUB_REF_NAME}" == "main" ] || [ "${GITHUB_REF_NAME}" == "release*" ]; then
+          if [[ "${GITHUB_REF_NAME}" == "main" ]] || [[ "${GITHUB_REF_NAME}" =~ "release/" ]]; then
             mvn $MAVEN_CLI_OPTS deploy
-          fi 
+          fi
         env:
           MAVEN_OPTS: ${{ secrets.MAVEN_OPTS }}
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: sonar-bw
-          path: ./target
+
   visualize:
     runs-on: ubuntu-latest
     needs: deploy
