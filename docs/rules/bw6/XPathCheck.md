@@ -16,8 +16,6 @@ As this is a template rule there is no common way to fix it, it will depend on t
 
 ## How do I use this rule?
 
-### Using within SonarQube
-
 This is a ***template*** rule. By default it is not enabled or available. To enable it, clone the default "**`BW6 Quality Profile`**" quality profile and then create new rules based on the template. You many create multiple rule instances for a single template, if required, each with different parameters.
 
 ---

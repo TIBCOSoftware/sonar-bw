@@ -12,11 +12,11 @@ Using labels as part of the Transition with Conditions to define what the condit
 
 ## How to fix it?
 
-Set a Label deinition the condition check on each Transition that needs a condition to invoke the following part of the flow
+Set a Label definition the condition check on each Transition that needs a condition to invoke the following part of the flow
 
 ## How do I use this rule?
 
-The rule is **_enabled_** by default. To disable it if unwanted, clone the default "**`BW6 Quality Profile`**" quality profile and then disable the rule.
+The rule is **_enabled_** by default. To disable it if unwanted, clone the default "**`BW5 Quality Profile`**" quality profile and then disable the rule.
 
 ---
-[< Return to Rules list](./RULES.md) | [< Return to STANDALONE operation](../STANDALONE.md) | [<< Return to main README file](../../README.md)
+[< Return to Rules list](./RULES.md) |  [<< Return to main README file](../../../README.md)

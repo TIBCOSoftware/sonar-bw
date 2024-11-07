@@ -21,11 +21,11 @@ import static org.mockito.Mockito.times;
  *
  * @author avazquez
  */
-public class MultipleTransitionCheckTest2 {
+public class MultipleTransitionCheck2Test {
     
     private static ProcessSource source;
     
-    public MultipleTransitionCheckTest2() {
+    public MultipleTransitionCheck2Test() {
     }
     
       

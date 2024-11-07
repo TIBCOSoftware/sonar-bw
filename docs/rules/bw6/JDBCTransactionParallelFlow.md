@@ -16,8 +16,6 @@ Change the design of your JDBC Transaction Group to remove the need for the Para
 
 ## How do I use this rule?
 
-### Using within SonarQube
-
 The rule is **_enabled_** by default. To disable it if unwanted, clone the default "**`BW6 Quality Profile`**" quality profile and then disable the rule.
 
 ---

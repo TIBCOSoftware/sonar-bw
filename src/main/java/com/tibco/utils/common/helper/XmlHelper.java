@@ -10,6 +10,8 @@ import com.tibco.utils.common.logger.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.Stack;
 import javax.xml.namespace.NamespaceContext;
@@ -120,10 +122,10 @@ public class XmlHelper {
         			Thread.currentThread().setContextClassLoader(ocl);
         		}
             } catch (final ParserConfigurationException e) {
-                throw new RuntimeException(EXCEPTION_MSG, e);
+                return null;
             }
 
-            final Stack<Element> elementStack = new Stack<>();
+            final Deque<Element> elementStack = new ArrayDeque<>();
             final StringBuilder textBuffer = new StringBuilder();
 
             final DefaultHandler handler = new DefaultHandler() {

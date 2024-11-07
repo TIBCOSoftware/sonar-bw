@@ -16,8 +16,6 @@ Upgrade the level of SSL used to the considered secure today (TLS 1.0 or higher)
 
 ## How do I use this rule?
 
-### Using within SonarQube
-
 The rule is **_enabled_** by default. To disable it if unwanted, clone the default "**`BW6 Quality Profile`**" quality profile and then disable the rule.
 
 ---

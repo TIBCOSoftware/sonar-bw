@@ -6,15 +6,13 @@
 
 package com.tibco.utils.standalone;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import com.tibco.sonar.plugins.bw.check.AbstractCheck;
-import com.tibco.sonar.plugins.bw.source.XmlSource;
 import org.sonar.check.RuleProperty;
 
 public class RulesInfo {
@@ -50,14 +48,15 @@ public class RulesInfo {
 
     public String getHTMLDocForRule(String folder,String rule) throws DocumentationException {
         try {
-            String htmlPath = "/org/sonar/l10n/"+folder+"/rules/" + rule + ".html";
-            return new String(RulesInfo.class.getResourceAsStream(htmlPath).readAllBytes());
+            String htmlPath = System.getProperty("user.dir") + "/src/main/resources/org/sonar/l10n/"+folder+"/rules/" + rule + ".html";
+            String content = "";
+            try (FileInputStream inputStream = new FileInputStream(htmlPath)) {
+                content = new String(inputStream.readAllBytes());
+            }
+            return content;
 
-        } catch (IOException e) {
-            Logger.getLogger(XmlSource.class.getName()).log(Level.SEVERE, null, e);
-            throw new DocumentationException("Cannot read HTML documentation for rule - " + rule);
-        } catch (NullPointerException e) {
-            throw new DocumentationException("Cannot read HTML documentation for rule - " + rule);
+        } catch (IOException | NullPointerException e) {
+            throw new DocumentationException("Cannot read HTML documentation for rule - " + rule + ": " + e.getMessage());
         }
     }
 

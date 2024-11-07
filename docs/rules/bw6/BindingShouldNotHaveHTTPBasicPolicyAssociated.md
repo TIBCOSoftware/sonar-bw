@@ -16,8 +16,6 @@ Change the Authentication method from Basic Authentication to another more secur
 
 ## How do I use this rule?
 
-### Using within SonarQube
-
 The rule is **_enabled_** by default. To disable it if unwanted, clone the default "**`BW6 Quality Profile`**" quality profile and then disable the rule.
 
 ---

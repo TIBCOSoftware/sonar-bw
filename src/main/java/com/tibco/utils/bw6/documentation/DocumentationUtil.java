@@ -19,6 +19,7 @@ import com.tibco.utils.standalone.RulesInfo.DocumentationException;
 import org.sonar.check.RuleProperty;
 
 import java.io.*;
+import java.util.Objects;
 
 public class DocumentationUtil {
 	private static final Logger LOG = LoggerFactory.getLogger(DocumentationUtil.class);
@@ -40,8 +41,8 @@ public class DocumentationUtil {
 	}
 
 	private static int getMeasuresCount() {
-		String measuresSrcDir = "./src/main/java/" + AbstractResourceTotals.class.getPackageName().replace("\\.", "/");
-		return new File(measuresSrcDir).listFiles(file -> file.isFile() && file.getName().endsWith("Measure.java")).length;
+		String measuresSrcDir = System.getProperty("user.dir") +  "/src/main/java/" + AbstractResourceTotals.class.getPackageName().replace(".", "/");
+		return Objects.requireNonNull(new File(measuresSrcDir).listFiles(file -> file.isFile() && file.getName().endsWith("Measure.java"))).length;
 	}
 
 	public static void generate()  throws FileNotFoundException {

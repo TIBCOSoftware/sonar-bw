@@ -8,8 +8,6 @@ package com.tibco.sonar.plugins.bw6.metric;
 import java.util.List;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.measures.Metrics;
-// TODO: Recommend to convert to this below...Apprarently. Needs research...
-//import org.sonar.api.batch.measure.Metric;
 
 import static java.util.Arrays.asList;
 

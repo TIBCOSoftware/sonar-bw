@@ -16,8 +16,6 @@ It is recommened to use the CLIENT ACK mode in your developments and provide a C
 
 ## How do I use this rule?
 
-### Using within SonarQube
-
 The rule is **_enabled_** by default. To disable it if unwanted, clone the default "**`BW6 Quality Profile`**" quality profile and then disable the rule.
 
 ---

@@ -8,15 +8,13 @@ This is a ***Process*** rule - the rule will test each process of the applicatio
 
 ## Why is this condition important?
 
-TBD
+Proper Exception Handling is important when defining your processes. Catch All ensure that you have a planned logic for some unexpected error to make sure the error is handled in a proper way
 
 ## How to fix it?
 
-TBD
+Introduct a Exception Handling Logic by introducing a Catch All activity at the process level to ensure a proper error handling process.
 
 ## How do I use this rule?
-
-### Using within SonarQube
 
 The rule is **_enabled_** by default. To disable it if unwanted, clone the default "**`BW5 Quality Profile`**" quality profile and then disable the rule.
 

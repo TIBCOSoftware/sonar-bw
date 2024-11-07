@@ -16,8 +16,6 @@ Change your process design to avoid using ParseXML using a RenderXML activity ou
 
 ## How do I use this rule?
 
-### Using within SonarQube
-
 The rule is **_enabled_** by default. To disable it if unwanted, clone the default "**`BW6 Quality Profile`**" quality profile and then disable the rule.
 
 ---

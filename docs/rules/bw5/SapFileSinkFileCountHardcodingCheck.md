@@ -8,15 +8,13 @@ This is an ***Application*** rule - the rule will test for some condition within
 
 ## Why is this condition important?
 
-TBD
+File Count hardcoded as part of the File Sink configuration break the externalization of the configuration of the application
 
 ## How to fix it?
 
-TBD
+Externalize the property by using a Global Variable for that purpose
 
 ## How do I use this rule?
-
-### Using within SonarQube
 
 The rule is **_enabled_** by default. To disable it if unwanted, clone the default "**`BW5 Quality Profile`**" quality profile and then disable the rule.
 

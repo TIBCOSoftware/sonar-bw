@@ -16,7 +16,7 @@ Add the missing "Otherwise transition to the process design and provide the righ
 
 ## How do I use this rule?
 
-The rule is **_enabled_** by default. To disable it if unwanted, clone the default "**`BW6 Quality Profile`**" quality profile and then disable the rule.
+The rule is **_enabled_** by default. To disable it if unwanted, clone the default "**`BW5 Quality Profile`**" quality profile and then disable the rule.
 
 ---
-[< Return to Rules list](./RULES.md) | [< Return to STANDALONE operation](../STANDALONE.md) | [<< Return to main README file](../../README.md)
+[< Return to Rules list](./RULES.md) |  [<< Return to main README file](../../../README.md)
