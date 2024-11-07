@@ -44,16 +44,21 @@ Testing should be done initially by running the JUnit tests. However the plugin 
 1. Download and unzip the [sonarqube scanner](https://docs.sonarsource.com/sonarqube/9.9/analyzing-source-code/scanners/sonarscanner)
    </br>
 
-2. Start a docker instance with the plugin installed
+2. Package the plugin code and generate a Docker image to test it locally by running the `make ` command:
 
    ```shell
-   cd docker-compose
-   docker compose up --detach
+   make
    ```
 
-3. Log into [SonarQube](http://localhost:9000) and change the admin password
+3. Start a docker instance with the plugin installed
+
+   ```shell
+   make docker-run
+   ```
+
+4. Log into [SonarQube](http://localhost:9000) and change the admin password
    </br>
-4. Generate an access token
+5. Generate an access token
 
    - Click `Administration/Security/Users`
    - Click on "`Tokens`" icon for `Administrator` user
@@ -62,10 +67,10 @@ Testing should be done initially by running the JUnit tests. However the plugin 
    - Copy the new token
      <br/>
 
-5. Run the analysis
+6Run the analysis
 
    ```shell
-   ~/Downloads/sonar-scanner-5.0.1.3006-macosx/bin/sonar-scanner -Dsonar.login="<token>"
+   ~/sonar-scanner/bin/sonar-scanner -Dsonar.login="<token>"
    ```
 
 ## Development Notes

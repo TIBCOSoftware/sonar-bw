@@ -99,7 +99,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '11'
-          
+
       - name: Extract Maven project version
         run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
         id: project
@@ -133,7 +133,7 @@ jobs:
           path: ./target
   visualize:
     runs-on: ubuntu-latest
-    needs: test
+    needs: deploy
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
