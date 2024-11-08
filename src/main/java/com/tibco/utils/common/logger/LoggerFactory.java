@@ -20,7 +20,7 @@ public class LoggerFactory {
 
     }
 
-    private static String loggerImplementationClass = "com.tibco.utils.bw6.logger.impl.SysOutLogger";
+    private static String loggerImplementationClass = "com.tibco.utils.common.logger.impl.SonarLogger";
 
     public static void setLoggerImplementation(String className){
         loggerImplementationClass =  className;
@@ -35,9 +35,6 @@ public class LoggerFactory {
         } catch (ClassNotFoundException e) {
             return new SysOutLogger(className);
         }
-
-
-
         try {
             logger = (Logger) c.getConstructor(Class.class).newInstance(className);
             return logger;
