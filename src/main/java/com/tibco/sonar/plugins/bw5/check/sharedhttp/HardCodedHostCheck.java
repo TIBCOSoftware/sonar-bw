@@ -7,7 +7,6 @@
 package com.tibco.sonar.plugins.bw5.check.sharedhttp;
 
 import com.tibco.sonar.plugins.bw5.language.SharedHttp;
-import com.tibco.sonar.plugins.bw5.sensor.BWResourceMetricSensor;
 import com.tibco.utils.common.helper.XmlHelper;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;

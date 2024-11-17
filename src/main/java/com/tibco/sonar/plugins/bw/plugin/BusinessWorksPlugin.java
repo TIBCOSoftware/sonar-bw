@@ -9,9 +9,7 @@ package com.tibco.sonar.plugins.bw.plugin;
 import com.tibco.sonar.plugins.bw5.settings.BW5LanguageFileSuffixProperty;
 import com.tibco.sonar.plugins.bw5.language.BusinessWorks5Language;
 import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
-import com.tibco.sonar.plugins.bw5.sensor.BWResourceMetricSensor;
 import com.tibco.sonar.plugins.bw5.sensor.GlobalVariableMetricSensor;
-import com.tibco.sonar.plugins.bw5.sensor.ProcessMetricSensor;
 import org.sonar.api.Plugin;
 
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;
@@ -42,8 +40,6 @@ public class BusinessWorksPlugin implements Plugin {
 				com.tibco.sonar.plugins.bw5.rulerepository.ProcessRuleDefinition.class,
 				com.tibco.sonar.plugins.bw5.sensor.ProcessRuleSensor.class,
 				GlobalVariableMetricSensor.class,
-				BWResourceMetricSensor.class,
-				ProcessMetricSensor.class,
 				BWProcessQualityProfile.class
 		);
 
