@@ -2,8 +2,6 @@
 
 ## Introduction
 
-This is a TIBCO BusinessWorks Container plugin for the SonarQube, the static code analyzer tool.
-
 This is a quality-enforcement component for TIBCO ActiveMatrix BusinessWorks 5.x, TIBCO ActiveMatrix BusinessWorks BW6.x and TIBCO BusinessWorks Container Edition 2.x  applications. The component is able to understand the details of your TIBCO BW application and then applies "rules" that detect various conditions that are either required for the application or are blocked. In this way the plugin is able to enforce a "quality" policy for TIBCO BW applications within an organization.
 
 Each detected issue may then be tracked individually and quality gates assigned so that code that does not meet a specific quality level cannot be released:
