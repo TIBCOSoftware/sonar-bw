@@ -2,7 +2,7 @@
 
 ## What condition does this detect?
 
-Check if this BusinessWorks Module matches recommended version which has better performance and less vulnerabilities
+Check if this BusinessWorks™ Module matches recommended version which has better performance and less vulnerabilities
 
 This is an ***Application*** rule - the rule will test for some condition within the application
 
@@ -12,7 +12,7 @@ Software currency is an important topic. As time goes the existing libraries bei
 
 ## How to fix it?
 
-Upgrade the TIBCO BusinessWorks version to the most actual to keep the software currency
+Upgrade the TIBCO BusinessWorks™ version to the most actual to keep the software currency
 
 ## How do I use this rule?
 

@@ -5,7 +5,7 @@ This version of the plugin provides ***62 quality rules*** and [***0 metrics***]
 | Name | Type | Has Parameters | Initial  State | Description |
 | ---- | ---- | -------------- | -------------- | ----------- |
 | [`AtLeastOneStarter`](AtLeastOneStarter.md) | Project | No | Enabled | Check that an application module should have one starter additional to the Activator process |
-| [`BWVersionCheck`](BWVersionCheck.md) | Project | No | Enabled | Check if this BusinessWorks Module matches recommended version which has better performance and less vulnerabilities |
+| [`BWVersionCheck`](BWVersionCheck.md) | Project | No | Enabled | Check if this BusinessWorks™ Module matches recommended version which has better performance and less vulnerabilities |
 | [`BindingShouldHavePolicyAssociated`](BindingShouldHavePolicyAssociated.md) | Project | No | Enabled | To ensure that the communications are authentified all input connections should check that the binding has a policy associated |
 | [`BindingShouldNotHaveHTTPBasicPolicyAssociated`](BindingShouldNotHaveHTTPBasicPolicyAssociated.md) | Project | No | Enabled | To ensure that the communications are authentified all input connections should check that the binding has a policy associated that is secure |
 | [`BwSharedResourceUsingModuleProperty`](BwSharedResourceUsingModuleProperty.md) | Resource | No | Enabled | Parameter Resource using Module Property |
@@ -24,7 +24,7 @@ This version of the plugin provides ***62 quality rules*** and [***0 metrics***]
 | [`HttpClientMustBeUsedinHTTPBinding`](HttpClientMustBeUsedinHTTPBinding.md) | Process | No | Enabled | HTTP Binding should have an HTTP Client Resource |
 | [`HttpClientSSLShouldHaveConfidentiality`](HttpClientSSLShouldHaveConfidentiality.md) | Resource | No | Enabled | HTTP Client using 443 port should have set confidentiality settings |
 | [`HttpConnectorShouldHaveConfidentiality`](HttpConnectorShouldHaveConfidentiality.md) | Resource | No | Enabled | HTTP Connector should have set confidentiality settings |
-| [`IsMavenProject`](IsMavenProject.md) | Project | No | Enabled | Check is this BusinessWorks Module is a Maven Project |
+| [`IsMavenProject`](IsMavenProject.md) | Project | No | Enabled | Check is this BusinessWorks™ Module is a Maven Project |
 | [`JDBCHardCoded`](JDBCHardCoded.md) | Process | No | Enabled | This rule checks JDBC activities for hardcoded values for fields Timeout and MaxRows. Use Process property or Module property. |
 | [`JDBCTransactionParallelFlow`](JDBCTransactionParallelFlow.md) | Process | No | Enabled | This rule checks if there is no parallel flows with JDBC activities inside a Transaction Group |
 | [`JDBCWildcards`](JDBCWildcards.md) | Process | No | Enabled | This rule checks whether JDBC activities are using wildcards in the query. As a good coding practice, never use wildcards in JDBC queries. |
