@@ -8,7 +8,7 @@ This is a ***Process*** rule - the rule will test each process of the applicatio
 
 ## Why is this condition important?
 
-JDBC activities in TIBCO BusinessWorks are asynchronous ones so that means that it uses an internal thread pool to manage the execution of those activities. This internal pool is not limited and can be increased for so many reasons leading to unexpected memory increase and also performance issues. To avoid that we should set up as part of the JDBC activity configuration a Shared Resource Instance for a Threadpool Resource so we can managed ourlves the amount of threads to be used for those activities.
+JDBC activities in TIBCO BusinessWorks™ are asynchronous ones so that means that it uses an internal thread pool to manage the execution of those activities. This internal pool is not limited and can be increased for so many reasons leading to unexpected memory increase and also performance issues. To avoid that we should set up as part of the JDBC activity configuration a Shared Resource Instance for a Threadpool Resource so we can managed ourlves the amount of threads to be used for those activities.
 
 ## How to fix it?
 
