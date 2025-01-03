@@ -1,0 +1,20 @@
+<!--
+ Copyright © 2023 - 2024. Cloud Software Group, Inc.
+ This file is subject to the license terms contained
+ in the license file that is distributed with this file.
+-->
+
+
+<h3>Basic Description</h3>
+
+<p>Endpoint URI from SOAP/HTTP Binding should be set using a Module Property </p>
+
+<h3>Why this is important?</h3>
+
+<p>
+   When you have a binding inside your project and it is HTTP based one of the elements to be provided in the Endpoint URI. Endpoint URI can change between environments so it is important to keep it configurable without needed to change the code base
+</p>
+
+<h3>How to fix it?</h3>
+<p>Set the Endpoint URI for the binding as a Module Property so this can be updated at deployment time</p>
+

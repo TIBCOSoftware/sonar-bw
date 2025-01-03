@@ -1,0 +1,24 @@
+<!--
+ Copyright © 2023 - 2024. Cloud Software Group, Inc.
+ This file is subject to the license terms contained
+ in the license file that is distributed with this file.
+-->
+
+
+<h3>Basic Description</h3>
+
+<p>This rule checks the Input mappings of activities. In activity Input mapping for performance reasons, it is recommended ato use Copy-Of instead of For-Each whenever possible. </p>
+
+<h3>Why this is important?</h3>
+
+<p>copy-of  clause are much more performant rather a loop iteration from the root element and also it requires less memory to compute.</p>
+
+<h3>How to fix it?</h3>
+<p>Check if you have available the copy-of when you're doing the mapping from your component to the target one to use the most efficient mapping solution</p>
+
+<p>If you are certain that the mapping is correect then disable the rule for this activity only. Add the following to the activity description tab:
+<br/><br/>
+<code>
+  SQIGNORE:ForEachMapping
+</code>
+</p>

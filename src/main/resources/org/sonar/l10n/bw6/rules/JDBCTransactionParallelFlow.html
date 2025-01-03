@@ -1,0 +1,18 @@
+<!--
+ Copyright © 2023 - 2024. Cloud Software Group, Inc.
+ This file is subject to the license terms contained
+ in the license file that is distributed with this file.
+-->
+
+
+<h3>Basic Description</h3>
+
+<p>This rule checks if there is no parallel flows with JDBC activities inside a Transaction Group </p>
+
+<h3>Why this is important?</h3>
+
+<p>Parallel flows inside a JDBC Transaction Group will not be executed so the  output of the whole Transaction Group could be unexpected</p>
+
+<h3>How to fix it?</h3>
+<p>Change the design of your JDBC Transaction Group to remove the need for the Parallel configuration </p>
+

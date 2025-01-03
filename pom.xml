@@ -1,0 +1,347 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.tibco.sonar</groupId>
+    <artifactId>sonar-bw-plugin</artifactId>
+    <packaging>sonar-plugin</packaging>
+    <version>2.0.0</version>
+    <name>Extension for SonarQube for use with TIBCO BusinessWorks</name>
+    <description>Extension for SonarQube for use with TIBCO BusinessWorks</description>
+
+    <url>https://github.com/TIBCOSoftware/sonar-bw</url>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <organization>
+        <name>Cloud Software Group - TIBCO BU</name>
+        <url>http://www.tibco.com</url>
+    </organization>
+    <issueManagement>
+        <url>https://github.com/TIBCOSoftware/sonar-bw</url>
+    </issueManagement>
+    <developers>
+        <developer>
+            <name>Alexandre Vazquez</name>
+            <email>alexandre.vazquez@cloud.com</email>
+            <organization>Cloud Software Group - TIBCO BU</organization>
+            <organizationUrl>http://www.tibco.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Mark Bloomfield</name>
+            <email>mark.bloomfield@cloud.com</email>
+            <organization>Cloud Software Group - TIBCO BU</organization>
+            <organizationUrl>http://www.tibco.com</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git://github.com/TIBCOSoftware/sonar-bw
+        </connection>
+        <developerConnection>scm:git:ssh://github.com:TIBCOSoftware/sonar-bw
+        </developerConnection>
+        <url>http://github.com/TIBCOSoftware/sonar-bw</url>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.versionSuffix>-SNAPSHOT</project.versionSuffix>
+        <sonar.apiVersion>9.17.0.587</sonar.apiVersion>
+        <jdk.min.version>11</jdk.min.version>
+        <sonar.version>9.0</sonar.version>
+        <sonar.sources>src/main/java</sonar.sources>
+        <sonar.language>java</sonar.language>
+        <sonar.analyzerCommons.version>2.9.0.2753</sonar.analyzerCommons.version>
+        <sonar.testingHarnessVersion>9.9.5.90363</sonar.testingHarnessVersion>
+        <jacoco.version>0.8.12</jacoco.version>
+    </properties>
+
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/tibco/sonar-bw</url>
+        </repository>
+        <snapshotRepository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/tibco/sonar-bw</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.sonarsource.api.plugin</groupId>
+            <artifactId>sonar-plugin-api</artifactId>
+            <!-- minimal version of SonarQube to support. Note that the groupId was "org.codehaus.sonar" before version 5.2 -->
+            <version>${sonar.apiVersion}</version>
+            <scope>provided</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.analyzer-commons</groupId>
+            <artifactId>sonar-xml-parsing</artifactId>
+            <version>2.11.0.2861</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.23.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.15.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.parser.v3</groupId>
+            <artifactId>swagger-parser</artifactId>
+            <version>2.1.21</version>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.12.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
+
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.version}</version>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>post-unit-test</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- Sets the path to the file which contains the execution data. -->
+                                    <dataFile>target/jacoco.exec</dataFile>
+                                    <!-- Sets the output directory for the code coverage report. -->
+                                    <outputDirectory>target/jacoco-ut</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <!--                <systemPropertyVariables>
+                                                <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+                                            </systemPropertyVariables>
+                            -->
+                        </configuration>
+                    </plugin>
+
+
+                    <plugin>
+                        <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
+                        <artifactId>sonar-packaging-maven-plugin</artifactId>
+                        <version>1.23.0.740</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <skipDependenciesPackaging>true</skipDependenciesPackaging>
+                            <pluginKey>BWPlugin</pluginKey>
+                            <pluginClass>com.tibco.sonar.plugins.bw.plugin.BusinessWorksPlugin</pluginClass>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.5.1</version>
+                        <configuration>
+                            <source>${jdk.min.version}</source>
+                            <target>${jdk.min.version}</target>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <!-- UTF-8 bundles are not supported by Java, so they must be converted during build -->
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>native2ascii-maven-plugin</artifactId>
+                        <version>1.0-beta-1</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>native2ascii</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <version>3.5.3</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>shade</goal>
+                                </goals>
+                                <configuration>
+
+                                    <shadedArtifactAttached>false</shadedArtifactAttached>
+                                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                                    <minimizeJar>true</minimizeJar>
+
+                                    <filters>
+                                        <filter>
+                                            <artifact>*:*</artifact>
+                                            <excludes>
+                                                <exclude>META-INF/LICENSE*</exclude>
+                                                <exclude>META-INF/NOTICE*</exclude>
+                                                <exclude>META-INF/*.RSA</exclude>
+                                                <exclude>META-INF/*.SF</exclude>
+                                                <exclude>META-INF/services/*</exclude>
+                                                <exclude>LICENSE*</exclude>
+                                                <exclude>NOTICE*</exclude>
+                                            </excludes>
+                                        </filter>
+                                        <filter>
+                                            <artifact>xerces:xercesImpl</artifact>
+                                            <includes>
+                                                <include>**</include>
+                                            </includes>
+                                        </filter>
+                                        <filter>
+                                            <artifact>gson:gson</artifact>
+                                            <includes>
+                                                <include>**</include>
+                                            </includes>
+                                        </filter>
+                                        <filter>
+                                            <artifact>xml-apis:xml-apis</artifact>
+                                            <includes>
+                                                <include>**</include>
+                                            </includes>
+                                        </filter>
+                                    </filters>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <executions>
+                            <execution>
+                                <id>process-plugin-docs</id>
+                                <phase>site</phase>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <includeProjectDependencies>true</includeProjectDependencies>
+                            <includePluginDependencies>true</includePluginDependencies>
+                            <classpathScope>compile</classpathScope>
+                            <mainClass>com.tibco.utils.standalone.DocumentationUtil</mainClass>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>10.0.3</version>
+                        <executions>
+                            <execution>
+                                <phase>none</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>10.0.3</version>
+                        <executions>
+                            <execution>
+                                <phase>none</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>2.4.0</version>
+                        <executions>
+                            <execution>
+                                <id>aggregate-third-party-report</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>third-party-report</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.basedir}/docs/third-party-licenses</outputDirectory>
+                                    <includedScopes>compile</includedScopes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <version>3.2.5</version>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+
+</project>

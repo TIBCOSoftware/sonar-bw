@@ -1,0 +1,24 @@
+<!--
+ Copyright © 2023 - 2024. Cloud Software Group, Inc.
+ This file is subject to the license terms contained
+ in the license file that is distributed with this file.
+-->
+
+
+<h3>Basic Description</h3>
+
+<p>Check if exceptions are handled in component process. </p>
+
+<h3>Why this is important?</h3>
+
+<p>Usually we spend more time deciding and working on how our process should behave when everything happen as designed. But it is as important as how we behave when things goes wrong and nothing happen as expected. And here is where the Exception Handling and Management
+    comes into the place. We need to make sure we're handling errors to avoid that internal errors are directly exposed to the outside. That could lead to very different of wrong scenarios:
+</p>
+<ul>
+    <li>From the design view, if we are not handling the exceptions we're going to propagate are not going to compliant with the Interface Specification we've design and that will make more difficult or even impossible to be used for other tools as they don't have a reliable interface</li>
+    <li>From the security view, we're exposing so many internal information about how this component is created, because we will expose things like the technology that we're using and how it is behaving in the inside. This information is usually uised by hackers to exploit some vulnerabilities after they know the components involved.</li>
+</ul>
+
+<h3>How to fix it?</h3>
+<p>Make sure you add a Catch activity in your Component Process so no internal errors are send to the outside without the proper handling you define.</p>
+

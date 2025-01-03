@@ -1,0 +1,20 @@
+<!--
+ Copyright © 2023 - 2024. Cloud Software Group, Inc.
+ This file is subject to the license terms contained
+ in the license file that is distributed with this file.
+-->
+
+
+<h3>Basic Description</h3>
+
+<p>This rule checks multiple transition from an activity only one for the paths are for no matching condition</p>
+
+<h3>Why this is important?</h3>
+
+<p>
+   This rule checks multiple transition from an activity only one for the paths are for no matching condition because multiple ones are not supported and could lead to an unexpected runtime behavior
+</p>
+
+<h3>How to fix it?</h3>
+<p>Change the process design to have only one Otherwise transition and in case you need to do two activities in parallel as part of the otherwise just add an Empty activity as the target of the otherwise and add the parallel definition there</p>
+

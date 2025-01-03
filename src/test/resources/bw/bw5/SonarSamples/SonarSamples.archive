@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Repository:repository xmlns:Repository="http://www.tibco.com/xmlns/repo/types/2002">
+    <enterpriseArchive>
+        <sharedArchive name="Shared Archive">
+            <resourceType>shared.archive.resource</resourceType>
+            <authorProperty>Alexandre.Vazquez</authorProperty>
+        </sharedArchive>
+        <processArchive name="Process Archive">
+            <resourceType>process.archive.resource</resourceType>
+            <authorProperty>Alexandre.Vazquez</authorProperty>
+            <processProperty>/Process Definition.process</processProperty>
+        </processArchive>
+        <versionProperty>1</versionProperty>
+        <authorProperty>Alexandre.Vazquez</authorProperty>
+        <addServiceSettableGvars>true</addServiceSettableGvars>
+        <name>SonarSamples</name>
+        <designer/>
+        <fileLocationProperty>C:\Users\Alexandre.Vazquez\SonarSamples.ear</fileLocationProperty>
+    </enterpriseArchive>
+</Repository:repository>

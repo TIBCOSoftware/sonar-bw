@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<tns:extarchetype-descriptor
+	xmlns:tns="http://www.tibco.com/xmlns/extarchetype/metadata"
+	xmlns:tns1="http://www.tibco.com/xmlns/extarchetype/validation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.tibco.com/xmlns/extarchetype/metadata ../../../../../maven-ext-archetype-plugin/src/main/resources/xsd/ext-archetype-metadata.xsd ">
+	<tns:requiredProperties>
+		<tns:requiredProperty key="param1">
+			<tns1:validationRule>validationRule1</tns1:validationRule>
+			<tns:source>deduction</tns:source>
+		</tns:requiredProperty>
+		<tns:requiredProperty key="param2">
+			<tns1:validationRule>validationRule2</tns1:validationRule>
+			<tns:source>global</tns:source>
+		</tns:requiredProperty>
+		<tns:requiredProperty key="param3">
+			<tns1:validationRule>validationRule3</tns1:validationRule>
+			<tns:source>input</tns:source>
+		</tns:requiredProperty>
+	</tns:requiredProperties>
+</tns:extarchetype-descriptor>

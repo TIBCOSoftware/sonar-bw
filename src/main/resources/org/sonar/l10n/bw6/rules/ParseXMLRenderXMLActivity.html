@@ -1,0 +1,20 @@
+<!--
+ Copyright © 2023 - 2024. Cloud Software Group, Inc.
+ This file is subject to the license terms contained
+ in the license file that is distributed with this file.
+-->
+
+
+<h3>Basic Description</h3>
+
+<p>This rule checks for inefficiencies on using ParseXML activities using RenderXML activity output   </p>
+
+<h3>Why this is important?</h3>
+
+<p>
+   This rule checks for inefficiencies on using ParseXML activities using RenderXML activity output  as input when it should rely on Coertion to do same job. If we have a RenderXML activity output  that because we have a known structure first with a Node so it was already parsed, so going from Parsed --> Text --> Parsed is inefficient and it should be avoided. You will get more performance and better readability of the process as we are removing some activities as well
+</p>
+
+<h3>How to fix it?</h3>
+<p>Change your process design to avoid using ParseXML using a RenderXML activity output  as the input of it and change it for a coertion on the next activity that you need that data to</p>
+
