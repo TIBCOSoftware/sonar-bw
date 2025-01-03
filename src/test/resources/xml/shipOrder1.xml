@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:shipOrder orderId="123456"
+	xmlns:tns="http://www.tibco.com/utils/wrapper/jaxb/tests" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.tibco.com/utils/wrapper/jaxb/tests ../xsd/shiporder.xsd ">
+	<orderPerson>foo</orderPerson>
+	<shipTo>
+		<name>bar</name>
+		<address>address</address>
+		<city>city</city>
+		<country>country</country>
+	</shipTo>
+	<item>
+		<title>title</title>
+		<note>note</note>
+		<quantity>1</quantity>
+		<price>0.0</price>
+	</item>
+</tns:shipOrder>

@@ -1,0 +1,19 @@
+<!--
+ Copyright © 2023 - 2024. Cloud Software Group, Inc.
+ This file is subject to the license terms contained
+ in the license file that is distributed with this file.
+-->
+
+
+<h3>Basic Description</h3>
+
+<p>HTTP Binding should have an HTTP Client Resource </p>
+
+<h3>Why this is important?</h3>
+
+<p>HTTP Client are the resources available in BW to define HTTP Connection pools specific to connect to an specific host and allow us to configure its properties. When we define a Reference Binding that is using HTTP we have the option to specific this component or rely on a single URL address approach. As a best-practice we should specify always a HTTP Client resource to make sure we have complete control of the connection pool that it will be created and also we can configure the technical components and decide which of them we'd like to expose it as Properties to avoid any hard coding situation as part of the use of the REference Binding.
+</p>
+
+<h3>How to fix it?</h3>
+<p>Check your binding configuration and add a HTTP Client Resource to it in case this is a HTTP Based Reference Binding</p>
+

@@ -1,0 +1,19 @@
+<!--
+ Copyright © 2023 - 2024. Cloud Software Group, Inc.
+ This file is subject to the license terms contained
+ in the license file that is distributed with this file.
+-->
+
+<h3>Basic Description</h3>
+
+<p>JMS Request/Reply shoud use NON-PERSISTENT messages </p>
+
+<h3>Why this is important?</h3>
+
+<p>
+    When you have a Request/Reply activity using JMS this is meant for an online-synchronous communication, that means that the option to persist the message in the EMS is not relevant because it is expected to get a reply at this specific moment, so if the receiver goes down and continue to process later the message will be nobody to answer to. So there is no real advatange of persisting the message in this configuration but we're losing performance as part of it.
+</p>
+
+<h3>How to fix it?</h3>
+<p>Review the configuration of your JMS Request/Reply activities to mark it as NON_PERSISTENT in the Advanced Configuration</p>
+

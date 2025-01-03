@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://www.tibco.com/utils/wrapper/jaxb/tests"
+	targetNamespace="http://www.tibco.com/utils/wrapper/jaxb/tests">
+
+	<xs:simpleType name="string">
+		<xs:restriction base="xs:string" />
+	</xs:simpleType>
+
+	<xs:simpleType name="int">
+		<xs:restriction base="xs:positiveInteger" />
+	</xs:simpleType>
+
+	<xs:simpleType name="dec">
+		<xs:restriction base="xs:decimal" />
+	</xs:simpleType>
+
+	<xs:simpleType name="orderId">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{6}" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="shipTo">
+		<xs:sequence>
+			<xs:element name="name" type="tns:string" />
+			<xs:element name="address" type="tns:string" />
+			<xs:element name="city" type="tns:string" />
+			<xs:element name="country" type="tns:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="item">
+		<xs:sequence>
+			<xs:element name="title" type="tns:string" />
+			<xs:element name="note" type="tns:string" minOccurs="0" />
+			<xs:element name="quantity" type="tns:int" />
+			<xs:element name="price" type="tns:dec" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="shipOrder">
+		<xs:sequence>
+			<xs:element name="orderPerson" type="tns:string" />
+			<xs:element name="shipTo" type="tns:shipTo" />
+			<xs:element name="item" maxOccurs="unbounded" type="tns:item" />
+		</xs:sequence>
+		<xs:attribute name="orderId" type="tns:orderId" use="required" />
+	</xs:complexType>
+
+	<xs:element name="shipOrder" type="tns:shipOrder" />
+
+</xs:schema>

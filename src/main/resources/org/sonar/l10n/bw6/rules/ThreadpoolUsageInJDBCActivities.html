@@ -1,0 +1,19 @@
+<!--
+ Copyright © 2023 - 2024. Cloud Software Group, Inc.
+ This file is subject to the license terms contained
+ in the license file that is distributed with this file.
+-->
+
+<h3>Basic Description</h3>
+
+<p>This rule check if you are setting up a ThreadPool Resource to your JDBC Activities to handle the increasing number of threads because of JDBC Activities</p>
+
+<h3>Why this is important?</h3>
+
+<p>
+   JDBC activities in TIBCO BusinessWorks are asynchronous ones so that means that it uses an internal thread pool to manage the execution of those activities. This internal pool is not limited and can be increased for so many reasons leading to unexpected memory increase and also performance issues. To avoid that we should set up as part of the JDBC activity configuration a Shared Resource Instance for a Threadpool Resource so we can managed ourlves the amount of threads to be used for those activities.
+</p>
+
+<h3>How to fix it?</h3>
+<p>Check your JDBC Activity configuration and in the Advance tab provide a ThreadPool Resource Instance to be used as part of each activity</p>
+

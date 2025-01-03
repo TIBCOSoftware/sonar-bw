@@ -1,0 +1,20 @@
+<!--
+ Copyright © 2023 - 2024. Cloud Software Group, Inc.
+ This file is subject to the license terms contained
+ in the license file that is distributed with this file.
+-->
+
+
+<h3>Basic Description</h3>
+
+<p>This rule checks whether multiple transitions from an activity in a parallel flow merge into EMPTY activity</p>
+
+<h3>Why this is important?</h3>
+
+<p>
+   EMPTY activity should be used if you want to join multiple transition flows. For example, there are multiple transitions out of an activity and each transition takes a different path in the process. In this scenario you can create a transition from the activity at the end of each path to an Empty activity to resume a single flow of execution in the process. 
+</p>
+
+<h3>How to fix it?</h3>
+<p>Review your process design for merging flows without an Empty activity and to ease the readability and maintenance of the process add a Empty activity to just merge those flows</p>
+

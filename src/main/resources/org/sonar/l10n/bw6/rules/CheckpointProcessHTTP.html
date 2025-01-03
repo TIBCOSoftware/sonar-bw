@@ -1,0 +1,19 @@
+<!--
+ Copyright © 2023 - 2024. Cloud Software Group, Inc.
+ This file is subject to the license terms contained
+ in the license file that is distributed with this file.
+-->
+
+
+<h3>Basic Description</h3>
+
+<p>This rule checks the placement of a Checkpoint activity within a process. When placing your checkpoint in a process, be careful with certain types of process starters or incoming events, so that a recovered process instance does not attempt to access resources that no longer exist. For example, consider a process with an HTTP process starter that takes a checkpoint after receiving a request but before sending a response. In this case, when the engine restarts after a crash, the recovered process instance cannot respond to the request since the HTTP socket is already closed. As a best practice, do not place Checkpoint activity right after or in parallel path to HTTP activities. </p>
+
+<h3>Why this is important?</h3>
+
+If the checkpoint is applied after and the instance crashes at some point after receiving the request, they try to recover from that point and when it tries to respond to the requestor it will fail because it is not going to be present and the socket is not going to be available to use it.
+
+<h3>How to fix it?</h3>
+<p>In your developments try to do a design that  require an stateless approach to be able to dont need the presence of any Checkpoint activity to store the status of the instance at that particular point.</p>
+<p>In case you have the need or the requirement to use it try to do it </p>
+
