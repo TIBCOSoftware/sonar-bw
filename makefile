@@ -1,6 +1,6 @@
 build: 
 	mvn clean package
-	rm docker/extensions/*
+	rm -rf docker/extensions/*
 	cp target/sonar-bw-plugin-*.jar docker/extensions
 	docker build --tag=sonarqube-custom docker/.
 

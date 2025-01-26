@@ -1,6 +1,6 @@
 # Available Quality Rules
 
-This version of the plugin provides ***62 quality rules*** and [***0 metrics***](../METRICS.md). Note that not all of the rules will be available by default. Some rules are disabled - as they may not be applicable to all installations - and some are templates. These must be instantiated as required and configuration parameters provided.
+This version of the plugin provides ***62 quality rules*** and [***25 metrics***](METRICS.md). Note that not all of the rules will be available by default. Some rules are disabled - as they may not be applicable to all installations - and some are templates. These must be instantiated as required and configuration parameters provided.
 
 | Name | Type | Has Parameters | Initial  State | Description |
 | ---- | ---- | -------------- | -------------- | ----------- |
@@ -68,4 +68,4 @@ This version of the plugin provides ***62 quality rules*** and [***0 metrics***]
 | [`XPathCheck`](XPathCheck.md) | Project | No | Disabled | This is a template rule that allow to add custom XPath Checks if required |
 
 ---
-[< Return to STANDALONE operation](../STANDALONE.md) | [<< Return to main README file](../../README.md)
+ [<< Return to main README file](../../README.md)

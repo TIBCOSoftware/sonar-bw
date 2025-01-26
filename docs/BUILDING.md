@@ -31,7 +31,7 @@ All building of the application uses Apache Maven. You will also need at least J
    mvn clean package
    ```
 
-This will build the plugin and then perform a set of regression tests. If all is well then the plugin is located in "`target/sonar-bw6-plugin-<version>.jar`". The `JAR` file is self-contained. This is all that is required for operation.
+This will build the plugin and then perform a set of regression tests. If all is well then the plugin is located in "`target/sonar-bw-plugin-<version>.jar`". The `JAR` file is self-contained. This is all that is required for operation.
 
 
 To understand if all was successful then check the end of the build log:

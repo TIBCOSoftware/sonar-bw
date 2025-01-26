@@ -2,7 +2,7 @@
 
 In this configuration, the plugin is installed within a SonarQube system and contributes to the facilities provided by SonarQube.
 
-The plugin is compatible with and tested on SonarQube versions 9 and 10.
+The plugin is compatible with and tested on SonarQube versions 10.x
 
 ## Set up SonarQube
 
@@ -14,7 +14,7 @@ If you don't have a SonarQube system, you can easily create one in Docker for lo
 version: "3"
 services:
   sonarqube:
-    image: sonarqube:9.6.1-community
+    image: sonarqube:10.4.1-community
     hostname: sonarqube
     container_name: sonarqube
     depends_on:
@@ -87,13 +87,13 @@ docker cp target/sonar-bw6-plugin-<version>.jar \
 docker restart sonarqube
 ```
 
-Confirm that the plugin is installed by checking the "`Administration/Configuration`" screen and looking for a new "`TIBCO/BW6`" section:
+Confirm that the plugin is installed by checking the "`Administration/Configuration`" screen and looking for a new "`TIBCO`" section:
 
 ![bw6-plugin-config](./images/bw6-config.png)
 
 ## Using the plugin
 
-The plugin operates just like any other SonarQube plugin. Define Quality Profiles that use the rules that you are interested in. Modify the [configuration of each rule](./rules/RULES.md) within the Quality Profile to fine-tune operation. Define Quality Gates that specify how many of each defect type should be allowed by a pipeline.
+The plugin operates just like any other SonarQube plugin. Define Quality Profiles that use the rules that you are interested in. Modify the configuration of each rule within the Quality Profile to fine-tune operation. Define Quality Gates that specify how many of each defect type should be allowed by a pipeline.
 
 The overall operation of the plugin can be configured by an administrator using the [configuration page](./CONFIG.md) within SonarQube.
 

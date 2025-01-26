@@ -19,4 +19,4 @@ Change the Authentication method from Basic Authentication to another more secur
 The rule is **_enabled_** by default. To disable it if unwanted, clone the default "**`BW6 Quality Profile`**" quality profile and then disable the rule.
 
 ---
-[< Return to Rules list](./RULES.md) | [< Return to STANDALONE operation](../STANDALONE.md) | [<< Return to main README file](../../README.md)
+[< Return to Rules list](./RULES.md) |  [<< Return to main README file](../../../README.md)

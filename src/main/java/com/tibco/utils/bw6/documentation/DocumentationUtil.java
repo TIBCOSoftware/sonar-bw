@@ -97,7 +97,7 @@ public class DocumentationUtil {
             ps.println();
             ps.println("---");
             ps.println(
-                    "[< Return to STANDALONE operation](../STANDALONE.md) | [<< Return to main README file](../../README.md)");
+                    " [<< Return to main README file](../../README.md)");
 
 
         }
@@ -177,7 +177,7 @@ public class DocumentationUtil {
 
             ps.println("---");
             ps.println(
-                    "[< Return to Rules list](./RULES.md) | [< Return to STANDALONE operation](../STANDALONE.md) | [<< Return to main README file](../../README.md)");
+                    "[< Return to Rules list](./RULES.md) |  [<< Return to main README file](../../../README.md)");
 
 
         }

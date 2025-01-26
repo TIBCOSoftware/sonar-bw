@@ -1,6 +1,6 @@
 # Available Quality Rules
 
-This version of the plugin provides ***42 quality rules*** and [***10 metrics***](../METRICS.md). Note that not all of the rules will be available by default. Some rules are disabled - as they may not be applicable to all installations - and some are templates. These must be instantiated as required and configuration parameters provided.
+This version of the plugin provides ***42 quality rules*** and ***10 metrics***. Note that not all of the rules will be available by default. Some rules are disabled - as they may not be applicable to all installations - and some are templates. These must be instantiated as required and configuration parameters provided.
 
 | Name | Type | Has Parameters | Initial  State | Description |
 | ---- | ---- | -------------- | -------------- | ----------- |
