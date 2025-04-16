@@ -15,6 +15,7 @@ import com.tibco.sonar.plugins.bw5.language.SharedHttp;
 import com.tibco.sonar.plugins.bw5.language.SharedJdbc;
 import com.tibco.sonar.plugins.bw5.language.SharedJms;
 import com.tibco.sonar.plugins.bw5.metric.BusinessWorksMetrics;
+import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.sensor.Sensor;
 
 import org.sonar.api.batch.fs.FilePredicate;
@@ -47,7 +48,7 @@ public class BWResourceMetricSensor implements Sensor {
 
         this.fileSystem = fileSystem;        
         this.mainFilesPredicate = fileSystem.predicates().and(
-                fileSystem.predicates().hasLanguage(BusinessWorks5Language.KEY));
+                fileSystem.predicates().hasLanguage(BusinessWorks5Language.KEY)) ;
         LOG.debug("ProcessRuleSensor - END");
     }
 
@@ -62,7 +63,7 @@ public class BWResourceMetricSensor implements Sensor {
 
         try{
         resourceLanguageKeys.forEach(entry -> {
-            for (InputFile file : fileSystem.inputFiles(mainFilesPredicate)) {
+            for (InputFile file : fileSystem.inputFiles(fileSystem.predicates().hasExtension(entry.getKey()))) {
                 context.<Integer>newMeasure()
                         .forMetric(entry.getValue())
                         .on(file)
