@@ -86,6 +86,9 @@ public class ProjectStructureCheck extends AbstractProjectCheck {
     private void check(File child, JsonObject object) {
 
         File[] childFiles = child.listFiles();
+        if (childFiles == null) {
+            return;
+        }
         for (File childItem : childFiles) {
             boolean valid = false;
             JsonArray structureArray = object.getAsJsonArray("structure");

@@ -5,7 +5,6 @@
 */
 package com.tibco.utils.common.logger;
 
-import javax.xml.xpath.XPathExpressionException;
 
 /**
  *

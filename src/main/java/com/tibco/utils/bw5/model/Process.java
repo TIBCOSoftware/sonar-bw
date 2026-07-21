@@ -218,10 +218,12 @@
        transition.parse();
        this.transitions.add(transition);
        break;
+     default:
+       break;
      }
-     
+
    }
-   
+
    public int countAllGroups()
    {
      int result = 0;

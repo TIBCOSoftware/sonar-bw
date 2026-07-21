@@ -6,6 +6,7 @@
 
 package com.tibco.sonar.plugins.bw.plugin;
 
+import com.tibco.sonar.plugins.bw5.computers.*;
 import com.tibco.sonar.plugins.bw5.settings.BW5LanguageFileSuffixProperty;
 import com.tibco.sonar.plugins.bw5.language.BusinessWorks5Language;
 import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
@@ -39,16 +40,28 @@ public class BusinessWorksPlugin implements Plugin {
 		context.addExtensions(
 				BW5LanguageFileSuffixProperty.getPropertyDefinition(),
 				BusinessWorks5Language.class,
+
 				com.tibco.sonar.plugins.bw5.rulerepository.ProcessRuleDefinition.class,
 				com.tibco.sonar.plugins.bw5.sensor.ProcessRuleSensor.class,
 				GlobalVariableMetricSensor.class,
 				BWResourceMetricSensor.class,
 				ProcessMetricSensor.class,
 				BWProcessQualityProfile.class
+
 		);
 
 		// Resource File Metric Information
 		context.addExtensions(
+			com.tibco.sonar.plugins.bw5.metric.BusinessWorksMetrics.class,
+			ActivitiesMeasureComputer.class,
+			BWResourcesMeasureComputer.class,
+			GlobalVariablesMeasureComputer.class,
+			GroupsMeasureComputer.class,
+			HTTPConnectionMeasureComputer.class,
+			JDBCConnectionMeasureComputer.class,
+			JMSConnectionMeasureComputer.class,
+			ProcessesMeasureComputer.class,
+			TransitionsMeasureComputer.class,
 			SharedResourceMetrics.class,
 			ComputeBusinessDataFormatResource.class,		
 			ComputeProxyConfigResource.class,	

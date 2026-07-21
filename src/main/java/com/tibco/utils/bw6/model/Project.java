@@ -347,10 +347,10 @@ public class Project {
         if (files != null) {
             LOG.debug("Reading files for keystore analyzing");
             for(File f: files){
-                try {
+                try (FileInputStream fis = new FileInputStream(f)) {
                     KeyStore kstore = KeyStore.getInstance(KeyStore.getDefaultType());
                     LOG.debug("Loading Keystore to be able to analyze it");
-                    kstore.load(new FileInputStream(f) , null);
+                    kstore.load(fis, null);
                     LOG.debug("Keystore loaded");
                     this.keystores.add(kstore);
                 } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException ex) {
@@ -484,7 +484,7 @@ public class Project {
                     String simpleValue = XmlHelper.getAttributeValue(bindingAdjuntProperty, "scaext:simpleValue");
                     LOG.debug("Property simple value: " + simpleValue);
                     binding.addProperty(name, simpleValue);
-                    if (name.equals("endpointURI")) {
+                    if ("endpointURI".equals(name)) {
                         binding.setIsPropertyURI(true);
                         LOG.debug("Set binding URI is set by property: " + binding.isIsPropertyURI());
                         binding.setUri(simpleValue);

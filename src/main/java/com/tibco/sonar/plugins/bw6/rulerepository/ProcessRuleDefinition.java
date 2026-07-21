@@ -8,6 +8,8 @@ package com.tibco.sonar.plugins.bw6.rulerepository;
 import com.tibco.sonar.plugins.bw.check.AbstractCheck;
 
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -162,13 +164,14 @@ public final class ProcessRuleDefinition implements RulesDefinition {
 
     private void setDescriptionFromHtml(NewRule rule) {
         String htmlPath = "/org/sonar/l10n/bw6/rules/" + rule.key() + ".html";
-        String description = "<p></p>";
-        try {
-            description = new BufferedReader(
-                    new InputStreamReader(this.getClass().getResourceAsStream(htmlPath), StandardCharsets.UTF_8))
-                    .lines().collect(Collectors.joining("\n"));
-        } catch (Exception e) {
-            description= "<p>Description not available</p>";
+        String description = "<p>Description not available</p>";
+        InputStream htmlStream = this.getClass().getResourceAsStream(htmlPath);
+        if (htmlStream != null) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(htmlStream, StandardCharsets.UTF_8))) {
+                description = reader.lines().collect(Collectors.joining("\n"));
+            } catch (IOException e) {
+                description = "<p>Description not available</p>";
+            }
         }
         rule.setHtmlDescription(description);
     }

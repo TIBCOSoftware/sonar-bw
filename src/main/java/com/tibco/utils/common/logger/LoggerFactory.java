@@ -28,7 +28,7 @@ public class LoggerFactory {
 
     public static Logger getLogger(Class<?> className) {
 
-        Class<?> c = null;
+        Class<?> c;
         Logger logger;
         try {
             c = Class.forName(loggerImplementationClass);

@@ -30,7 +30,7 @@ public class CheckpointAfterRESTCheck extends AbstractProcessCheck {
     private boolean onlyOneViolation = true;
 
     private static boolean test(Activity activity) {
-        return (activity.getType() != null && activity.getType().equals("bw.internal.checkpoint"));
+        return (activity.getType() != null && "bw.internal.checkpoint".equals(activity.getType()));
     }
 
     @Override

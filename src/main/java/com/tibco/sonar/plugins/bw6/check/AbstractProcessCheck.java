@@ -45,7 +45,7 @@ public abstract class AbstractProcessCheck extends AbstractCheck {
         final NodeList childNodes = activity.getNode().getChildNodes();
         for (int i = 0; i < childNodes.getLength(); ++i) {
         	final Node node = childNodes.item(i);
-        	if (node.getNodeName().equals("bpws:documentation")) {
+        	if ("bpws:documentation".equals(node.getNodeName())) {
                 final Node contentsNode = node.getFirstChild();
                 final String documentation = contentsNode.getNodeValue();
                 return isRuleDisabled(documentation);
@@ -64,7 +64,7 @@ public abstract class AbstractProcessCheck extends AbstractCheck {
 	 * @param config String containing (optionally) the SQIGNORE config
 	 * @return true if the rule is disabled, false if not
 	 */
-	private final boolean isRuleDisabled(String config) {
+	private boolean isRuleDisabled(String config) {
 		final String configLine = Arrays.asList(config.split("\n"))
 										  .stream()
 										  .map(String::trim)

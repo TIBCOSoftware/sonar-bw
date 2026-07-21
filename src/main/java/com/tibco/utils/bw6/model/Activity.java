@@ -48,11 +48,7 @@ public class Activity extends ProcessNode {
     }
 
     public boolean hasProperty(String propName) {
-        Map<String, String> properties = getProperties();
-        if (properties != null) {
-            return properties.containsKey(propName);
-        }
-        return false;
+        return getProperties().containsKey(propName);
     }
 
     public Map<String, String> parseProperties() {
@@ -75,11 +71,7 @@ public class Activity extends ProcessNode {
     }
 
     public String getProperty(String propName) {
-        Map<String, String> properties = getProperties();
-        if (properties != null) {
-            return properties.get(propName);
-        }
-        return null;
+        return getProperties().get(propName);
     }
 
     /**

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+
+    <!--
+      httpcore 4.4.16 (transitive via swagger-compat-spec-parser -> httpclient 4.x).
+      CVE-2026-54399 (HTTP/1.1 parser) and CVE-2026-54428 (HTTP/2 HPACK decoder)
+      affect Apache HttpComponents Core 5.x ("5.4.2 and earlier, 5.5-beta1 and
+      earlier"). The HTTP/2 HPACK decoder does not even exist in the 4.x line.
+      Dependency-check matches them here only through the shared
+      cpe:/a:apache:httpcomponents_core identifier; there is no fix on the 4.x
+      branch and it is used purely for transitive OpenAPI parsing, not to run an
+      HTTP/1.1 server or HTTP/2 endpoint.
+    -->
+    <suppress>
+        <notes>httpcore 4.x is not affected; both CVEs are HttpComponents Core 5.x issues (CPE over-match).</notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.httpcomponents/httpcore@.*$</packageUrl>
+        <cve>CVE-2026-54399</cve>
+        <cve>CVE-2026-54428</cve>
+    </suppress>
+
+    <!--
+      json-schema-validator 2.2.14 (com.github.java-json-tools).
+      CVE-2025-15104 is a vulnerability in the "Nu Html Checker (validator.nu)"
+      product, an unrelated project that merely shares the "validator" keyword.
+      It does not apply to com.github.java-json-tools:json-schema-validator.
+    -->
+    <suppress>
+        <notes>False positive: CVE-2025-15104 targets Nu Html Checker (validator.nu), a different product.</notes>
+        <packageUrl regex="true">^pkg:maven/com\.github\.java-json-tools/json-schema-validator@.*$</packageUrl>
+        <cve>CVE-2025-15104</cve>
+    </suppress>
+
+    <!--
+      commons-io 2.11.0 is shaded inside the SonarQube-provided sonar-plugin-api
+      jar (scope "provided"). It is supplied by the SonarQube runtime and is not
+      bundled in this plugin's artifact. This project's own direct commons-io
+      dependency is already 2.15.1, which is past the fixed 2.14.0.
+    -->
+    <suppress>
+        <notes>commons-io 2.11.0 is an upstream shaded copy inside the provided sonar-plugin-api; not shipped by this plugin.</notes>
+        <packageUrl regex="true">^pkg:maven/commons-io/commons-io@.*$</packageUrl>
+        <cve>CVE-2024-47554</cve>
+    </suppress>
+
+</suppressions>

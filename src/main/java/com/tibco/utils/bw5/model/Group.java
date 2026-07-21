@@ -93,8 +93,10 @@
        transition.parse();
        this.transitions.add(transition);
        break;
+     default:
+       break;
      }
-     
+
    }
    
  

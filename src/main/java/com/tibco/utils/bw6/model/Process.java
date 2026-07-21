@@ -228,7 +228,7 @@ public class Process {
     }
 
     private Reference getReferenceServiceAttribute(Node partnerLink, Element referenceServiceElement) {
-        Reference reference = null;
+        Reference reference;
 
         if (referenceServiceElement != null) {
             reference = new Reference(XmlHelper.getAttributeValue(referenceServiceElement, "serviceName"));
@@ -329,23 +329,23 @@ public class Process {
             if (nodeMap != null && nodeMap.getNamedItem(TIBEXGROUP) != null) {
                 whichGroup = nodeMap.getNamedItem(TIBEXGROUP).getNodeValue();
             }
-            if (nodeName.equals(BPWSEXTENSION_ACTIVITY) || nodeName.equals(BPWSREPLY) || nodeName.equals(BPWSCOMPENSATE) || nodeName.equals(BPWSEXIT) || nodeName.equals(BPWSRECEIVE) || nodeName.equals(BPWSEMPTY) || nodeName.equals(BPWSTHROW) || nodeName.equals(BPWSRETHROW)) {
+            if (BPWSEXTENSION_ACTIVITY.equals(nodeName) || BPWSREPLY.equals(nodeName) || BPWSCOMPENSATE.equals(nodeName) || BPWSEXIT.equals(nodeName) || BPWSRECEIVE.equals(nodeName) || BPWSEMPTY.equals(nodeName) || BPWSTHROW.equals(nodeName) || BPWSRETHROW.equals(nodeName)) {
                 parseActivities(group, transition);
-            } else if (nodeName.equals(BPWSLINKS)) {
+            } else if (BPWSLINKS.equals(nodeName)) {
                 parseTransitions(transition, groupsstack);
                 if (groupsstack.peek() != null) {
                     groupsstack.pollLast();
                 }
-            } else if (nodeName.equals(BPWSSCOPE) || nodeName.equals("bpws:sequence") ||  nodeName.equals(BPWSFLOW) || nodeName.equals(BPWSEVENT_HANDLERS) || nodeName.equals(BPWSON_EVENT) || nodeName.equals(BPWSFAULT_HANDLERS) || nodeName.equals(BPWSREPEAT_UNTIL) || nodeName.equals(BPWSWHILE) || nodeName.equals(BPWSCATCH_ALL) || nodeName.equals(BPWSCATCH) || nodeName.equals(BPWSFOR_EACH) || nodeName.equals(BPWSPICK)) {
+            } else if (BPWSSCOPE.equals(nodeName) || "bpws:sequence".equals(nodeName) ||  BPWSFLOW.equals(nodeName) || BPWSEVENT_HANDLERS.equals(nodeName) || BPWSON_EVENT.equals(nodeName) || BPWSFAULT_HANDLERS.equals(nodeName) || BPWSREPEAT_UNTIL.equals(nodeName) || BPWSWHILE.equals(nodeName) || BPWSCATCH_ALL.equals(nodeName) || BPWSCATCH.equals(nodeName) || BPWSFOR_EACH.equals(nodeName) || BPWSPICK.equals(nodeName)) {
                 Group returnedGroup = parseScope(group, nodeName, transition, whichGroup, nodeMap);
                 parseProcess(returnedGroup, transition.getChildNodes());
                 
-            } else if (nodeName.equals(BPWSON_MESSAGE)) {
+            } else if (BPWSON_MESSAGE.equals(nodeName)) {
                 parseServiceDefinition(transition);
                 parseProcess(group, transition.getChildNodes());
                 //do something related to reference and service
                 //also create an activity with source and target similar to normal activity
-            } else if (nodeName.equals(BPWSINVOKE)) {
+            } else if (BPWSINVOKE.equals(nodeName)) {
                 parseInvoke(group, transition);
 
             }
@@ -353,7 +353,7 @@ public class Process {
     }
 
     private void parseInvoke(Group group, Node transition) {
-        String serviceName = null;
+        String serviceName;
         String referencedServiceName = transition.getAttributes().getNamedItem(PARTNER_LINK).getTextContent();
         String calledOperation = transition.getAttributes().getNamedItem(OPERATION).getTextContent();
         String namespacePrefix = transition.getAttributes().getNamedItem(PORT_TYPE).getNodeValue();
@@ -401,7 +401,7 @@ public class Process {
     }
 
     private Group parseScope(Group inputGroup, String nodeName, Node transition, String whichGroup, NamedNodeMap nodeMap) {
-        if (nodeName.equals(BPWSCATCH_ALL) || nodeName.equals(BPWSCATCH)) {
+        if (BPWSCATCH_ALL.equals(nodeName) || BPWSCATCH.equals(nodeName)) {
             Group dummygroup = new Group(this);
             dummygroup.setNode(transition);
             dummygroup.calculateVariables();
@@ -409,12 +409,12 @@ public class Process {
             setCatchcount(getCatchcount() + 1);
             return dummygroup;
         }
-        if (nodeName.equals(BPWSEVENT_HANDLERS)) {
+        if (BPWSEVENT_HANDLERS.equals(nodeName)) {
             setEventHandler(getEventHandler() + 1);
         }
-        if ( (whichGroup != null && nodeName.equals(BPWSFLOW) && whichGroup.equalsIgnoreCase("localTX") )  || (nodeName.equals(BPWSSCOPE) && transition.getAttributes().getNamedItem(TIBEXGROUP) != null && whichGroup != null && (whichGroup.equalsIgnoreCase("critical") || whichGroup.equalsIgnoreCase("repeatUntil") || whichGroup.equalsIgnoreCase("while") || whichGroup.equalsIgnoreCase("foreach") || whichGroup.equalsIgnoreCase("iterate") || whichGroup.equalsIgnoreCase("none") || whichGroup.equalsIgnoreCase("repeatOnError")))) {
+        if ( (whichGroup != null && BPWSFLOW.equals(nodeName) && "localTX".equalsIgnoreCase(whichGroup) )  || (BPWSSCOPE.equals(nodeName) && transition.getAttributes().getNamedItem(TIBEXGROUP) != null && whichGroup != null && ("critical".equalsIgnoreCase(whichGroup) || "repeatUntil".equalsIgnoreCase(whichGroup) || "while".equalsIgnoreCase(whichGroup) || "foreach".equalsIgnoreCase(whichGroup) || "iterate".equalsIgnoreCase(whichGroup) || "none".equalsIgnoreCase(whichGroup) || "repeatOnError".equalsIgnoreCase(whichGroup)))) {
             setGroupcount(getGroupcount() + 1);
-            if (whichGroup.equalsIgnoreCase("foreach")) {
+            if ("foreach".equalsIgnoreCase(whichGroup)) {
                 hasForEachGroup = true;
             }
             Group group = new Group(this);
@@ -460,9 +460,9 @@ public class Process {
         NodeList children = parent.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             NodeList transitions = children.item(i).getChildNodes();
-            if (children.item(i).getNodeName().equals("bpws:targets")) {
+            if ("bpws:targets".equals(children.item(i).getNodeName())) {
                 parseTransitionTarget(transitions, parent);
-            } else if (children.item(i).getNodeName().equals("bpws:sources")) {
+            } else if ("bpws:sources".equals(children.item(i).getNodeName())) {
                 parseTransitionSource(transitions, parent);
             }
         }
@@ -470,7 +470,7 @@ public class Process {
 
     private void parseTransitionSource(NodeList transitions, Node parent) {
         for (int j = 0; j < transitions.getLength(); j++) {
-            if (transitions.item(j).getNodeName().equals(BPWSSOURCE)) {
+            if (BPWSSOURCE.equals(transitions.item(j).getNodeName())) {
                 Node tNode = transitions.item(j);
                 parseTransitionSourceDetails(parent, tNode);
             }
@@ -527,7 +527,7 @@ public class Process {
     }
 
     private void parseTransitionTargetDetails(Node parent, Node tNode) {
-        if (tNode.getNodeName().equals(BPWSTARGET)) {
+        if (BPWSTARGET.equals(tNode.getNodeName())) {
             String grouptransition = tNode.getAttributes().getNamedItem(LINK_NAME).getNodeValue();
             String grouptransition2 = synonymsGroupMapping.get(grouptransition);
             Transition transition = transitionMap.get(grouptransition2);
@@ -559,7 +559,7 @@ public class Process {
     }
 
     private void parseTransition(Node sibling, Deque<Group> groupsstack1) {
-        if (sibling != null && sibling.getNodeName().equals("bpws:link")) {
+        if (sibling != null && "bpws:link".equals(sibling.getNodeName())) {
             Transition transition = new Transition(this);
             transition.setNode(sibling);
             String transitionName = XmlHelper.getAttributeValue((Element) sibling, "name");
@@ -626,18 +626,18 @@ public class Process {
 
     public void parseActivities(Group group, Node parent) {
 
-        if (parent.getNodeName().equals(BPWSRECEIVE)) {
+        if (BPWSRECEIVE.equals(parent.getNodeName())) {
             parseReceiveActivity(group, parent);
         } else {
             if (parent.getChildNodes().item(0) != null) {
                 Node children = parent.getChildNodes().item(0).getNextSibling();
-                if (children.getNodeName().equals("tibex:receiveEvent")) {
+                if ("tibex:receiveEvent".equals(children.getNodeName())) {
                     parseProcessStarterActivity(children);
-                } else if (children.getNodeName().equals("tibex:activityExtension") || children.getNodeName().equals("tibex:extActivity")) {
+                } else if ("tibex:activityExtension".equals(children.getNodeName()) || "tibex:extActivity".equals(children.getNodeName())) {
                     parseActivityExtension(group, children);
-                } else if (parent.getNodeName().equals(BPWSRETHROW) || parent.getNodeName().equals(BPWSCOMPENSATE) || parent.getNodeName().equals(BPWSTHROW) || parent.getNodeName().equals(BPWSEXIT) || parent.getNodeName().equals(BPWSREPLY) || parent.getNodeName().equals(BPWSINVOKE) || (parent.getNodeName().equals(BPWSEMPTY) && parent.getAttributes().getNamedItem(TIBEXGROUP) == null)) {
+                } else if (BPWSRETHROW.equals(parent.getNodeName()) || BPWSCOMPENSATE.equals(parent.getNodeName()) || BPWSTHROW.equals(parent.getNodeName()) || BPWSEXIT.equals(parent.getNodeName()) || BPWSREPLY.equals(parent.getNodeName()) || BPWSINVOKE.equals(parent.getNodeName()) || (BPWSEMPTY.equals(parent.getNodeName()) && parent.getAttributes().getNamedItem(TIBEXGROUP) == null)) {
                     parseThrowCompensateActivities(group, parent);
-                } else if (parent.getNodeName().equals(BPWSEMPTY) && parent.getAttributes().getNamedItem(TIBEXGROUP) != null) {
+                } else if (BPWSEMPTY.equals(parent.getNodeName()) && parent.getAttributes().getNamedItem(TIBEXGROUP) != null) {
                     parseTranstionFromToGroups(parent);
                 }
             }
@@ -700,12 +700,12 @@ activity.setType(parent.getNodeName());
         LOG.debug("EventSource detected ["+eventSource.getName()+"]");
         eventSource.parseTransitions();
         for (int i = 0; i < processStarter.getChildNodes().getLength(); i++) {
-            if (processStarter.getChildNodes().item(i).getNodeName().equals("bpws:sources")) {
+            if ("bpws:sources".equals(processStarter.getChildNodes().item(i).getNodeName())) {
                 String transitionName = processStarter.getChildNodes().item(i).getChildNodes().item(1).getAttributes().getNamedItem(LINK_NAME).getTextContent();
                 Transition transition = transitionMap.get(transitionName);
                 setTransitionActivity(transition, processStarter.getAttributes().getNamedItem("name").getTextContent(), true,false);
             }
-            if (processStarter.getChildNodes().item(i).getNodeName().equals("tibex:eventSource")) {
+            if ("tibex:eventSource".equals(processStarter.getChildNodes().item(i).getNodeName())) {
                 if (processStarter.getChildNodes().item(i).getChildNodes().item(1).getAttributes().getNamedItem("activityTypeID") == null) {
                     eventSource.setType("bw.Start");
                 } else {

@@ -13,43 +13,45 @@ import com.tibco.utils.common.logger.Logger;
  */
 public class SysOutLogger implements Logger {
 
-    public SysOutLogger(Class<?> className) {
+    private final String source;
 
+    public SysOutLogger(Class<?> className) {
+        this.source = className != null ? className.getName() + " - " : "";
     }
 
     @Override
     public void debug(String arg0) {
-        System.out.println(arg0);
+        System.out.println(source + arg0);
     }
 
     @Override
     public void warn(String arg0, Exception arg1) {
         if (arg1 != null) {
-            System.err.println(arg0 + ": " + arg1.getMessage());
+            System.err.println(source + arg0 + ": " + arg1.getMessage());
         } else {
-            System.err.println(arg0);
+            System.err.println(source + arg0);
         }
     }
 
     @Override
     public void error(String arg0, Exception arg1) {
         if (arg1 != null) {
-            System.err.println(arg0 + ": " + arg1.getMessage());
+            System.err.println(source + arg0 + ": " + arg1.getMessage());
         } else {
-            System.err.println(arg0);
+            System.err.println(source + arg0);
         }
     }
 
     public void warn(String arg0) {
-            System.err.println(arg0);
+            System.err.println(source + arg0);
     }
 
     public void error(String arg0) {
-        System.err.println(arg0);
+        System.err.println(source + arg0);
     }
 
     public void info(String arg0) {
-        System.out.println(arg0);
+        System.out.println(source + arg0);
     }
 
 }

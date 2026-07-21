@@ -37,7 +37,7 @@ public class TransitionLabelCheck extends AbstractProcessCheck {
             Map.Entry<String, Transition> pair = it.next();
             Transition transition = pair.getValue();
             LOG.debug("Checking transition [" + transition.getName() + "] with condition type [" + transition.getConditionType() + "] and label [" + transition.getLabel() + "]");
-            if (transition.getConditionType() != null && transition.getConditionType().equals("SUCCESSWITHCONDITION") &&  transition.getLabel() == null) {
+            if (transition.getConditionType() != null && "SUCCESSWITHCONDITION".equals(transition.getConditionType()) &&  transition.getLabel() == null) {
                 reportIssueOnFile("The transition from " + transition.getFrom() + " to " + transition.getTo() + " doesn't have a proper label", transition.getLineNumber());
             }
         }

@@ -4,7 +4,7 @@
     <groupId>com.tibco.sonar</groupId>
     <artifactId>sonar-bw-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <name>Extension for SonarQube for use with TIBCO BusinessWorks</name>
     <description>Extension for SonarQube for use with TIBCO BusinessWorks</description>
 
@@ -68,6 +68,36 @@
             <url>https://maven.pkg.github.com/tibco/sonar-bw</url>
         </snapshotRepository>
     </distributionManagement>
+
+    <!--
+      Pin transitive dependencies (pulled in mainly by swagger-parser) to
+      CVE-patched versions. See dependency-check-suppressions.xml for the
+      findings that are false positives / not fixable on the 4.x branch.
+    -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- jackson-databind 2.16.1 -> CVE-2026-54512/54513/54514/54515 (fixed in 2.18.8/2.18.9) -->
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>2.18.9</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- commons-lang3 3.13.0 -> CVE-2025-48924 (fixed in 3.18.0) -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.18.0</version>
+            </dependency>
+            <!-- rhino 1.7.7.2 -> CVE-2025-66453 (fixed in 1.7.14.1 / 1.7.15.1 / 1.8.1) -->
+            <dependency>
+                <groupId>org.mozilla</groupId>
+                <artifactId>rhino</artifactId>
+                <version>1.7.15.1</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -288,21 +318,17 @@
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
                         <version>10.0.3</version>
-                        <executions>
-                            <execution>
-                                <phase>none</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-
-                    <plugin>
-                        <groupId>org.owasp</groupId>
-                        <artifactId>dependency-check-maven</artifactId>
-                        <version>10.0.3</version>
+                        <configuration>
+                            <suppressionFiles>
+                                <suppressionFile>${project.basedir}/dependency-check-suppressions.xml</suppressionFile>
+                            </suppressionFiles>
+                            <!-- Fail the vulnerability check on High/Critical findings (CVSS >= 7) -->
+                            <failBuildOnCVSS>7</failBuildOnCVSS>
+                            <!-- The Sonatype OSS Index analyzer requires account credentials and
+                                 aborts analysis without them; the NVD feed is the authoritative
+                                 source, so this supplementary analyzer is disabled. -->
+                            <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
+                        </configuration>
                         <executions>
                             <execution>
                                 <phase>none</phase>
@@ -330,6 +356,96 @@
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+
+                    <!-- ==================== Static analysis ==================== -->
+                    <plugin>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-maven-plugin</artifactId>
+                        <version>4.8.6.4</version>
+                        <configuration>
+                            <effort>Max</effort>
+                            <threshold>Medium</threshold>
+                            <includeTests>false</includeTests>
+                            <failOnError>true</failOnError>
+                            <excludeFilterFile>${project.basedir}/spotbugs-exclude.xml</excludeFilterFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>spotbugs-check</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>3.24.0</version>
+                        <configuration>
+                            <rulesets>
+                                <ruleset>${project.basedir}/pmd-rules.xml</ruleset>
+                            </rulesets>
+                            <failOnViolation>true</failOnViolation>
+                            <printFailingErrors>true</printFailingErrors>
+                            <includeTests>false</includeTests>
+                            <targetJdk>${jdk.min.version}</targetJdk>
+                            <linkXRef>false</linkXRef>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>pmd-check</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>net.sourceforge.pmd</groupId>
+                                <artifactId>pmd-core</artifactId>
+                                <version>7.3.0</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>net.sourceforge.pmd</groupId>
+                                <artifactId>pmd-java</artifactId>
+                                <version>7.3.0</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>3.4.0</version>
+                        <configuration>
+                            <configLocation>${project.basedir}/checkstyle.xml</configLocation>
+                            <consoleOutput>true</consoleOutput>
+                            <failOnViolation>true</failOnViolation>
+                            <violationSeverity>warning</violationSeverity>
+                            <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                            <linkXRef>false</linkXRef>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>checkstyle-check</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.puppycrawl.tools</groupId>
+                                <artifactId>checkstyle</artifactId>
+                                <version>9.3</version>
+                            </dependency>
+                        </dependencies>
                     </plugin>
 
                 </plugins>

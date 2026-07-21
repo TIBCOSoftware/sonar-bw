@@ -19,7 +19,6 @@ import org.sonar.check.Rule;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
     
 @Rule(key = TransitionLabelCheck.RULE_KEY, name = "Transition Labels Check", priority = Priority.MINOR, description = "This rule checks whether the transitions with the type 'Success With Condition' (XPath) have a proper label. This will improve code readability")
 @BelongsToProfile(title = BWProcessQualityProfile.PROFILE_NAME, priority = Priority.MINOR)
@@ -37,7 +36,7 @@ public class TransitionLabelCheck extends AbstractProcessCheck {
         while (it.hasNext()) {
             Transition transition = it.next();
             LOG.debug("Checking transition [" + transition.getFrom()+"-"+transition.getTo() + "] with condition type [" + transition.getConditionType() + "] and label [" + transition.getLabel() + "]");
-            if (transition.getConditionType() != null && transition.getConditionType().equals("xpath") &&  (transition.getLabel() == null || transition.getLabel().isEmpty())) {
+            if (transition.getConditionType() != null && "xpath".equals(transition.getConditionType()) &&  (transition.getLabel() == null || transition.getLabel().isEmpty())) {
                 reportIssueOnFile("The transition from " + transition.getFrom() + " to " + transition.getTo() + " doesn't have a proper label", XmlHelper.getLineNumber(transition.getNode()));
             }
         }

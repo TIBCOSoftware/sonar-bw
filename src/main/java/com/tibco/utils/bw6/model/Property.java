@@ -58,7 +58,7 @@ public class Property {
 
     void calculatePath() {
         if(name != null && !"".equals(name)){
-            int idxPath = name.lastIndexOf("/");
+            int idxPath = name.lastIndexOf('/');
             if(idxPath > 0){
                 path = name.substring(0,idxPath);
             }

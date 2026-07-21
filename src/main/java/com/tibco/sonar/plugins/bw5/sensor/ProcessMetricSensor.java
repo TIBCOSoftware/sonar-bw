@@ -55,7 +55,7 @@ public class ProcessMetricSensor implements Sensor {
 
     }
 
-    private void saveMeasure(Metric metric, double value, InputFile processFileResource) {
+    private void saveMeasure(Metric metric, int value, InputFile processFileResource) {
         sensorContext.<Integer>newMeasure()
                 .forMetric(metric)
                 .on(processFileResource)

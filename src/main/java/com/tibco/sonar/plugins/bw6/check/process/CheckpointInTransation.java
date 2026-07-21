@@ -38,7 +38,7 @@ public class CheckpointInTransation extends AbstractProcessCheck {
         boolean runvalidationflag = false;
         List<Group> groups = process.getGroups();
         for (Group group : groups) {
-            if (group.getType().equals("localTX")) {
+            if ("localTX".equals(group.getType())) {
                 runvalidationflag = true;
                 break;
             }
@@ -46,7 +46,7 @@ public class CheckpointInTransation extends AbstractProcessCheck {
 
         if (!groups.isEmpty() && runvalidationflag) {
             for (Activity activity : process.getActivities()) {
-                if (activity.getType() != null && activity.getType().equals("bw.internal.checkpoint")) {
+                if (activity.getType() != null && "bw.internal.checkpoint".equals(activity.getType())) {
                     checkActivities(processSource, activity, process);
                 }
             }
@@ -57,10 +57,10 @@ public class CheckpointInTransation extends AbstractProcessCheck {
     private void checkActivities(ProcessSource processSource, Activity activity, Process process) {
         NodeList nodes = activity.getNode().getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
-            if (nodes.item(i).getNodeName().equals("bpws:targets")) {
+            if ("bpws:targets".equals(nodes.item(i).getNodeName())) {
                 NodeList transitionsTo = nodes.item(i).getChildNodes();
                 for (int j = 0; j < transitionsTo.getLength(); j++) {
-                    if (transitionsTo.item(j).getNodeName().equals("bpws:target")) {
+                    if ("bpws:target".equals(transitionsTo.item(j).getNodeName())) {
                         String transitionName = transitionsTo.item(j).getAttributes().getNamedItem("linkName").getTextContent();
                         if (process.getTransitions().get(transitionName) == null) {
                             Map<String, String> groupMapping = process.getSynonymsGroupMapping();
@@ -92,9 +92,9 @@ public class CheckpointInTransation extends AbstractProcessCheck {
             }
         } else {
             if (process.getEventSourceByName(from) == null && process.getGroupByName(from) != null) {
-                    if (process.getGroupByName(from).getType().equals("localTX")) {
+                    if ("localTX".equals(process.getGroupByName(from).getType())) {
                         reportIssueOnFile("The Checkpoint activity in the process [" + process.getBasename() + "] is placed within a Transaction group. Checkpoint should not be placed within or in parallel flow to a transaction.",XmlHelper.getLineNumber(process.getGroupByName(from).getNode()));
-                    } else if (process.getGroupByName(from).getType().equals("critical")) {
+                    } else if ("critical".equals(process.getGroupByName(from).getType())) {
                         reportIssueOnFile("The Checkpoint activity in the process [" + process.getBasename() + "] is placed within a Critical Section group. Checkpoint should not be placed within a Critical Section group.",XmlHelper.getLineNumber(process.getGroupByName(from).getNode()));
                     }
                 }

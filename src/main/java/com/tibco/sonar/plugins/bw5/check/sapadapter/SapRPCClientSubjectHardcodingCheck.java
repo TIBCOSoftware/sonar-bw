@@ -45,7 +45,7 @@ public class SapRPCClientSubjectHardcodingCheck extends AbstractXmlCheck {
 					Node nNode = clientNodeList.item(temp);
 					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 						Element eElement = (Element) nNode;
-						if (eElement.getAttribute("objectType").equals("endpoint.RVRPCClient")) {
+						if ("endpoint.RVRPCClient".equals(eElement.getAttribute("objectType"))) {
 							xmlSource.findAndValidateHardCodedChild(getRuleKey(), eElement, SUBJECT_ELEMENT_NAME,
 									SUBJECT_ELEMENT_DESCRIPTION);
 						}

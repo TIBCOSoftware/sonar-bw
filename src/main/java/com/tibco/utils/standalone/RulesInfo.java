@@ -8,6 +8,7 @@ package com.tibco.utils.standalone;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +34,10 @@ public class RulesInfo {
         public DocumentationException(String string) {
             super(string);
         }
+
+        public DocumentationException(String string, Throwable cause) {
+            super(string, cause);
+        }
     }
 
 
@@ -49,19 +54,19 @@ public class RulesInfo {
     public String getHTMLDocForRule(String folder,String rule) throws DocumentationException {
         try {
             String htmlPath = System.getProperty("user.dir") + "/src/main/resources/org/sonar/l10n/"+folder+"/rules/" + rule + ".html";
-            String content = "";
+            String content;
             try (FileInputStream inputStream = new FileInputStream(htmlPath)) {
-                content = new String(inputStream.readAllBytes());
+                content = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
             }
             return content;
 
-        } catch (IOException | NullPointerException e) {
-            throw new DocumentationException("Cannot read HTML documentation for rule - " + rule + ": " + e.getMessage());
+        } catch (IOException e) {
+            throw new DocumentationException("Cannot read HTML documentation for rule - " + rule + ": " + e.getMessage(), e);
         }
     }
 
-    private final String replaceAll(String source, String regex, String replace) {
-        String oldValue = "";
+    private String replaceAll(String source, String regex, String replace) {
+        String oldValue;
         String response = source;
         do {
             oldValue = response;
@@ -75,7 +80,7 @@ public class RulesInfo {
 
         String response = fields[field - 1].matcher(info).replaceFirst("$1");
 
-        if (response.equals(info) || response.equals("")) {
+        if (response.equals(info) || "".equals(response)) {
             return "";
         }
 

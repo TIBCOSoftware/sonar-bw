@@ -45,7 +45,7 @@ public class BWProcessLanguage extends AbstractLanguage {
 			nonEmptyStrings.add(string.trim());
 		  }
 		}
-		return nonEmptyStrings.toArray(new String[nonEmptyStrings.size()]);
+		return nonEmptyStrings.toArray(new String[0]);
     }
      
 }

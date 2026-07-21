@@ -101,7 +101,7 @@ public final class SaxParser extends AbstractParser {
 		// Admittedly, this is largely lifted from other examples
 		@Override
 		public void startElement(String uri, String localName, String qName, Attributes attrs) {
-			Element e = null;
+			Element e;
 			if (localName != null && !"".equals(localName)) {
 				e = doc.createElementNS(uri, localName);
 			} else {

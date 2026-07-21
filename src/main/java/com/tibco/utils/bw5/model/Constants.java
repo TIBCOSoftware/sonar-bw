@@ -130,7 +130,7 @@
        this.name = name;
      }
      
-     public final String getName() {
+     public String getName() {
        return this.name;
      }
      
