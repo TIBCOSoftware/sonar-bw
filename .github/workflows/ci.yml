@@ -158,7 +158,7 @@ jobs:
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/workspace \
-            registry.gitlab.com/haynes/jacoco2cobertura:1.0.9 \
+            registry.gitlab.com/haynes/jacoco2cobertura:latest \
             python /opt/cover2cover.py /workspace/target/site/jacoco/jacoco.xml /workspace/src/main/java/ > ${{ github.workspace }}/target/site/cobertura.xml
 
       - name: Upload coverage report
