@@ -70,7 +70,7 @@ public class Variable {
                     this.setFullPath(this.getFullPath().replace('\\', '/'));
                 }
                 
-                indexOf = this.getFullPath().lastIndexOf("/");
+                indexOf = this.getFullPath().lastIndexOf('/');
                 
                 if(indexOf > 0){
                     this.setFullPath(this.getFullPath().substring(0, indexOf+1) + this.getName());

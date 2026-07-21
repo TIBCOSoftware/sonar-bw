@@ -197,12 +197,12 @@ public void addParameter(String name, String value) {
 
     @Override
     public String toString() {
-        StringBuilder out = new StringBuilder();
-        out.append("Name: ").append(name).append(";Type: ").append(type).append(";");
+        StringBuilder out = new StringBuilder(64);
+        out.append("Name: ").append(name).append(";Type: ").append(type).append(';');
         for ( SharedResourceParameter parameter : properties) {
-            out.append("{").append(parameter.getName()).append(",").append(parameter.getValue()).append("}");
+            out.append('{').append(parameter.getName()).append(',').append(parameter.getValue()).append('}');
         }
-        out.append(";");
+        out.append(';');
         return out.toString();
     }
 

@@ -59,6 +59,6 @@ public class LastActivityAndEndActivityCheck extends AbstractProcessCheck {
     }
 
     private boolean isActivityEnd(String type) {
-        return type != null && (type.equals(BPWSRETHROW) || type.equals("bw.internal.end") || type.equals(BPWSREPLY) || type.equals(BPWSEXIT) || type.equals(BPWSTHROW));
+        return type != null && (BPWSRETHROW.equals(type) || "bw.internal.end".equals(type) || BPWSREPLY.equals(type) || BPWSEXIT.equals(type) || BPWSTHROW.equals(type));
     }
 }

@@ -47,6 +47,20 @@ public class Component {
     }
 
     /**
+     * @return the element
+     */
+    public Element getElement() {
+        return element;
+    }
+
+    /**
+     * @param element the element to set
+     */
+    public void setElement(Element element) {
+        this.element = element;
+    }
+
+    /**
      * @return the name
      */
     public String getName() {

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SpotBugs exclude filter for the SonarQube BusinessWorks plugin.
+
+  Only genuine false positives or patterns that do not apply to this
+  code base are excluded here. Everything else must be fixed in source.
+-->
+<FindBugsFilter>
+
+    <!-- Test sources are not analysed (see plugin configuration), but keep
+         a guard here in case the include scope changes. -->
+    <Match>
+        <Class name="~.*Test$"/>
+    </Match>
+
+    <!--
+      The plugin's model layer (ProcessNode, Transition, Activity, ... and the
+      numerous *Model / DTO classes) intentionally stores and hands back direct
+      references to the underlying org.w3c.dom.Node tree. Defensive copies
+      (Node.cloneNode) would detach the returned nodes from their owner
+      document, breaking namespace-aware XPath evaluation and element lookup
+      that the checks and their integration tests depend on. These "may expose
+      internal representation" findings are therefore by design for this code
+      base and are excluded wholesale.
+    -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
+
+    <!--
+      CT_CONSTRUCTOR_THROW hardens against finalizer attacks on partially
+      constructed objects. The model classes it flags (ModuleProperties and its
+      subclasses) parse a trusted, already-loaded DOM document in their
+      constructor; they are not security boundaries and cannot be declared final
+      because the model hierarchy relies on subclassing. The recommended
+      remedy therefore does not apply, so this rank-low finding is excluded.
+    -->
+    <Match>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+    </Match>
+
+</FindBugsFilter>

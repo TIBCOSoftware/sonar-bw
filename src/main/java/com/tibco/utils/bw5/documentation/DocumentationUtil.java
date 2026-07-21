@@ -18,6 +18,7 @@ import com.tibco.utils.standalone.RulesInfo.DocumentationException;
 import org.sonar.check.RuleProperty;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class DocumentationUtil {
 
@@ -60,7 +61,7 @@ public class DocumentationUtil {
 
 	private static void writeRulesFile() throws FileNotFoundException {
 		FileOutputStream fos = new FileOutputStream("docs/rules/bw5/RULES.md");
-        try (PrintStream ps = new PrintStream(fos)) {
+        try (PrintStream ps = new PrintStream(fos, false, StandardCharsets.UTF_8)) {
 
             ps.println("# Available Quality Rules");
             ps.println();
@@ -114,7 +115,7 @@ public class DocumentationUtil {
 		LOG.debug("Generating documentation file " + check.getRuleKeyName() + ".md");
 
 		FileOutputStream fos = new FileOutputStream("docs/rules/bw5/" + check.getRuleKeyName() + ".md");
-        try (PrintStream ps = new PrintStream(fos)) {
+        try (PrintStream ps = new PrintStream(fos, false, StandardCharsets.UTF_8)) {
 
 
 

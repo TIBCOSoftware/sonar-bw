@@ -99,8 +99,10 @@
      case x: 
        setX(Integer.parseInt(node.getTextContent()));
        break;
-     case y: 
+     case y:
        setY(Integer.parseInt(node.getTextContent()));
+       break;
+     default:
        break;
      }
    }

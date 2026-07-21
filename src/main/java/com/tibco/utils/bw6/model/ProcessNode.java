@@ -64,13 +64,13 @@ public abstract class ProcessNode {
             NodeList children = node.getChildNodes();
             for (int i = 0; i < children.getLength(); i++) {
                 Node child = children.item(i);
-                if (child.getNodeName().equals("tibex:config")) {
+                if ("tibex:config".equals(child.getNodeName())) {
                     Node bwactivityConfig = child.getChildNodes().item(1);
                     setType(bwactivityConfig.getAttributes().getNamedItem("activityTypeID").getTextContent());
                     break;
-                } else if (child.getNodeName().equals("bpws:targets")) {
+                } else if ("bpws:targets".equals(child.getNodeName())) {
                     parseActivityOutcomingTransitions(child, synonymsGroupMapping, transitions, name);
-                } else if (child.getNodeName().equals("bpws:sources")) {
+                } else if ("bpws:sources".equals(child.getNodeName())) {
                     parseActivityIncomingTransitions(child, synonymsGroupMapping, transitions, name);
                 }
             }
@@ -81,7 +81,7 @@ public abstract class ProcessNode {
     private void parseActivityOutcomingTransitions(Node child, Map<String, String> synonymsGroupMapping, Map<String, Transition> transitions, String name) {
         NodeList transitionsTo = child.getChildNodes();
         for (int j = 0; j < transitionsTo.getLength(); j++) {
-            if (transitionsTo.item(j).getNodeName().equals("bpws:target")) {
+            if ("bpws:target".equals(transitionsTo.item(j).getNodeName())) {
                 parseActivityTransition(transitionsTo, j, synonymsGroupMapping, transitions, name,false);
             }
         }
@@ -128,7 +128,7 @@ public abstract class ProcessNode {
     private void parseActivityIncomingTransitions(Node child, Map<String, String> synonymsGroupMapping, Map<String, Transition> transitions, String name) {
         NodeList transitionsTo = child.getChildNodes();
         for (int j = 0; j < transitionsTo.getLength(); j++) {
-            if (transitionsTo.item(j).getNodeName().equals("bpws:source")) {
+            if ("bpws:source".equals(transitionsTo.item(j).getNodeName())) {
                 parseActivityTransition(transitionsTo, j, synonymsGroupMapping, transitions, name,true);
             }
         }

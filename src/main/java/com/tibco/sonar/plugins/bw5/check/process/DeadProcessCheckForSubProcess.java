@@ -8,8 +8,9 @@ package com.tibco.sonar.plugins.bw5.check.process;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 
 import com.tibco.sonar.plugins.bw5.check.AbstractProcessCheck;
@@ -42,7 +43,7 @@ public class DeadProcessCheckForSubProcess extends AbstractProcessCheck {
 			File sourceDir = processSource.getBaseDir();
 			boolean isDynamicExist = checkDynamicCode(sourceDir);
 			String name =processSource.getProcessModel().getName();
-			boolean isPresent = false;
+			boolean isPresent;
 
 			if(processSource.getProcessModel().isSubprocess()) {
 				// Subprocess Logic
@@ -69,8 +70,8 @@ public class DeadProcessCheckForSubProcess extends AbstractProcessCheck {
 		List<File> processFiles = (List<File>) FileUtils.listFiles(sourceDir, processExtensions, true);
 		for (File processFile : processFiles) {
 			if (!name.contains(processFile.getName())) {
-				try (BufferedReader reader = new BufferedReader(new FileReader(processFile))) {
-					String sCurrLine = "";
+				try (BufferedReader reader = Files.newBufferedReader(processFile.toPath(), StandardCharsets.UTF_8)) {
+					String sCurrLine;
 					while ((sCurrLine = reader.readLine()) != null) {
 						if (sCurrLine.contains(name)) {
 							isPresent = true;
@@ -87,8 +88,8 @@ public class DeadProcessCheckForSubProcess extends AbstractProcessCheck {
 		String[] processExtensions = new String[] { "process" };
 		List<File> processFiles = (List<File>) FileUtils.listFiles(sourceDir, processExtensions, true);
 		for (File processFile : processFiles) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(processFile))) {
-                String sCurrLine = "";
+            try (BufferedReader reader = Files.newBufferedReader(processFile.toPath(), StandardCharsets.UTF_8)) {
+                String sCurrLine;
                 while ((sCurrLine = reader.readLine()) != null) {
                     if (sCurrLine.contains("<processNameXPath>") && sCurrLine.contains("</processNameXPath>")) {
                         isDynamicFound = true;

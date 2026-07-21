@@ -67,8 +67,6 @@ public class SharedResourceNotUsed extends AbstractResourceCheck {
                 }
             } catch (IOException ex) {
                 LOG.warn("File not found", ex);
-            } catch (NullPointerException ex) {
-                LOG.warn("Catching NullPointerException", ex);
             }
         }
         return found;

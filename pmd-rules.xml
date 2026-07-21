@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="sonar-bw-pmd"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        Curated, high-signal PMD ruleset for the SonarQube BusinessWorks plugin.
+        Focuses on genuine bugs, error-prone constructs, resource/thread safety
+        and performance. Purely stylistic / opinionated rules are excluded.
+    </description>
+
+    <!-- ==================== ERROR PRONE ==================== -->
+    <rule ref="category/java/errorprone.xml">
+        <!-- Opinionated / noisy for this code base -->
+        <exclude name="AvoidLiteralsInIfCondition"/>
+        <exclude name="AvoidDuplicateLiterals"/>
+        <exclude name="AvoidFieldNameMatchingMethodName"/>
+        <exclude name="AvoidFieldNameMatchingTypeName"/>
+        <exclude name="MissingSerialVersionUID"/>
+        <exclude name="TestClassWithoutTestCases"/>
+        <exclude name="NonSerializableClass"/>
+        <exclude name="UseProperClassLoader"/>
+        <exclude name="AvoidCatchingNPE"/>
+        <exclude name="CompareObjectsWithEquals"/>
+        <!-- while ((line = reader.readLine()) != null) is idiomatic Java -->
+        <exclude name="AssignmentInOperand"/>
+        <!-- ModuleProperties intentionally uses the template-method pattern:
+             its constructor calls getElementName(), which subclasses override -->
+        <exclude name="ConstructorCallsOverridableMethod"/>
+        <!-- Assigning null to reset state (e.g. clearing the current DOM node
+             when SAX parsing returns to the document root) is intentional -->
+        <exclude name="NullAssignment"/>
+    </rule>
+
+    <!-- ==================== BEST PRACTICES ==================== -->
+    <rule ref="category/java/bestpractices.xml">
+        <exclude name="GuardLogStatement"/>
+        <exclude name="AvoidReassigningParameters"/>
+        <exclude name="AbstractClassWithoutAbstractMethod"/>
+        <exclude name="AccessorClassGeneration"/>
+        <exclude name="AccessorMethodGeneration"/>
+        <exclude name="UseVarargs"/>
+        <exclude name="MethodReturnsInternalArray"/>
+        <exclude name="ArrayIsStoredDirectly"/>
+        <exclude name="ForLoopCanBeForeach"/>
+        <exclude name="ForLoopVariableCount"/>
+        <exclude name="LooseCoupling"/>
+        <exclude name="ReplaceHashtableWithMap"/>
+        <exclude name="ReplaceVectorWithList"/>
+        <exclude name="ReplaceEnumerationWithIterator"/>
+        <exclude name="SystemPrintln"/>
+        <exclude name="AvoidStringBufferField"/>
+        <exclude name="ConstantsInInterface"/>
+        <exclude name="MissingOverride"/>
+        <exclude name="JUnitAssertionsShouldIncludeMessage"/>
+        <exclude name="JUnitTestsShouldIncludeAssert"/>
+        <exclude name="JUnitTestContainsTooManyAsserts"/>
+        <exclude name="JUnit4TestShouldUseTestAnnotation"/>
+        <exclude name="UnitTestShouldUseTestAnnotation"/>
+        <exclude name="UnitTestContainsTooManyAsserts"/>
+        <exclude name="UnitTestShouldIncludeAssert"/>
+        <exclude name="UnitTestAssertionsShouldIncludeMessage"/>
+    </rule>
+
+    <!-- ==================== PERFORMANCE ==================== -->
+    <rule ref="category/java/performance.xml">
+        <exclude name="AvoidInstantiatingObjectsInLoops"/>
+        <exclude name="ConsecutiveLiteralAppends"/>
+        <exclude name="ConsecutiveAppendsShouldReuse"/>
+        <exclude name="UseStringBufferForStringAppends"/>
+        <exclude name="AvoidFileStream"/>
+        <exclude name="TooFewBranchesForSwitch"/>
+        <exclude name="RedundantFieldInitializer"/>
+    </rule>
+
+    <!-- ==================== MULTITHREADING ==================== -->
+    <rule ref="category/java/multithreading.xml">
+        <exclude name="DoNotUseThreads"/>
+        <exclude name="UseConcurrentHashMap"/>
+        <exclude name="AvoidUsingVolatile"/>
+        <exclude name="AvoidSynchronizedAtMethodLevel"/>
+    </rule>
+
+    <!-- ==================== SELECTED DESIGN RULES ==================== -->
+    <rule ref="category/java/design.xml/AvoidThrowingNewInstanceOfSameException"/>
+    <rule ref="category/java/design.xml/AvoidThrowingNullPointerException"/>
+    <rule ref="category/java/design.xml/AvoidThrowingRawExceptionTypes"/>
+    <rule ref="category/java/design.xml/CollapsibleIfStatements"/>
+    <rule ref="category/java/design.xml/SimplifyBooleanExpressions"/>
+    <rule ref="category/java/design.xml/SimplifyBooleanReturns"/>
+    <rule ref="category/java/design.xml/SimplifyConditional"/>
+    <rule ref="category/java/design.xml/UselessOverridingMethod"/>
+    <rule ref="category/java/design.xml/ExceptionAsFlowControl"/>
+    <rule ref="category/java/design.xml/LogicInversion"/>
+
+    <!-- ==================== SELECTED CODE STYLE RULES ==================== -->
+    <rule ref="category/java/codestyle.xml/UnnecessaryImport"/>
+    <rule ref="category/java/codestyle.xml/UnnecessaryReturn"/>
+    <rule ref="category/java/codestyle.xml/UnnecessaryModifier"/>
+    <rule ref="category/java/codestyle.xml/UnnecessarySemicolon"/>
+
+</ruleset>

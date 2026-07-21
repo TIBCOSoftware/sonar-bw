@@ -6,7 +6,6 @@
 
 package com.tibco.sonar.plugins.bw5.metric;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import org.sonar.api.measures.CoreMetrics;

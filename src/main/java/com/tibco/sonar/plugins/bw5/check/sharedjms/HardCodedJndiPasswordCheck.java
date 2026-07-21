@@ -5,7 +5,6 @@
 */
 package com.tibco.sonar.plugins.bw5.check.sharedjms;
 
-import com.tibco.sonar.plugins.bw5.language.SharedJdbc;
 import com.tibco.sonar.plugins.bw5.language.SharedJms;
 import com.tibco.utils.common.helper.XmlHelper;
 import org.sonar.check.BelongsToProfile;
@@ -45,7 +44,7 @@ public class HardCodedJndiPasswordCheck extends AbstractXmlCheck {
                     Element namingEnvironment = XmlHelper.firstChildElement(config, NAMING_SECTION_ELEMENT_NAME);
                     if (config.hasChildNodes()) {
                         Element useJNDI = XmlHelper.firstChildElement(namingEnvironment, JNDI_FLAG_ELEMENT_NAME);
-                        if (useJNDI.getTextContent() != null && useJNDI.getTextContent().equals("true")) {
+                        if (useJNDI.getTextContent() != null && "true".equals(useJNDI.getTextContent())) {
                             xmlSource.findAndValidateHardCodedChild(getRuleKey(), namingEnvironment, JNDI_PWD_ELEMENT_NAME, JNDI_PWD_ELEMENT_DESC);
                         }
                     } else {

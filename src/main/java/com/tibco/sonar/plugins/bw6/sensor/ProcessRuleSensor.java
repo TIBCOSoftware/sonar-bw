@@ -81,7 +81,7 @@ public class ProcessRuleSensor implements Sensor {
     private final FilePredicate mainFilesPredicate;
     private final Checks<Object> checkReturned;
     protected static Map<String, Integer> foundResources = new HashMap<>();
-    protected static Map<String, String> resourceExtensionMapper = new HashMap<>();
+    private static final Map<String, String> resourceExtensionMapper = new HashMap<>();
 
     public ProcessRuleSensor(FileSystem fileSystem,
             CheckFactory checkFactory) {
@@ -139,7 +139,7 @@ public class ProcessRuleSensor implements Sensor {
             LOG.debug("File location: " + file.getAbsolutePath());
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newDefaultInstance();       
             DocumentBuilder dBuilder;
-            NodeList propertyList = null;
+            NodeList propertyList;
             boolean flag = true;
             try {
                 dBuilder = dbFactory.newDocumentBuilder();
@@ -228,8 +228,8 @@ public class ProcessRuleSensor implements Sensor {
         LOG.info("Searching for BW Resources");
         for (InputFile file : files) {
             LOG.info("Found File: " + file.filename());
-            if (file.filename().lastIndexOf(".") > 0) {
-                String extension = file.filename().substring(file.filename().lastIndexOf("."));
+            if (file.filename().lastIndexOf('.') > 0) {
+                String extension = file.filename().substring(file.filename().lastIndexOf('.'));
                 LOG.debug("Extension for file: " + extension);
 
                 parseAdditionalResources(bwProject, projectSource, file, extension);

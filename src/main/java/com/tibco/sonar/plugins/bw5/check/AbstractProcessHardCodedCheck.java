@@ -8,7 +8,6 @@ package com.tibco.sonar.plugins.bw5.check;
 
 import java.util.List;
 
-import javax.xml.xpath.XPathExpressionException;
 
 import com.tibco.utils.bw5.helper.GvHelper;
 import com.tibco.utils.common.helper.XmlHelper;

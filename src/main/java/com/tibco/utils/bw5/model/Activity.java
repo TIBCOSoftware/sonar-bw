@@ -43,9 +43,9 @@
    public List<String> getJavaScriptModelAsLine(String parentName)
    {
      ArrayList<String> result = new ArrayList<>();
-     StringBuilder line = new StringBuilder();
+     StringBuilder line = new StringBuilder(64);
      
-     line.append("{");
+     line.append('{');
      
      line.append("name: \"").append(getName()).append("\",");
      
@@ -56,11 +56,11 @@
      if ((parentName != null) && (!parentName.isEmpty())) {
        line.append("parent: \"").append(parentName).append("\",");
      }
-     line.append("x: ").append(getX()).append(",");
+     line.append("x: ").append(getX()).append(',');
      
      line.append("y: ").append(getY());
      
-     line.append("}");
+     line.append('}');
      result.add(line.toString());
      return result;
    }

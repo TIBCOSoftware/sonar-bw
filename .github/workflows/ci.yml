@@ -44,8 +44,8 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
 
-      - name: Build with Maven
-        run: mvn $MAVEN_CLI_OPTS clean initialize package
+      - name: Build with Maven (includes SpotBugs, PMD and Checkstyle)
+        run: mvn $MAVEN_CLI_OPTS clean initialize verify
         env:
           MAVEN_OPTS: ${{ secrets.MAVEN_OPTS }}
 

@@ -13,6 +13,7 @@ import com.tibco.utils.bw6.model.Activity;
 import com.tibco.utils.bw6.model.Group;
 import com.tibco.utils.bw6.model.Process;
 import java.util.Arrays;
+import java.util.Collections;
 
 import java.util.List;
 import com.tibco.utils.common.logger.Logger;
@@ -28,7 +29,7 @@ public class CriticalSectionCheck
 
     private static final Logger LOG = LoggerFactory.getLogger(CriticalSectionCheck.class);
     public static final String RULE_KEY = "CriticalSection";
-    protected static final List<String> CONSTANTS = Arrays.asList("bw.http.waitForHTTPRequest", "bw.file.wait", "bw.generalactivities.sleep", "bw.jms.signalin", "bw.rv.waitforRVMessage", "bw.tcp.waitfortcp", "bw.http.sendHTTPRequest", "bw.ftl.requestreply", "bw.jms.requestreply", "bw.rv.sendRVRequest","bw.generalactivities.sleep");
+    protected static final List<String> CONSTANTS = Collections.unmodifiableList(Arrays.asList("bw.http.waitForHTTPRequest", "bw.file.wait", "bw.generalactivities.sleep", "bw.jms.signalin", "bw.rv.waitforRVMessage", "bw.tcp.waitfortcp", "bw.http.sendHTTPRequest", "bw.ftl.requestreply", "bw.jms.requestreply", "bw.rv.sendRVRequest","bw.generalactivities.sleep"));
 
     @Override
     protected void validate(ProcessSource processSource) {
@@ -37,7 +38,7 @@ public class CriticalSectionCheck
         final List<Group> groups = process.getGroups();
         for (final Group group : groups) {
             
-            if (group.getType().equals("critical")) {
+            if ("critical".equals(group.getType())) {
                 group.getActivities().stream().filter(activity -> (activity.getType() != null && CriticalSectionCheck.CONSTANTS.contains(activity.getType()))).forEachOrdered((Activity activity) -> reportIssueOnFile("The activity " + activity.getName() + " in process " + process.getBasename() + " should not be used within Critical Section group.",XmlHelper.getLineNumber(activity.getNode())) );
             }
         }        

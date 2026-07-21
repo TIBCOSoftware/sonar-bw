@@ -13,8 +13,6 @@ import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
 import com.tibco.sonar.plugins.bw5.sensor.BWResourceMetricSensor;
 import com.tibco.sonar.plugins.bw5.sensor.GlobalVariableMetricSensor;
 import com.tibco.sonar.plugins.bw5.sensor.ProcessMetricSensor;
-import com.tibco.sonar.plugins.bw6.metric.BusinessWorksMetrics;
-import com.tibco.utils.bw6.model.Transition;
 import org.sonar.api.Plugin;
 
 import com.tibco.sonar.plugins.bw6.language.BWProcessLanguage;

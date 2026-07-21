@@ -33,9 +33,9 @@ public class SubProcessInlineCheck
         Map<String, Service> referenceServices = process.getProcessReferenceServices();
 
         if (referenceServices != null) {
-            for (String referenceService : referenceServices.keySet()) {
-                if (referenceServices.get(referenceService) != null && "true".equals(referenceServices.get(referenceService).getInline())) {
-                    Service service = referenceServices.get(referenceService);
+            for (Map.Entry<String, Service> referenceService : referenceServices.entrySet()) {
+                Service service = referenceService.getValue();
+                if (service != null && "true".equals(service.getInline())) {
                     checkService(service, process);
 
                 }
@@ -50,8 +50,8 @@ public class SubProcessInlineCheck
     private void checkService(Service service, Process process) {
         if (service != null) {
             String proc = service.getImplementationProcess();
-            if (proc != null && proc.lastIndexOf(".") > 0) {
-                proc = proc.substring(proc.lastIndexOf(".") + 1).concat(".bwp");
+            if (proc != null && proc.lastIndexOf('.') > 0) {
+                proc = proc.substring(proc.lastIndexOf('.') + 1).concat(".bwp");
                 String parentprocess = process.getBasename();
                 reportIssueOnFile("For performance reasons it is highly recommended to use Job Shared Variable instead of passing a large set of data when invoking Inline SubProcess " + proc + " from parent process " + parentprocess);
             }

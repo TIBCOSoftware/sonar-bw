@@ -12,7 +12,6 @@ import com.tibco.utils.bw6.model.Project;
 import com.tibco.utils.bw6.model.XsdResource;
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.sonar.api.batch.fs.InputFile;
 

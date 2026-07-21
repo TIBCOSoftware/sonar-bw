@@ -8,7 +8,9 @@ package com.tibco.sonar.plugins.bw5.check.process;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 
 import com.tibco.sonar.plugins.bw5.check.AbstractProcessCheck;
@@ -17,14 +19,9 @@ import org.apache.commons.io.FileUtils;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import com.tibco.sonar.plugins.bw5.check.AbstractXmlCheck;
 import com.tibco.sonar.plugins.bw5.check.CheckConstants;
 import com.tibco.sonar.plugins.bw5.profile.BWProcessQualityProfile;
-import com.tibco.sonar.plugins.bw5.source.XmlBw5Source;
 import com.tibco.utils.common.logger.Logger;
 import com.tibco.utils.common.logger.LoggerFactory;
 
@@ -47,8 +44,8 @@ public class DeadProcessCheckForStarterProcess extends AbstractProcessCheck {
 			String[] extensions = new String[] { "archive" };
 			List<File> archiveFiles = (List<File>) FileUtils.listFiles(sourceDir, extensions, true);
 			for (File archiveFile : archiveFiles) {
-				try (BufferedReader reader = new BufferedReader(new FileReader(archiveFile))) {
-					String sCurrLine = "";
+				try (BufferedReader reader = Files.newBufferedReader(archiveFile.toPath(), StandardCharsets.UTF_8)) {
+					String sCurrLine;
 					while ((sCurrLine = reader.readLine()) != null) {
 						if (sCurrLine.contains(name)) {
 							isPresent = true;
@@ -62,7 +59,7 @@ public class DeadProcessCheckForStarterProcess extends AbstractProcessCheck {
 									reportIssueOnFile("The " + DEAD_CODE_DESCRIPTION);
 			}
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			LOG.error("Exception Occured in DeadProcessCheckForStarterProcess");
 		}
 	}

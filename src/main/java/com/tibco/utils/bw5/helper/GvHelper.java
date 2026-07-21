@@ -30,7 +30,7 @@ public class GvHelper {
 		if (globalVariables.hasChildNodes()) {
 			for (int i = 0; i < globalVariables.getChildNodes().getLength(); i++) {
 				Node node = globalVariables.getChildNodes().item(i);
-				if (node.getLocalName().equals(SUBSTVAR_GV_NODE_NAME )) {
+				if (SUBSTVAR_GV_NODE_NAME .equals(node.getLocalName())) {
 					result++;
 				}
 			}

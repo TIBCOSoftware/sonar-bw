@@ -21,9 +21,12 @@ import com.tibco.sonar.plugins.bw5.check.sharedjms.HardCodedJndiUserCheck;
 import com.tibco.sonar.plugins.bw5.language.BusinessWorks5Language;
 
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +42,7 @@ public class ProcessRuleDefinition implements RulesDefinition {
 
     public static final String REPOSITORY_KEY = BusinessWorks5Language.KEY;
     protected static final String REPOSITORY_NAME = "SonarQube";
-    protected static final List<String> LANGUAGE_KEYS = Arrays.asList(BusinessWorks5Language.KEY);
+    protected static final List<String> LANGUAGE_KEYS = Collections.singletonList(BusinessWorks5Language.KEY);
 
 
     private void defineRulesForLanguage(Context context, String repositoryKey, String repositoryName, String languageKey) {
@@ -62,13 +65,14 @@ public class ProcessRuleDefinition implements RulesDefinition {
 
     private void setDescriptionFromHtml(NewRule rule) {
         String htmlPath = "/org/sonar/l10n/bw5/rules/" + rule.key() + ".html";
-        String description = "<p></p>";
-        try {
-            description = new BufferedReader(
-                    new InputStreamReader(this.getClass().getResourceAsStream(htmlPath), StandardCharsets.UTF_8))
-                    .lines().collect(Collectors.joining("\n"));
-        } catch (Exception e) {
-            description= "<p>Description not available</p>";
+        String description = "<p>Description not available</p>";
+        InputStream htmlStream = this.getClass().getResourceAsStream(htmlPath);
+        if (htmlStream != null) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(htmlStream, StandardCharsets.UTF_8))) {
+                description = reader.lines().collect(Collectors.joining("\n"));
+            } catch (IOException e) {
+                description = "<p>Description not available</p>";
+            }
         }
         rule.setHtmlDescription(description);
     }

@@ -98,6 +98,8 @@
        case xpathDescription:
          setLabel(node.getTextContent());
          break;
+     default:
+       break;
      }
    }
 

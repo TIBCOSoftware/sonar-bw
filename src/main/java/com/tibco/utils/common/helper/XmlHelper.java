@@ -13,7 +13,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
-import java.util.Stack;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -106,7 +105,7 @@ public class XmlHelper {
 
             SAXParser parser;
             try {
-            	SAXParserFactory factory = null;
+            	SAXParserFactory factory;
             	ClassLoader ocl = Thread.currentThread().getContextClassLoader();
         		try{
         			Thread.currentThread().setContextClassLoader(javax.xml.parsers.SAXParserFactory.class.getClassLoader());

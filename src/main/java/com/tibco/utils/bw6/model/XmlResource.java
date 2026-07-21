@@ -5,7 +5,6 @@
 */
 package com.tibco.utils.bw6.model;
 
-import java.io.File;
 import org.w3c.dom.Document;
 
 /**
