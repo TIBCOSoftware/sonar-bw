@@ -61,11 +61,11 @@
     <distributionManagement>
         <repository>
             <id>github</id>
-            <url>https://maven.pkg.github.com/tibco/sonar-bw</url>
+            <url>https://maven.pkg.github.com/TIBCOSoftware/sonar-bw</url>
         </repository>
         <snapshotRepository>
             <id>github</id>
-            <url>https://maven.pkg.github.com/tibco/sonar-bw</url>
+            <url>https://maven.pkg.github.com/TIBCOSoftware/sonar-bw</url>
         </snapshotRepository>
     </distributionManagement>
 
