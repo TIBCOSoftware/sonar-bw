@@ -127,10 +127,15 @@ jobs:
         id: check
         run: |
           if [[ "${GITHUB_REF_NAME}" == "main" ]] || [[ "${GITHUB_REF_NAME}" =~ "release/" ]]; then
-            mvn $MAVEN_CLI_OPTS org.owasp:dependency-check-maven:10.0.3:check
+            # Use the NVD API key when configured to avoid the slow, rate-limited
+            # anonymous NVD download; falls back to anonymous if the secret is unset.
+            KEY_ARG=""
+            [ -n "$NVD_API_KEY" ] && KEY_ARG="-DnvdApiKey=$NVD_API_KEY"
+            mvn $MAVEN_CLI_OPTS org.owasp:dependency-check-maven:10.0.3:check $KEY_ARG
           fi
         env:
           MAVEN_OPTS: ${{ secrets.MAVEN_OPTS }}
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
 
       - name: Deploy with maven with Maven
         run: |
