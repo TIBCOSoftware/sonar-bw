@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Minimal BW5 design-time library builder descriptor used for tests.
+     It declares the processes exported by the library (projlib). -->
+<Repository>
+    <name>SampleLibrary</name>
+    <fileList>
+        <file>Lib Starter.process</file>
+    </fileList>
+</Repository>

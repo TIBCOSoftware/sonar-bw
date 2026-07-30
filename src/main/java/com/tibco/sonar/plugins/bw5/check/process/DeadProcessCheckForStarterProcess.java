@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.tibco.sonar.plugins.bw5.check.AbstractProcessCheck;
 import com.tibco.sonar.plugins.bw5.source.ProcessSource;
+import com.tibco.utils.bw5.model.Process;
 import org.apache.commons.io.FileUtils;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
@@ -37,14 +38,25 @@ public class DeadProcessCheckForStarterProcess extends AbstractProcessCheck {
 	protected void validate(ProcessSource processSource) {
 
 		try {
-			String name =processSource.getProcessModel().getName();
+			Process processModel = processSource.getProcessModel();
+			// Issue #30: this rule only applies to starter (auto-starting) processes.
+			// Subprocesses have no process starter and are covered by
+			// DeadProcessCheckForSubProcess, so they must not be flagged here.
+			if (processModel.isSubprocess()) {
+				return;
+			}
+
+			String name = processModel.getName();
 			boolean isPresent = false;
 			File sourceDir = processSource.getBaseDir();
-			// Stater(or Main) process logic
-			String[] extensions = new String[] { "archive" };
-			List<File> archiveFiles = (List<File>) FileUtils.listFiles(sourceDir, extensions, true);
-			for (File archiveFile : archiveFiles) {
-				try (BufferedReader reader = Files.newBufferedReader(archiveFile.toPath(), StandardCharsets.UTF_8)) {
+			// A starter (or Main) process is considered used when it is packaged in an
+			// application archive or exported by a design-time library. Issue #31:
+			// library builder projects (projlib) declare their processes in a
+			// .libbuilder file instead of an .archive, so both are inspected.
+			String[] extensions = new String[] { "archive", "libbuilder" };
+			List<File> deploymentFiles = (List<File>) FileUtils.listFiles(sourceDir, extensions, true);
+			for (File deploymentFile : deploymentFiles) {
+				try (BufferedReader reader = Files.newBufferedReader(deploymentFile.toPath(), StandardCharsets.UTF_8)) {
 					String sCurrLine;
 					while ((sCurrLine = reader.readLine()) != null) {
 						if (sCurrLine.contains(name)) {

@@ -269,4 +269,65 @@ public class DeadProcessCheckForStarterProcessTest extends TestCase {
         spyInstance.validate(source1);
         Mockito.verify(spyInstance,times(0)).reportIssueOnFile(anyString());
     }
+
+    private static final String SAMPLES_DIR =
+            System.getProperty("user.dir") + "/src/test/resources/bw/bw5/SonarSamples";
+    private static final String LIBBUILDER_DIR =
+            System.getProperty("user.dir") + "/src/test/resources/bw/bw5/LibbuilderSample";
+
+    private static String starterProcess(String name) {
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<pd:ProcessDefinition xmlns:pd=\"http://xmlns.tibco.com/bw/process/2003\">\n" +
+                "    <pd:name>" + name + "</pd:name>\n" +
+                "    <pd:startName>Timer</pd:startName>\n" +
+                "    <pd:starter name=\"Timer\">\n" +
+                "        <pd:type>com.tibco.plugin.timer.TimerEventSource</pd:type>\n" +
+                "        <pd:x>92</pd:x>\n" +
+                "        <pd:y>122</pd:y>\n" +
+                "    </pd:starter>\n" +
+                "    <pd:endName>End</pd:endName>\n" +
+                "</pd:ProcessDefinition>";
+    }
+
+    private static String subProcess(String name) {
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<pd:ProcessDefinition xmlns:pd=\"http://xmlns.tibco.com/bw/process/2003\">\n" +
+                "    <pd:name>" + name + "</pd:name>\n" +
+                "    <pd:startName>Start</pd:startName>\n" +
+                "    <pd:endName>End</pd:endName>\n" +
+                "</pd:ProcessDefinition>";
+    }
+
+    private static DeadProcessCheckForStarterProcess run(String xml, String baseDir) {
+        ProcessSource source = Mockito.spy(new ProcessSource(xml));
+        when(source.getBaseDir()).thenReturn(new File(baseDir));
+        DeadProcessCheckForStarterProcess spyInstance =
+                Mockito.spy(new DeadProcessCheckForStarterProcess());
+        doNothing().when(spyInstance).reportIssueOnFile(anyString());
+        spyInstance.validate(source);
+        return spyInstance;
+    }
+
+    // Issue #30: a subprocess must never be flagged by the starter dead-code
+    // rule, even when its name is not referenced in any archive.
+    public void testSubprocessNotFlagged() {
+        DeadProcessCheckForStarterProcess spy =
+                run(subProcess("Orphan Subprocess.process"), SAMPLES_DIR);
+        verify(spy, times(0)).reportIssueOnFile(anyString());
+    }
+
+    // A genuine starter process that is not packaged in any archive is dead code.
+    public void testStarterNotInArchiveIsFlagged() {
+        DeadProcessCheckForStarterProcess spy =
+                run(starterProcess("Orphan Starter.process"), SAMPLES_DIR);
+        verify(spy, times(1)).reportIssueOnFile(anyString());
+    }
+
+    // Issue #31: a starter process exported by a library builder (projlib) is
+    // declared in a .libbuilder descriptor and must be considered used.
+    public void testStarterInLibbuilderNotFlagged() {
+        DeadProcessCheckForStarterProcess spy =
+                run(starterProcess("Lib Starter.process"), LIBBUILDER_DIR);
+        verify(spy, times(0)).reportIssueOnFile(anyString());
+    }
 }
