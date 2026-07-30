@@ -32,7 +32,9 @@ NETWORK="bw-it-net"
 SQ_CONTAINER="bw-sonarqube-it"
 PROJECT_KEY="bw5-it-sample"
 
-SAMPLE_SRC="src/test/resources/bw/bw5/SonarSamples"
+# Project to scan. Defaults to the bundled BW5 sample; override with SAMPLE_SRC
+# to point at any BW project (e.g. to reproduce a customer issue locally).
+SAMPLE_SRC="${SAMPLE_SRC:-src/test/resources/bw/bw5/SonarSamples}"
 WORKSPACE="target/it-workspace"
 
 HOST_URL="http://localhost:${SQ_PORT}"          # reached from this host
