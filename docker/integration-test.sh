@@ -199,22 +199,34 @@ MEASURES_JSON="$(curl -fsS -u "${ADMIN_USER}:${ADMIN_PASS}" \
 FILES="$(echo "$MEASURES_JSON" | jq -r '.component.measures[]? | select(.metric=="files") | .value' 2>/dev/null || echo "")"
 FILES="${FILES:-0}"
 
+# Issue #24: the BW5 metric sensor must save its measures without the
+# "Measure value should be of type Integer" error, so they show on the report.
+BW_MEASURES_JSON="$(curl -fsS -u "${ADMIN_USER}:${ADMIN_PASS}" \
+  "${HOST_URL}/api/measures/component?component=${PROJECT_KEY}&metricKeys=processes,groups,activities,transitions" \
+  || echo '{}')"
+PROCESSES="$(echo "$BW_MEASURES_JSON" | jq -r '.component.measures[]? | select(.metric=="processes") | .value' 2>/dev/null || echo "")"
+PROCESSES="${PROCESSES:-0}"
+
+log "BW5 measures:"
+echo "$BW_MEASURES_JSON" | jq -r '.component.measures[]? | "    \(.metric): \(.value)"' 2>/dev/null || true
+
 log "Top rules triggered:"
 curl -fsS -u "${ADMIN_USER}:${ADMIN_PASS}" \
   "${HOST_URL}/api/issues/search?componentKeys=${PROJECT_KEY}&resolved=false&facets=rules&ps=1" \
   | jq -r '.facets[]? | select(.property=="rules") | .values[] | "    \(.val): \(.count)"' 2>/dev/null || true
 
 echo
-log "Summary:  files=${FILES}  issues=${ISSUES}"
+log "Summary:  files=${FILES}  issues=${ISSUES}  processes=${PROCESSES}"
 
 FAIL=0
 if [[ "${FILES}" -lt 1 ]]; then err "Expected at least 1 analysed file, got ${FILES}."; FAIL=1; fi
 if [[ "${ISSUES}" -lt 1 ]]; then err "Expected the plugin to raise at least 1 issue, got ${ISSUES}."; FAIL=1; fi
+if [[ "${PROCESSES}" -lt 1 ]]; then err "Expected BW5 'processes' measure >= 1 (issue #24), got ${PROCESSES}."; FAIL=1; fi
 
 if [[ "$FAIL" -ne 0 ]]; then
   err "Integration test FAILED."
   exit 1
 fi
 
-ok "Integration test PASSED — plugin analysed the BW5 project and produced ${ISSUES} issue(s)."
+ok "Integration test PASSED — plugin analysed the BW5 project, produced ${ISSUES} issue(s) and ${PROCESSES} process measure(s)."
 log "Dashboard: ${HOST_URL}/dashboard?id=${PROJECT_KEY}"
