@@ -239,4 +239,79 @@ public class CatchAllCheckTest extends TestCase {
         Mockito.verify(spyInstance,times(0)).reportIssueOnFile(anyString());
     }
 
+    // A Catch activity whose config has no <catchAll> element must not crash the
+    // analysis (previously threw a NullPointerException aborting the whole scan).
+    public void testCatchWithoutCatchAllConfigDoesNotThrow() {
+        ProcessSource source = new ProcessSource("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<pd:ProcessDefinition xmlns:pd=\"http://xmlns.tibco.com/bw/process/2003\">\n" +
+                "    <pd:name>Process Definition.process</pd:name>\n" +
+                "    <pd:startName>Start</pd:startName>\n" +
+                "    <pd:endName>End</pd:endName>\n" +
+                "    <pd:activity name=\"Catch\">\n" +
+                "        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>\n" +
+                "        <pd:resourceType>ae.activities.catch</pd:resourceType>\n" +
+                "        <pd:x>149</pd:x>\n" +
+                "        <pd:y>379</pd:y>\n" +
+                "        <pd:handler>true</pd:handler>\n" +
+                "        <config/>\n" +
+                "    </pd:activity>\n" +
+                "</pd:ProcessDefinition>");
+        CatchAllCheck spyInstance = Mockito.spy(new CatchAllCheck());
+        doNothing().when(spyInstance).reportIssueOnFile(anyString());
+
+        // Must not throw; a catch without catchAll means the catch-all was not found.
+        spyInstance.validate(source);
+        Mockito.verify(spyInstance, times(1)).reportIssueOnFile(anyString());
+    }
+
+    private static final String SUBPROCESS_NO_CATCH =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<pd:ProcessDefinition xmlns:pd=\"http://xmlns.tibco.com/bw/process/2003\">\n" +
+            "    <pd:name>Sub.process</pd:name>\n" +
+            "    <pd:startName>Start</pd:startName>\n" +
+            "    <pd:endName>End</pd:endName>\n" +
+            "</pd:ProcessDefinition>";
+
+    private static final String STARTER_NO_CATCH =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<pd:ProcessDefinition xmlns:pd=\"http://xmlns.tibco.com/bw/process/2003\">\n" +
+            "    <pd:name>Starter.process</pd:name>\n" +
+            "    <pd:startName>Timer</pd:startName>\n" +
+            "    <pd:starter name=\"Timer\">\n" +
+            "        <pd:type>com.tibco.plugin.timer.TimerEventSource</pd:type>\n" +
+            "        <pd:x>1</pd:x>\n" +
+            "        <pd:y>1</pd:y>\n" +
+            "    </pd:starter>\n" +
+            "    <pd:endName>End</pd:endName>\n" +
+            "</pd:ProcessDefinition>";
+
+    // onlyStarterProcesses=true: a subprocess (no process starter) must be skipped.
+    public void testOnlyStarterProcessesSkipsSubprocess() {
+        CatchAllCheck spyInstance = Mockito.spy(new CatchAllCheck());
+        spyInstance.setOnlyStarterProcesses(true);
+        doNothing().when(spyInstance).reportIssueOnFile(anyString());
+
+        spyInstance.validate(new ProcessSource(SUBPROCESS_NO_CATCH));
+        Mockito.verify(spyInstance, times(0)).reportIssueOnFile(anyString());
+    }
+
+    // onlyStarterProcesses=true: a starter (receiver) process is still evaluated.
+    public void testOnlyStarterProcessesEvaluatesStarter() {
+        CatchAllCheck spyInstance = Mockito.spy(new CatchAllCheck());
+        spyInstance.setOnlyStarterProcesses(true);
+        doNothing().when(spyInstance).reportIssueOnFile(anyString());
+
+        spyInstance.validate(new ProcessSource(STARTER_NO_CATCH));
+        Mockito.verify(spyInstance, times(1)).reportIssueOnFile(anyString());
+    }
+
+    // Default behaviour (property off): every process is evaluated, including subprocesses.
+    public void testDefaultEvaluatesSubprocess() {
+        CatchAllCheck spyInstance = Mockito.spy(new CatchAllCheck());
+        doNothing().when(spyInstance).reportIssueOnFile(anyString());
+
+        spyInstance.validate(new ProcessSource(SUBPROCESS_NO_CATCH));
+        Mockito.verify(spyInstance, times(1)).reportIssueOnFile(anyString());
+    }
+
 }

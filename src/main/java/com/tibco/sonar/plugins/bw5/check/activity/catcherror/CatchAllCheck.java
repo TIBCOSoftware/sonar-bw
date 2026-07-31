@@ -51,7 +51,21 @@ public class CatchAllCheck extends AbstractProcessCatchCheck {
 
 	@RuleProperty(key = "noCatchMessage", type = "TEXT", defaultValue=NO_CATCH_MESSAGE)
 	private String noCatchMessage = NO_CATCH_MESSAGE;
-	
+
+	@RuleProperty(key = "onlyStarterProcesses", type = "BOOLEAN", defaultValue = "false",
+			description = "When enabled, evaluate this rule only on starter (receiver) processes and skip subprocesses.")
+	private boolean onlyStarterProcesses = false;
+
+	@Override
+	public boolean isOnlyStarterProcesses() {
+		return onlyStarterProcesses;
+	}
+
+	@Override
+	public void setOnlyStarterProcesses(boolean onlyStarterProcesses) {
+		this.onlyStarterProcesses = onlyStarterProcesses;
+	}
+
 	@Override
 	public String getCatchFaultElementValue() {
 		return catchFaultElementValue;

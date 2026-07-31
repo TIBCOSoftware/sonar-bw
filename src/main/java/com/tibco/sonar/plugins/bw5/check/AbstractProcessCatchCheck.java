@@ -7,7 +7,6 @@
 package com.tibco.sonar.plugins.bw5.check;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import com.tibco.utils.common.helper.XmlHelper;
 import org.w3c.dom.Element;
@@ -38,11 +37,19 @@ public abstract class AbstractProcessCatchCheck extends AbstractProcessCheck {
 
 	public abstract String getNoCatchMessage();
 	public abstract void setNoCatchMessage(String noCatchMessage);
-	
+
+	public abstract boolean isOnlyStarterProcesses();
+	public abstract void setOnlyStarterProcesses(boolean onlyStarterProcesses);
+
 	@Override
 	protected void validate(ProcessSource processSource) {
 		// Get process
 		Process process = processSource.getProcessModel();
+		// Enhancement: optionally limit this rule to starter (receiver) processes,
+		// skipping subprocesses. Default (false) keeps evaluating every process.
+		if (isOnlyStarterProcesses() && process.isSubprocess()) {
+			return;
+		}
 		// Get all catch activities
 		List<Activity> activitiesCatch = process
 				.getActivitiesByType(getCatchActivityType());
@@ -68,17 +75,16 @@ public abstract class AbstractProcessCatchCheck extends AbstractProcessCheck {
 	private boolean checkCatch(Activity activity){
 			// try to retrieve catchAll element in configuration
 		boolean catchAllFound = false;
-		try{
+			Element configuration = activity.getConfiguration();
+			if (configuration != null) {
 				Element catchAllConfigElement = XmlHelper.firstChildElement(
-						activity.getConfiguration(),getCatchAllElementName());
+						configuration, getCatchAllElementName());
 				// if catchAll found and value equal to activation value
-				if (catchAllConfigElement.getTextContent().equals(getCatchAllElementValue())) {
+				if (catchAllConfigElement != null
+						&& catchAllConfigElement.getTextContent().equals(getCatchAllElementValue())) {
 					// then catch all found
 					catchAllFound = true;
 				}
-			}catch(NoSuchElementException e){
-				// else catch all not found
-				catchAllFound = false;
 			}
 			// if catch all found
 			if(catchAllFound){
@@ -105,11 +111,13 @@ public abstract class AbstractProcessCatchCheck extends AbstractProcessCheck {
 		boolean catchFound = false;
 		// if specific fault element (based on name and value) is searched
 		if(!getCatchFaultElementName().isEmpty() && !getCatchFaultElementValue().isEmpty()){
-			// get fault element 
-			Element catchFaultConfigElement = XmlHelper.firstChildElement(
-                    activity.getConfiguration(),getCatchFaultElementName());
+			// get fault element
+			Element configuration = activity.getConfiguration();
+			Element catchFaultConfigElement = configuration == null ? null
+					: XmlHelper.firstChildElement(configuration, getCatchFaultElementName());
 			// if fault value is equal to what we are looking for
-			if (getCatchFaultElementValue().equals(catchFaultConfigElement.getTextContent())) {
+			if (catchFaultConfigElement != null
+					&& getCatchFaultElementValue().equals(catchFaultConfigElement.getTextContent())) {
 				// set catch found
 				catchFound = true;
 			}

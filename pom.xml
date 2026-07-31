@@ -4,7 +4,7 @@
     <groupId>com.tibco.sonar</groupId>
     <artifactId>sonar-bw-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
     <name>Extension for SonarQube for use with TIBCO BusinessWorks</name>
     <description>Extension for SonarQube for use with TIBCO BusinessWorks</description>
 
