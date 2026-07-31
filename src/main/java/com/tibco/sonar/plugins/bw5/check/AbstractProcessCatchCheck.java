@@ -37,11 +37,19 @@ public abstract class AbstractProcessCatchCheck extends AbstractProcessCheck {
 
 	public abstract String getNoCatchMessage();
 	public abstract void setNoCatchMessage(String noCatchMessage);
-	
+
+	public abstract boolean isOnlyStarterProcesses();
+	public abstract void setOnlyStarterProcesses(boolean onlyStarterProcesses);
+
 	@Override
 	protected void validate(ProcessSource processSource) {
 		// Get process
 		Process process = processSource.getProcessModel();
+		// Enhancement: optionally limit this rule to starter (receiver) processes,
+		// skipping subprocesses. Default (false) keeps evaluating every process.
+		if (isOnlyStarterProcesses() && process.isSubprocess()) {
+			return;
+		}
 		// Get all catch activities
 		List<Activity> activitiesCatch = process
 				.getActivitiesByType(getCatchActivityType());
